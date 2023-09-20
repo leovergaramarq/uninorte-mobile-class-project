@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'ui/pages/authentication/first.dart';
-import 'ui/pages/content/quest.dart';
+import 'ui/pages/authentication/first_page.dart';
+import 'ui/pages/content/quest_page.dart';
 
 void main() {
   runApp(const MyApp());

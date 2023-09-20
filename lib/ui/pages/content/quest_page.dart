@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import './numpad.dart';
 import './question.dart';
-import './answerInput.dart';
+import 'answer_input_page.dart';
 
 class Quest extends StatelessWidget {
   final int currentLevel; // Nivel actual
