@@ -4,33 +4,54 @@ import './question.dart';
 import './answerInput.dart';
 
 class Quest extends StatelessWidget {
-  const Quest({super.key});
+  final int currentLevel; // Nivel actual
 
-  // This widget is the root of your application.
+  const Quest({Key? key, required this.currentLevel}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Sudoku for kids',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        home: const QuestPage(),
-        debugShowCheckedModeBanner: false);
+      title: 'Sudoku for kids',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: QuestPage(currentLevel: currentLevel),
+      debugShowCheckedModeBanner: false,
+    );
   }
 }
 
 class QuestPage extends StatefulWidget {
-  const QuestPage({super.key});
+  final int currentLevel;
+
+  const QuestPage({Key? key, required this.currentLevel}) : super(key: key);
 
   @override
   State<QuestPage> createState() => _QuestPageState();
 }
 
 class _QuestPageState extends State<QuestPage> {
+  Widget levelStars(int level) {
+    return Row(
+      children: List.generate(
+          level, (index) => Icon(Icons.star, color: Colors.yellow)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Nivel:'),
+            SizedBox(width: 8),
+            levelStars(widget.currentLevel),
+          ],
+        ),
+      ),
       body: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
       // ),
       home: const Quest(
         key: Key('questPage'),
+        currentLevel: 3,
       ),
     );
   }

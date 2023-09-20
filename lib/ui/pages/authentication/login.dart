@@ -107,6 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       //   ));
                       Get.to(const Quest(
                         key: Key('Quest'),
+                        currentLevel: 1,
                       ));
                     },
                     child: const Text("Submit")),
