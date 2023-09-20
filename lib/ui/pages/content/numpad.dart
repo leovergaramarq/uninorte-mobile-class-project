@@ -23,7 +23,7 @@ class Numpad extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
-                  padding: EdgeInsets.all(48),
+                  padding: EdgeInsets.all(12),
                 )),
             SizedBox(width: 36),
             ElevatedButton(
@@ -40,7 +40,7 @@ class Numpad extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
-                  padding: EdgeInsets.all(48),
+                  padding: EdgeInsets.all(12),
                 )),
             SizedBox(width: 36),
             ElevatedButton(
@@ -57,7 +57,7 @@ class Numpad extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
-                  padding: EdgeInsets.all(48),
+                  padding: EdgeInsets.all(12),
                 )),
           ],
         ),
@@ -79,7 +79,7 @@ class Numpad extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
-                  padding: EdgeInsets.all(48),
+                  padding: EdgeInsets.all(12),
                 )),
             SizedBox(width: 36),
             ElevatedButton(
@@ -96,7 +96,7 @@ class Numpad extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
-                  padding: EdgeInsets.all(48),
+                  padding: EdgeInsets.all(12),
                 )),
             SizedBox(width: 36),
             ElevatedButton(
@@ -113,7 +113,7 @@ class Numpad extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
-                  padding: EdgeInsets.all(48),
+                  padding: EdgeInsets.all(12),
                 )),
           ],
         ),
@@ -135,7 +135,7 @@ class Numpad extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
-                  padding: EdgeInsets.all(48),
+                  padding: EdgeInsets.all(12),
                 )),
             SizedBox(width: 36),
             ElevatedButton(
@@ -152,7 +152,7 @@ class Numpad extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
-                  padding: EdgeInsets.all(48),
+                  padding: EdgeInsets.all(12),
                 )),
             SizedBox(width: 36),
             ElevatedButton(
@@ -169,7 +169,7 @@ class Numpad extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
-                  padding: EdgeInsets.all(48),
+                  padding: EdgeInsets.all(12),
                 )),
           ],
         ),
@@ -189,7 +189,7 @@ class Numpad extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
-                  padding: EdgeInsets.all(48),
+                  padding: EdgeInsets.all(12),
                 )),
             SizedBox(width: 36),
             ElevatedButton(
@@ -204,7 +204,7 @@ class Numpad extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
-                  padding: EdgeInsets.all(48),
+                  padding: EdgeInsets.all(12),
                 )),
             SizedBox(width: 36),
             ElevatedButton(
@@ -219,7 +219,7 @@ class Numpad extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.orange,
-                  padding: EdgeInsets.all(48),
+                  padding: EdgeInsets.all(12),
                 )),
           ],
         )
