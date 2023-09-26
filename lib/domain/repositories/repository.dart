@@ -1,37 +1,47 @@
-// // import 'package:f_web_authentication/data/datasources/remote/authentication_datasource.dart';
+import 'package:uninorte_mobile_class_project/data/datasources/remote/auth_datasource.dart';
+import 'package:uninorte_mobile_class_project/data/datasources/remote/user_datasource.dart';
 
-// // import '../../data/datasources/remote/user_datasource.dart';
-// import '../models/user.dart';
+import 'package:uninorte_mobile_class_project/domain/models/user.dart';
 
-// class Repository {
-//   late AuthenticationDataSource _authenticationDataSource;
-//   late UserDataSource _userDataSource;
-//   String token = "";
+class Repository {
+  late AuthDatasource _authDatasource;
+  late UserDatasource _userDatasource;
+  String token = "";
 
-//   // Repository() {
-//   //   _authenticationDataSource = AuthenticationDataSource();
-//   //   _userDataSource = UserDataSource();
-//   // }
+  // the base url of the API should end without the /
+  final String _baseUrl =
+      "http://ip172-18-0-103-cjvmcv8gftqg00dhebr0-8000.direct.labs.play-with-docker.com";
 
-//   Future<bool> login(String email, String password) async {
-//     token = await _authenticationDataSource.login(email, password);
-//     return true;
-//   }
+  Repository() {
+    _authDatasource = AuthDatasource();
+    _userDatasource = UserDatasource();
+  }
 
-//   Future<bool> signUp(String email, String password) async =>
-//       await _authenticationDataSource.signUp(email, password);
+  // authentication methods
 
-//   Future<bool> logOut() async => await _authenticationDataSource.logOut();
+  Future<bool> login(String email, String password) async {
+    token = await _authDatasource.login(_baseUrl, email, password);
+    return true;
+  }
 
-//   Future<List<User>> getUsers() async => await _userDataSource.getUsers();
+  Future<bool> signUp(String email, String password) async =>
+      await _authDatasource.signUp(_baseUrl, email, password);
 
-//   Future<bool> addUser(User user) async => await _userDataSource.addUser(user);
+  Future<bool> logOut() async => await _authDatasource.logOut();
 
-//   Future<bool> updateUser(User user) async =>
-//       await _userDataSource.updateUser(user);
+  // user methods
 
-//   Future<bool> deleteUser(int id) async => await _userDataSource.deleteUser(id);
+  Future<List<User>> getUsers() async => await _userDatasource.getUsers();
 
-//   Future<bool> simulateProcess() async =>
-//       await _userDataSource.simulateProcess(token);
-// }
+  Future<bool> addUser(User user) async => await _userDatasource.addUser(user);
+
+  Future<bool> updateUser(User user) async =>
+      await _userDatasource.updateUser(user);
+
+  Future<bool> deleteUser(int id) async => await _userDatasource.deleteUser(id);
+
+  Future<bool> simulateProcess() async =>
+      await _userDatasource.simulateProcess(_baseUrl, token);
+
+  // question methods
+}
