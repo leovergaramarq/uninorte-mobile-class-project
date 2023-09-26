@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import '../content/home.dart';
 import '../content/quest_page.dart';
 import 'signup_page.dart';
-import '../../../domain/models/User.dart';
+import '../../../domain/models/user.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key, required this.email, required this.password})
