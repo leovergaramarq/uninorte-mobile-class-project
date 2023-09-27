@@ -20,12 +20,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.deepPurple,
       ),
       home: const FirstPage(
-        key: Key('firstPage'),
+        key: Key('FirstPage'),
       ),
-      // home: const Quest(
-      //   key: Key('questPage'),
-      //   currentLevel: 3,
-      // ),
     );
   }
 }

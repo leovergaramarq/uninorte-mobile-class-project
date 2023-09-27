@@ -4,7 +4,7 @@ import 'package:uninorte_mobile_class_project/domain/repositories/repository.dar
 class QuestionUseCase {
   final Repository repository = Repository();
 
-  Future<Question> getNextQuestion(int levelOrder, int questionOrder) async {
+  Future<Question> getNextQuestion(int levelIndex, int questionIndex) async {
     print('questions');
     List<List<Question>> questions;
     try {
@@ -14,7 +14,7 @@ class QuestionUseCase {
       print(e);
       return Question(0, '+', 0);
     }
-    List<Question> level = questions[levelOrder % questions.length];
-    return level[questionOrder % level.length];
+    List<Question> level = questions[levelIndex % questions.length];
+    return level[questionIndex % level.length];
   }
 }

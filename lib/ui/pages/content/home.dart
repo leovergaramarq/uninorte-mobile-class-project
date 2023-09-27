@@ -2,18 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:uninorte_mobile_class_project/ui/pages/auth/login_page.dart';
+import 'package:uninorte_mobile_class_project/ui/pages/content/quest_page.dart';
 
 import 'package:uninorte_mobile_class_project/ui/controller/auth_controller.dart';
+import 'package:uninorte_mobile_class_project/ui/controller/question_controller.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
 
   final AuthController _authController = initAuthController();
+  final QuestionController _questionController = initQuestionController();
 
   void onLogout() async {
     await _authController.logOut();
     Get.off(() => LoginPage(
-          key: const Key('loginPage'),
+          key: const Key('LoginPage'),
         ));
   }
 
@@ -29,6 +32,23 @@ class HomePage extends StatelessWidget {
               icon: const Icon(Icons.logout))
         ],
       ),
+      body: Column(
+        children: [
+          Row(
+            children: [
+              ElevatedButton(
+                  onPressed: () {
+                    Get.to(() => QuestPage(
+                          key: const Key('QuestPage'),
+                        ));
+                  },
+                  child: Text('Start quest!'))
+            ],
+            mainAxisAlignment: MainAxisAlignment.center,
+          )
+        ],
+        mainAxisAlignment: MainAxisAlignment.center,
+      ),
     );
   }
 }
@@ -37,4 +57,10 @@ AuthController initAuthController() {
   return Get.isRegistered<AuthController>()
       ? Get.find<AuthController>()
       : Get.put<AuthController>(AuthController());
+}
+
+QuestionController initQuestionController() {
+  return Get.isRegistered<QuestionController>()
+      ? Get.find<QuestionController>()
+      : Get.put<QuestionController>(QuestionController());
 }

@@ -41,7 +41,7 @@ class _FirstPageState extends State<FirstPage> {
                   onPressed: () {
                     Get.to(
                       LoginPage(
-                        key: Key('loginPage'),
+                        key: Key('LoginPage'),
                       ),
                     );
                   },
@@ -53,8 +53,8 @@ class _FirstPageState extends State<FirstPage> {
                     ),
                     minimumSize: Size(200, 40),
                   ),
-                  child: Text(
-                    '¡Empecemos!',
+                  child: const Text(
+                    'Let\'s start!',
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 15,

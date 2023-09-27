@@ -42,13 +42,13 @@ class _SignUpPageState extends State<SignUpPage> {
     }
 
     if (result) {
-      if (_authController.logged.value) {
+      if (_authController.isLogged) {
         Get.off(HomePage(
           key: const Key('HomePage'),
         ));
       } else {
         Get.off(LoginPage(
-          key: const Key('loginPage'),
+          key: const Key('LoginPage'),
         ));
       }
     } else {

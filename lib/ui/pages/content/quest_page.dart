@@ -1,49 +1,47 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:uninorte_mobile_class_project/domain/use_case/question_use_case.dart';
+import 'dart:math';
+import 'package:get/get.dart';
+
+import 'package:uninorte_mobile_class_project/ui/pages/content/answer_input_page.dart';
+import 'package:uninorte_mobile_class_project/ui/pages/content/question.dart';
+import 'package:uninorte_mobile_class_project/ui/pages/content/numpad.dart';
+
 import 'package:uninorte_mobile_class_project/domain/models/question.dart'
     as QuestionModel;
-import './numpad.dart';
-import './question.dart';
-import 'answer_input_page.dart';
+import 'package:uninorte_mobile_class_project/ui/controller/question_controller.dart';
 
-class Quest extends StatelessWidget {
-  final int currentLevel; // Nivel actual
+// class Quest extends StatelessWidget {
 
-  const Quest({Key? key, required this.currentLevel}) : super(key: key);
+//   const Quest({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Sudoku for kids',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: QuestPage(currentLevel: currentLevel),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Sudoku for kids',
+//       theme: ThemeData(
+//         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+//         useMaterial3: true,
+//       ),
+//       home: QuestPage(),
+//       debugShowCheckedModeBanner: false,
+//     );
+//   }
+// }
 
 class QuestPage extends StatefulWidget {
-  QuestPage({Key? key, required this.currentLevel}) : super(key: key);
-
-  int currentLevel;
-  late Future<QuestionModel.Question> question;
-  final QuestionUseCase questionUseCase = QuestionUseCase();
+  const QuestPage({Key? key}) : super(key: key);
 
   @override
   State<QuestPage> createState() => _QuestPageState();
 }
 
 class _QuestPageState extends State<QuestPage> {
-  @override
-  void initState() {
-    widget.question = widget.questionUseCase
-        .getNextQuestion(widget.currentLevel - 1, Random().nextInt(4));
-    super.initState();
-  }
+  final QuestionController _questionController = initQuestionController();
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
 
   Widget levelStars(int level) {
     return Row(
@@ -61,7 +59,7 @@ class _QuestPageState extends State<QuestPage> {
           children: [
             Text('Nivel:'),
             SizedBox(width: 8),
-            levelStars(widget.currentLevel),
+            levelStars(_questionController.levelIndex + 1),
           ],
         ),
       ),
@@ -74,13 +72,11 @@ class _QuestPageState extends State<QuestPage> {
             ),
             // Question(3, '+', 3),
             FutureBuilder(
-              future: widget.question,
+              // future: question,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   return snapshot.data;
                 } else {
-                  print(snapshot.data);
-                  print(widget.question);
                   return CircularProgressIndicator();
                 }
               },
@@ -113,4 +109,10 @@ class _QuestPageState extends State<QuestPage> {
   //   return Question(
   //       widget.question.num1, widget.question.op, widget.question.num2);
   // }
+}
+
+QuestionController initQuestionController() {
+  return Get.isRegistered<QuestionController>()
+      ? Get.find<QuestionController>()
+      : Get.put<QuestionController>(QuestionController());
 }

@@ -39,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
       print(e);
     }
 
-    if (_authController.logged.value) {
+    if (_authController.isLogged) {
       Get.off(HomePage(
         key: const Key('HomePage'),
       ));
@@ -48,10 +48,6 @@ class _LoginPageState extends State<LoginPage> {
         content: Text('User or password not ok'),
       ));
     }
-    // Get.to(const Quest(
-    //   key: Key('Quest'),
-    //   currentLevel: 1,
-    // ));
   }
 
   @override
