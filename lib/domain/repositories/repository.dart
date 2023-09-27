@@ -20,6 +20,7 @@ class Repository {
   // authentication methods
 
   Future<bool> login(String email, String password) async {
+    print('sptmdr');
     token = await _authDatasource.login(_baseUrl, email, password);
     return true;
   }

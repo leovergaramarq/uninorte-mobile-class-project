@@ -8,12 +8,12 @@ class UserDatasource {
 
   Future<List<User>> getUsers() async {
     List<User> users = [];
-    var request = Uri.parse("https://retoolapi.dev/$apiKey/data")
+    final Uri request = Uri.parse("https://retoolapi.dev/$apiKey/data")
         .resolveUri(Uri(queryParameters: {
       "format": 'json',
     }));
 
-    var response = await http.get(request);
+    final http.Response response = await http.get(request);
 
     if (response.statusCode == 200) {
       //logInfo(response.body);

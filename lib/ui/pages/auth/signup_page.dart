@@ -10,12 +10,12 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  TextEditingController _date = TextEditingController();
-  final _schoolController = TextEditingController();
-  final _gradeController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _schoolController = TextEditingController();
+  final TextEditingController _gradeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +76,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   padding: const EdgeInsets.all(30.0),
                   child: TextFormField(
                     key: const Key('TextFormFieldSignUpBirthdate'),
-                    controller: _date,
+                    controller: _dateController,
                     decoration: const InputDecoration(
                       icon: Icon(Icons.calendar_today_rounded),
                       labelText: "Birthdate",
@@ -133,7 +133,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     onPressed: () {
                       // this line dismiss the keyboard by taking away the focus of the TextFormField and giving it to an unused
                       FocusScope.of(context).requestFocus(FocusNode());
-                      final form = _formKey.currentState;
+                      final FormState? form = _formKey.currentState;
                       form!.save();
                       if (form.validate()) {
                         // Get.to(LoginScreen(

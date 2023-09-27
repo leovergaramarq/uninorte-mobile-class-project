@@ -4,20 +4,21 @@ import 'package:loggy/loggy.dart';
 import 'package:uninorte_mobile_class_project/domain/use_case/auth_use_case.dart';
 
 class AuthController extends GetxController {
-  final logged = false.obs;
+  final AuthUseCase auth = AuthUseCase();
+  final RxBool logged = false.obs;
 
   bool get isLogged => logged.value;
 
   Future<void> login(email, password) async {
-    final AuthUseCase auth = Get.find();
+    // final AuthUseCase auth = Get.find();
     await auth.login(email, password);
     logged.value = true;
   }
 
   Future<bool> signUp(email, password) async {
-    final AuthUseCase authentication = Get.find();
+    // final AuthUseCase auth = Get.find();
     logInfo('Controller Sign Up');
-    await authentication.signUp(email, password);
+    await auth.signUp(email, password);
     return true;
   }
 

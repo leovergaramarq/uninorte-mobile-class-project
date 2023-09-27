@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'signup_page.dart';
-import 'login_page.dart';
+
+import 'package:uninorte_mobile_class_project/ui/pages/auth/signup_page.dart';
+import 'package:uninorte_mobile_class_project/ui/pages/auth/login_page.dart';
 
 class FirstPage extends StatefulWidget {
   const FirstPage({Key? key}) : super(key: key);
@@ -28,10 +29,10 @@ class _FirstPageState extends State<FirstPage> {
             const SizedBox(height: 50),
             ElevatedButton(
               onPressed: () {
-                Get.to(const LoginScreen(
+                Get.to(LoginScreen(
                   key: Key('loginPage'),
-                  email: "blank",
-                  password: "blank",
+                  // email: "blank",
+                  // password: "blank",
                 ));
               },
               child: const Text('¡Empecemos!'),

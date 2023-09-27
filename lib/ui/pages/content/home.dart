@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../authentication/login_page.dart';
+
+import 'package:uninorte_mobile_class_project/ui/pages/auth/login_page.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage(
-      {Key? key, required this.loggedEmail, required this.loggedPassword})
-      : super(key: key);
-  final String loggedEmail;
-  final String loggedPassword;
+  const HomePage({Key? key}) : super(key: key);
+
+  // final String loggedEmail;
+  // final String loggedPassword;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,8 +20,8 @@ class HomePage extends StatelessWidget {
               onPressed: () {
                 Get.off(() => LoginScreen(
                       key: const Key('LoginScreen'),
-                      email: loggedEmail,
-                      password: loggedPassword,
+                      // email: loggedEmail,
+                      // password: loggedPassword,
                     ));
               },
               icon: const Icon(Icons.logout))
