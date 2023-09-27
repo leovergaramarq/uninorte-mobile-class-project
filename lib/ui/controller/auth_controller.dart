@@ -17,6 +17,7 @@ class AuthController extends GetxController {
   Future<bool> signUp(email, password) async {
     logInfo('Controller Sign Up');
     await _authUseCase.signUp(email, password);
+    // logged.value = true;
     return true;
   }
 

@@ -18,8 +18,8 @@ class HomePage extends StatelessWidget {
           IconButton(
               key: const Key('ButtonHomeLogOff'),
               onPressed: () {
-                Get.off(() => LoginScreen(
-                      key: const Key('LoginScreen'),
+                Get.off(() => LoginPage(
+                      key: const Key('loginPage'),
                       // email: loggedEmail,
                       // password: loggedPassword,
                     ));

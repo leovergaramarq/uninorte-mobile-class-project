@@ -40,7 +40,7 @@ class _FirstPageState extends State<FirstPage> {
                 ElevatedButton(
                   onPressed: () {
                     Get.to(
-                      LoginScreen(
+                      LoginPage(
                         key: Key('loginPage'),
                       ),
                     );

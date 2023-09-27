@@ -9,28 +9,50 @@ import 'package:uninorte_mobile_class_project/ui/controller/auth_controller.dart
 
 import 'package:uninorte_mobile_class_project/domain/models/user.dart';
 
-class LoginScreen extends StatefulWidget {
-  LoginScreen({Key? key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  LoginPage({Key? key}) : super(key: key);
 
   String email = '';
   String password = '';
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final AuthController _authController = initAuthController();
 
-  // AuthController get authController {
-  //   if (!Get.isRegistered<AuthController>()) {
-  //     _authController = Get.put<AuthController>(AuthController());
-  //   }
-  //   return _authController;
-  // }
+  void onSubmit() async {
+    // this line dismiss the keyboard by taking away the focus of the TextFormField and giving it to an unused
+    FocusScope.of(context).requestFocus(FocusNode());
+    final form = _formKey.currentState;
+    form!.save();
+
+    if (!form.validate()) return;
+    try {
+      await _authController.login(
+          _emailController.text.trim(), _passwordController.text);
+    } catch (e) {
+      print(e);
+    }
+
+    if (_authController.logged.value) {
+      Get.off(HomePage(
+        key: const Key('HomePage'),
+      ));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('User or password not ok'),
+      ));
+    }
+    // Get.to(const Quest(
+    //   key: Key('Quest'),
+    //   currentLevel: 1,
+    // ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,11 +77,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   key: const Key('TextFormFieldLoginEmail'),
                   controller: _emailController,
                   decoration: const InputDecoration(labelText: 'Email'),
-                  onChanged: (value) {
-                    _emailController.text = value.trim();
-                    _emailController.selection = TextSelection.fromPosition(
-                        TextPosition(offset: _emailController.text.length));
-                  },
+                  // onChanged: (value) {
+                  //   _emailController.text = value.trim();
+                  //   _emailController.selection = TextSelection.fromPosition(
+                  //       TextPosition(offset: _emailController.text.length));
+                  // },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Enter email";
@@ -95,36 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 OutlinedButton(
                     key: const Key('ButtonLoginSubmit'),
-                    onPressed: () async {
-                      // this line dismiss the keyboard by taking away the focus of the TextFormField and giving it to an unused
-                      FocusScope.of(context).requestFocus(FocusNode());
-                      final form = _formKey.currentState;
-                      form!.save();
-
-                      if (form.validate()) {
-                        try {
-                          await _authController.login(
-                              _emailController.text, _passwordController.text);
-                        } catch (e) {
-                          print(e);
-                        }
-
-                        if (_authController.logged.value) {
-                          Get.to(HomePage(
-                            key: const Key('HomePage'),
-                          ));
-                        } else {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                            content: Text('User or password not ok'),
-                          ));
-                        }
-                      }
-                      // Get.to(const Quest(
-                      //   key: Key('Quest'),
-                      //   currentLevel: 1,
-                      // ));
-                    },
+                    onPressed: onSubmit,
                     child: const Text("Submit")),
                 const SizedBox(
                   height: 20,

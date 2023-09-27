@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 class AuthDatasource {
   Future<String> login(String baseUrl, String email, String password) async {
-    final response = await http.post(
+    final http.Response response = await http.post(
       Uri.parse("$baseUrl/login"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -27,7 +27,7 @@ class AuthDatasource {
   }
 
   Future<bool> signUp(String baseUrl, String email, String password) async {
-    final response = await http.post(
+    final http.Response response = await http.post(
       Uri.parse("$baseUrl/register"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
