@@ -4,7 +4,7 @@ class User {
     required this.firstName,
     required this.lastName,
     required this.email,
-    required this.password,
+    this.password,
     required this.birthDate,
     required this.degree,
     required this.school,
@@ -14,8 +14,8 @@ class User {
   String firstName;
   String lastName;
   String email;
-  String password;
-  DateTime birthDate;
+  String? password;
+  String birthDate;
   String degree;
   String school;
 

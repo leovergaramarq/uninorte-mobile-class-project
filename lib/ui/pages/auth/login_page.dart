@@ -128,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                         controller: _passwordController,
                         decoration:
                             const InputDecoration(labelText: "Password"),
-                        keyboardType: TextInputType.number,
+                        // keyboardType: TextInputType.number,
                         obscureText: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
