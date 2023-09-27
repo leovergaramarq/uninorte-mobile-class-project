@@ -27,6 +27,15 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    void onContinueAsGuest() {
+      _authController.continueAsGuest();
+      if (_authController.isGuest) {
+        Get.off(HomePage(
+          key: const Key('HomePage'),
+        ));
+      }
+    }
+
     void onSubmit() async {
       // this line dismiss the keyboard by taking away the focus of the TextFormField and giving it to an unused
       FocusScope.of(context).requestFocus(FocusNode());
@@ -147,7 +156,17 @@ class _LoginPageState extends State<LoginPage> {
                                   key: Key('SignUpPage'),
                                 ),
                               ),
-                          child: const Text('Create account'))
+                          child: const Text('Create account')),
+                      // const SizedBox(
+                      //   height: 8,
+                      // ),
+                      TextButton(
+                          key: const Key('ButtonLoginContinueAsGuest'),
+                          onPressed: onContinueAsGuest,
+                          child: const Text(
+                            'Continue as guest',
+                            style: TextStyle(color: Colors.black54),
+                          ))
                     ],
                   ),
                 ),

@@ -13,13 +13,15 @@ class QuestionController extends GetxController {
   final RxInt _answer = 0.obs;
   // final Rx<Question> _question = Rx<Question>(Question(0, '', 0));
   final Rx<List<List<Question>>> _questions = Rx<List<List<Question>>>([]);
+  final Rx<Question> _question = Rx<Question>(Question(0, '', 0));
   final RxBool _areQuestionsFetched = false.obs;
   final RxBool _answeredCorrect = false.obs;
 
   int get levelIndex => _levelIndex.value;
   int get questionIndex => _questionIndex.value;
   int get answer => _answer.value;
-  Question get question => _questions.value[levelIndex][questionIndex];
+  // Question get question => _questions.value[levelIndex][questionIndex];
+  Question get question => _question.value;
   List<List<Question>> get questions => _questions.value;
   bool get areQuestionsFetched => _areQuestionsFetched.value;
   bool get answeredCorrect => _answeredCorrect.value;
@@ -49,6 +51,7 @@ class QuestionController extends GetxController {
 
   void getQuestions() {
     _questions.value = _questionUseCase.getQuestions();
+    _question.value = _questions.value[levelIndex][questionIndex];
     if (!_areQuestionsFetched.value) {
       _areQuestionsFetched.value = true;
     }
@@ -72,7 +75,8 @@ class QuestionController extends GetxController {
       }
     }
     // _questions.value = _questions.value.map((e) => e).toList();
-    _questions.refresh();
+    // _questions.refresh();
+    _question.value = _questions.value[levelIndex][questionIndex];
   }
 
   bool isAnswerCorrect() {
