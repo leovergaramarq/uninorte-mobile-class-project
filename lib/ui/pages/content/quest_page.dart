@@ -2,31 +2,14 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:get/get.dart';
 
-import 'package:uninorte_mobile_class_project/ui/pages/content/answer_input_page.dart';
-import 'package:uninorte_mobile_class_project/ui/pages/content/question.dart';
-import 'package:uninorte_mobile_class_project/ui/pages/content/numpad.dart';
+import 'package:uninorte_mobile_class_project/ui/widgets/answer_input.dart';
+import 'package:uninorte_mobile_class_project/ui/widgets/question.dart';
+import 'package:uninorte_mobile_class_project/ui/widgets/numpad.dart';
+import 'package:uninorte_mobile_class_project/ui/widgets/level_stars.dart';
 
 import 'package:uninorte_mobile_class_project/domain/models/question.dart'
     as QuestionModel;
 import 'package:uninorte_mobile_class_project/ui/controller/question_controller.dart';
-
-// class Quest extends StatelessWidget {
-
-//   const Quest({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Sudoku for kids',
-//       theme: ThemeData(
-//         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-//         useMaterial3: true,
-//       ),
-//       home: QuestPage(),
-//       debugShowCheckedModeBanner: false,
-//     );
-//   }
-// }
 
 class QuestPage extends StatefulWidget {
   const QuestPage({Key? key}) : super(key: key);
@@ -43,13 +26,6 @@ class _QuestPageState extends State<QuestPage> {
   //   super.initState();
   // }
 
-  Widget levelStars(int level) {
-    return Row(
-      children: List.generate(
-          level, (index) => Icon(Icons.star, color: Colors.yellow)),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +35,7 @@ class _QuestPageState extends State<QuestPage> {
           children: [
             Text('Nivel:'),
             SizedBox(width: 8),
-            levelStars(_questionController.levelIndex + 1),
+            LevelStars(level: _questionController.levelIndex + 1),
           ],
         ),
       ),
