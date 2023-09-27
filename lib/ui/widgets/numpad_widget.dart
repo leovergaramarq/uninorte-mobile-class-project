@@ -5,12 +5,12 @@ class NumpadWidget extends StatelessWidget {
     Key? key,
     required void Function(int) this.typeNumber,
     required VoidCallback this.clearAnswer,
-    required VoidCallback this.evalAnswer,
+    required VoidCallback this.answer,
   });
 
   void Function(int) typeNumber;
   VoidCallback clearAnswer;
-  VoidCallback evalAnswer;
+  VoidCallback answer;
 
   @override
   Widget build(BuildContext context) {
@@ -202,7 +202,7 @@ class NumpadWidget extends StatelessWidget {
                         color: Colors.white,
                         fontWeight: FontWeight.w400,
                         fontSize: 32)),
-                onPressed: evalAnswer,
+                onPressed: answer,
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.orange,

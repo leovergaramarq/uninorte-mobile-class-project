@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
 
 import 'package:uninorte_mobile_class_project/domain/repositories/repository.dart';
-import 'package:uninorte_mobile_class_project/domain/use_case/user_use_case.dart';
 import 'package:uninorte_mobile_class_project/domain/models/user.dart';
 
 class UserUseCase {
@@ -22,7 +21,7 @@ class UserUseCase {
 
   deleteUser(int id) async => await _repository.deleteUser(id);
 
-  simulateProcess() async => await _repository.simulateProcess();
+  simulateProcess() async => await _repository.simulateProcessUser();
 }
 
 Repository initRepository() {

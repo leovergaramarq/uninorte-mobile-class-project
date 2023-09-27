@@ -1,18 +1,21 @@
 import 'package:uninorte_mobile_class_project/data/datasources/remote/auth_datasource.dart';
 import 'package:uninorte_mobile_class_project/data/datasources/remote/user_datasource.dart';
+import 'package:uninorte_mobile_class_project/data/datasources/remote/session_datasource.dart';
 import 'package:uninorte_mobile_class_project/data/datasources/local/question_datasource.dart';
 
 import 'package:uninorte_mobile_class_project/domain/models/user.dart';
+import 'package:uninorte_mobile_class_project/domain/models/session.dart';
 
 class Repository {
   final AuthDatasource _authDatasource = AuthDatasource();
   final UserDatasource _userDatasource = UserDatasource();
+  final SessionDatasource _sessionDatasource = SessionDatasource();
   final QuestionDatasource _questionDatasource = QuestionDatasource();
   String token = "";
 
   // the base url of the API should end without the /
   final String _baseUrl =
-      "http://ip172-18-0-57-cka3nscsnmng00dvqbn0-8000.direct.labs.play-with-docker.com";
+      "http://ip172-19-0-46-cka7c9ksnmng00dvqn60-8000.direct.labs.play-with-docker.com";
 
   // authentication methods
 
@@ -37,8 +40,25 @@ class Repository {
 
   Future<bool> deleteUser(int id) async => await _userDatasource.deleteUser(id);
 
-  Future<bool> simulateProcess() async =>
+  Future<bool> simulateProcessUser() async =>
       await _userDatasource.simulateProcess(_baseUrl, token);
+
+  // user methods
+
+  Future<List<Session>> getSessions() async =>
+      await _sessionDatasource.getSessions();
+
+  Future<bool> addSession(Session Session) async =>
+      await _sessionDatasource.addSession(Session);
+
+  Future<bool> updateSession(Session Session) async =>
+      await _sessionDatasource.updateSession(Session);
+
+  Future<bool> deleteSession(int id) async =>
+      await _sessionDatasource.deleteSession(id);
+
+  Future<bool> simulateProcessSession() async =>
+      await _sessionDatasource.simulateProcess(_baseUrl, token);
 
   // question methods
   List<List<dynamic>> getQuestions() => _questionDatasource.getQuestions();

@@ -7,13 +7,29 @@ import 'package:uninorte_mobile_class_project/domain/models/user.dart';
 class UserController extends GetxController {
   final UserUseCase _userUseCase = initUserUseCase();
   final RxList<User> _users = <User>[].obs;
+  // final Rx<User> _user = Rx<User>(User(
+  //   birthDate: '',
+  //   email: '',
+  //   firstName: '',
+  //   lastName: '',
+  //   password: '',
+  //   degree: '',
+  //   school: '',
+  // ));
+  final RxString _userEmail = ''.obs;
 
   List<User> get users => _users;
+  // User get user => _user.value;
+  String get userEmail => _userEmail.value;
 
   @override
   void onInit() {
     getUsers();
     super.onInit();
+  }
+
+  setUserEmail(String email) {
+    _userEmail.value = email;
   }
 
   getUsers() async {

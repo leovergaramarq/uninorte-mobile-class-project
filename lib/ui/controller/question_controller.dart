@@ -1,109 +1,153 @@
 import 'package:get/get.dart';
-import 'package:loggy/loggy.dart';
+
+import 'package:uninorte_mobile_class_project/domain/use_case/question_use_case.dart';
 
 import 'package:uninorte_mobile_class_project/domain/models/question.dart';
-import 'package:uninorte_mobile_class_project/domain/use_case/question_use_case.dart';
+import 'package:uninorte_mobile_class_project/domain/models/session.dart';
+import 'package:uninorte_mobile_class_project/domain/models/answer.dart';
 
 class QuestionController extends GetxController {
   final QuestionUseCase _questionUseCase = initQuestionUseCase();
   final RxInt _levelIndex = 0.obs;
   final RxInt _questionIndex = 0.obs;
-  // int levelIndex = 0;
-  // int questionIndex = 0;
-  final RxInt _answer = 0.obs;
+  final RxInt _userAnswer = 0.obs;
   // final Rx<Question> _question = Rx<Question>(Question(0, '', 0));
   final Rx<List<List<Question>>> _questions = Rx<List<List<Question>>>([]);
   final Rx<Question> _question = Rx<Question>(Question(0, '', 0));
+  final RxBool _isQuestionReady = false.obs;
   final RxBool _areQuestionsFetched = false.obs;
-  final RxBool _answeredCorrect = false.obs;
+  final RxBool _didAnswer = false.obs;
+  // final RxBool _answeredCorrect = false.obs;
+  final Rx<Session> _session = Rx<Session>(Session(
+      userEmail: '',
+      answers: [],
+      level: 0,
+      numCorrectAnswers: 0,
+      numAnswers: 0,
+      totalSeconds: 0));
+  final RxBool _isSessionActive = false.obs;
+  final _answerSeconds = 0.obs;
 
   int get levelIndex => _levelIndex.value;
   int get questionIndex => _questionIndex.value;
-  int get answer => _answer.value;
-  // Question get question => _questions.value[levelIndex][questionIndex];
+  int get userAnswer => _userAnswer.value;
   Question get question => _question.value;
   List<List<Question>> get questions => _questions.value;
+  bool get isQuestionReady => _isQuestionReady.value;
   bool get areQuestionsFetched => _areQuestionsFetched.value;
-  bool get answeredCorrect => _answeredCorrect.value;
+  bool get didAnswer => _didAnswer.value;
+  // bool get answeredCorrect => _answeredCorrect.value;
+  Session get session => _session.value;
+  bool get isSessionActive => _isSessionActive.value;
+  int get answerSeconds => _answerSeconds.value;
 
-  // void nextLevel() {
-  //   _levelIndex.value++;
-  //   _questionIndex.value = 0;
-  // }
-
-  // void nextQuestion() {
-  //   _questionIndex.value++;
-  // }
-
-  void typeNumber(int number) {
-    print('typed number');
-    if (!_areQuestionsFetched.value) return;
-
-    String ansString = answer.toString() + number.toString();
-    _answer.value = int.parse(ansString);
-    print(_answer.value);
+  Future<void> startSession(String userEmail) async {
+    if (userEmail.isEmpty) {
+      print('email is empty');
+    }
+    await fetchQuestions();
+    _session.value = Session(
+        userEmail: userEmail,
+        answers: [],
+        level: _levelIndex.value,
+        numCorrectAnswers: 0,
+        numAnswers: 0,
+        totalSeconds: 0);
+    _isSessionActive.value = true;
   }
 
-  void clearAnswer() {
-    if (!_areQuestionsFetched.value) return;
-    _answer.value = 0;
+  void finishSession() {
+    resetStates();
   }
 
-  void getQuestions() {
-    _questions.value = _questionUseCase.getQuestions();
-    _question.value = _questions.value[levelIndex][questionIndex];
-    if (!_areQuestionsFetched.value) {
-      _areQuestionsFetched.value = true;
-    }
-    if (_answeredCorrect.value) {
-      _answeredCorrect.value = false;
-    }
+  Future<void> fetchQuestions() async {
+    if (_areQuestionsFetched.value) _areQuestionsFetched.value = false;
+    _questions.value = await _questionUseCase.getQuestions();
+    _areQuestionsFetched.value = true;
   }
 
   void nextQuestion() {
     if (_areQuestionsFetched.value) {
-      _questionIndex.value++;
-      if (_questionIndex.value >= _questions.value[levelIndex].length) {
+      if (!_isQuestionReady.value) {
         _questionIndex.value = 0;
-        _levelIndex.value++;
-        if (_levelIndex.value >= _questions.value.length) {
-          _levelIndex.value = 0;
+        _levelIndex.value = 0;
+      } else {
+        _questionIndex.value++;
+        if (_questionIndex.value >= _questions.value[levelIndex].length) {
+          _questionIndex.value = 0;
+          _levelIndex.value++;
+          if (_levelIndex.value >= _questions.value.length) {
+            _levelIndex.value = 0;
+          }
         }
       }
-      if (_answeredCorrect.value) {
-        _answeredCorrect.value = false;
-      }
+      _question.value = _questions.value[levelIndex][questionIndex];
+
+      if (!_isQuestionReady.value) _isQuestionReady.value = true;
+      if (_didAnswer.value) _didAnswer.value = false;
     }
-    // _questions.value = _questions.value.map((e) => e).toList();
-    // _questions.refresh();
-    _question.value = _questions.value[levelIndex][questionIndex];
   }
 
-  bool isAnswerCorrect() {
-    if (!_areQuestionsFetched.value) return false;
-
-    // Question question = _questions.value[levelIndex][questionIndex];
-    int result;
-
-    switch (question.op) {
+  int performOperation() {
+    switch (_question.value.op) {
       case '+':
-        result = question.num1 + question.num2;
-        break;
+        return _question.value.num1 + _question.value.num2;
       case '-':
-        result = question.num1 - question.num2;
-        break;
+        return _question.value.num1 - _question.value.num2;
       case '*':
-        result = question.num1 * question.num2;
-        break;
+        return _question.value.num1 * _question.value.num2;
       case '/':
-        result = question.num1 ~/ question.num2;
-        break;
+        return _question.value.num1 ~/ _question.value.num2;
       default:
-        result = 0;
+        return 0;
     }
+  }
 
-    _answeredCorrect.value = result == _answer.value;
-    return _answeredCorrect.value;
+  void typeNumber(int number) {
+    if (!_areQuestionsFetched.value) return;
+
+    String answerString = userAnswer.toString() + number.toString();
+    _userAnswer.value = int.parse(answerString);
+    // print(_userAnswer.value);
+  }
+
+  void clearAnswer() {
+    if (!_areQuestionsFetched.value) return;
+    _userAnswer.value = 0;
+  }
+
+  Answer answer(int seconds) {
+    _didAnswer.value = true;
+    Answer newAnswer = Answer(
+        userAnswer: _userAnswer.value,
+        isCorrect: _userAnswer.value == performOperation(),
+        question: _question.value,
+        userEmail: _session.value.userEmail,
+        seconds: seconds);
+    _session.value.answers.add(newAnswer);
+    return newAnswer;
+  }
+
+  void setAnswerSeconds(int answerSeconds) {
+    _answerSeconds.value = answerSeconds;
+  }
+
+  void resetStates() {
+    _levelIndex.value = 0;
+    _questionIndex.value = 0;
+    _userAnswer.value = 0;
+    _questions.value = [];
+    _question.value = Question(0, '', 0);
+    _areQuestionsFetched.value = false;
+    // _answeredCorrect.value = false;
+    _session.value = Session(
+        userEmail: '',
+        answers: [],
+        level: 0,
+        numCorrectAnswers: 0,
+        numAnswers: 0,
+        totalSeconds: 0);
+    _isSessionActive.value = false;
   }
 }
 
