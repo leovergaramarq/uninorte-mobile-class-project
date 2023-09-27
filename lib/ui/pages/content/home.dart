@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:uninorte_mobile_class_project/ui/pages/auth/login_page.dart';
 import 'package:uninorte_mobile_class_project/ui/pages/content/quest_page.dart';
 
-import 'package:uninorte_mobile_class_project/ui/widgets/level_stars.dart';
+import 'package:uninorte_mobile_class_project/ui/widgets/level_stars_widget.dart';
 
 import 'package:uninorte_mobile_class_project/ui/controller/auth_controller.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/question_controller.dart';
@@ -38,7 +38,7 @@ class HomePage extends StatelessWidget {
         children: [
           Row(
             children: [
-              LevelStars(level: _questionController.levelIndex + 1),
+              LevelStarsWidget(level: _questionController.levelIndex + 1),
             ],
             mainAxisAlignment: MainAxisAlignment.center,
           ),

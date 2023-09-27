@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Numpad extends StatelessWidget {
+class NumpadWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -17,9 +17,7 @@ class Numpad extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       fontSize: 32),
                 ),
-                onPressed: () {
-                  print('asjdjnakmsd');
-                },
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
@@ -34,9 +32,7 @@ class Numpad extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       fontSize: 32),
                 ),
-                onPressed: () {
-                  print('asjdjnakmsd');
-                },
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
@@ -51,9 +47,7 @@ class Numpad extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       fontSize: 32),
                 ),
-                onPressed: () {
-                  print('asjdjnakmsd');
-                },
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
@@ -73,9 +67,7 @@ class Numpad extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       fontSize: 32),
                 ),
-                onPressed: () {
-                  print('asjdjnakmsd');
-                },
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
@@ -90,9 +82,7 @@ class Numpad extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       fontSize: 32),
                 ),
-                onPressed: () {
-                  print('asjdjnakmsd');
-                },
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
@@ -107,9 +97,7 @@ class Numpad extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       fontSize: 32),
                 ),
-                onPressed: () {
-                  print('asjdjnakmsd');
-                },
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
@@ -129,9 +117,7 @@ class Numpad extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       fontSize: 32),
                 ),
-                onPressed: () {
-                  print('asjdjnakmsd');
-                },
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
@@ -146,9 +132,7 @@ class Numpad extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       fontSize: 32),
                 ),
-                onPressed: () {
-                  print('asjdjnakmsd');
-                },
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
@@ -163,9 +147,7 @@ class Numpad extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       fontSize: 32),
                 ),
-                onPressed: () {
-                  print('asjdjnakmsd');
-                },
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
@@ -178,9 +160,7 @@ class Numpad extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-                onPressed: () {
-                  print('asjdjnakmsd');
-                },
+                onPressed: () {},
                 child: const Text('0',
                     style: TextStyle(
                         color: Colors.white,
@@ -193,9 +173,7 @@ class Numpad extends StatelessWidget {
                 )),
             SizedBox(width: 36),
             ElevatedButton(
-                onPressed: () {
-                  print('asjdjnakmsd');
-                },
+                onPressed: () {},
                 child: const Text('C',
                     style: TextStyle(
                         color: Colors.white,
@@ -208,9 +186,7 @@ class Numpad extends StatelessWidget {
                 )),
             SizedBox(width: 36),
             ElevatedButton(
-                onPressed: () {
-                  print('asjdjnakmsd');
-                },
+                onPressed: () {},
                 child: const Text('GO',
                     style: TextStyle(
                         color: Colors.white,

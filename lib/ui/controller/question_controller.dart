@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
 
+import 'package:uninorte_mobile_class_project/domain/models/question.dart';
 import 'package:uninorte_mobile_class_project/domain/use_case/question_use_case.dart';
 
 class QuestionController extends GetxController {
@@ -20,9 +21,8 @@ class QuestionController extends GetxController {
     _questionIndex.value++;
   }
 
-  Future<void> getQuestion() async {
-    logInfo('Controller Get Question');
-    await _questionUseCase.getNextQuestion(levelIndex, questionIndex);
+  Question getQuestion() {
+    return _questionUseCase.getQuestion(levelIndex, questionIndex);
   }
 }
 

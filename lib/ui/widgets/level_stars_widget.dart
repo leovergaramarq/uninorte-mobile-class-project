@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class LevelStars extends StatelessWidget {
-  LevelStars({Key? key, required this.level}) : super(key: key);
+class LevelStarsWidget extends StatelessWidget {
+  LevelStarsWidget({Key? key, required this.level}) : super(key: key);
   int level;
 
   @override

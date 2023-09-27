@@ -1,11 +1,13 @@
 import 'package:uninorte_mobile_class_project/data/datasources/remote/auth_datasource.dart';
 import 'package:uninorte_mobile_class_project/data/datasources/remote/user_datasource.dart';
+import 'package:uninorte_mobile_class_project/data/datasources/local/question_datasource.dart';
 
 import 'package:uninorte_mobile_class_project/domain/models/user.dart';
 
 class Repository {
   final AuthDatasource _authDatasource = AuthDatasource();
   final UserDatasource _userDatasource = UserDatasource();
+  final QuestionDatasource _questionDatasource = QuestionDatasource();
   String token = "";
 
   // the base url of the API should end without the /
@@ -39,4 +41,5 @@ class Repository {
       await _userDatasource.simulateProcess(_baseUrl, token);
 
   // question methods
+  List<List<dynamic>> getQuestions() => _questionDatasource.getQuestions();
 }
