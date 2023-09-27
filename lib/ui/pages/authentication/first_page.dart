@@ -14,30 +14,58 @@ class _FirstPageState extends State<FirstPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Summarizer',
-              style: TextStyle(
-                fontSize: 50,
-                fontWeight: FontWeight.bold,
-              ),
+      body: Stack(
+        children: [
+          Image.asset(
+            'assets/First.png',
+            width: double.infinity,
+            height: double.infinity,
+            fit: BoxFit.cover,
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Sum+',
+                  style: TextStyle(
+                    fontFamily: 'Itim',
+                    fontSize: 64,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 50),
+                ElevatedButton(
+                  onPressed: () {
+                    Get.to(
+                      LoginScreen(
+                        key: Key('loginPage'),
+                        email: "blank",
+                        password: "blank",
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF997AC1),
+                    onPrimary: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    minimumSize: Size(200, 40),
+                  ),
+                  child: Text(
+                    '¡Empecemos!',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 50),
-            ElevatedButton(
-              onPressed: () {
-                Get.to(const LoginScreen(
-                  key: Key('loginPage'),
-                  email: "blank",
-                  password: "blank",
-                ));
-              },
-              child: const Text('¡Empecemos!'),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

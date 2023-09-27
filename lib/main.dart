@@ -18,13 +18,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
-      // home: const FirstPage(
-      //   key: Key('firstPage'),
-      // ),
-      home: const Quest(
-        key: Key('questPage'),
-        currentLevel: 3,
+      home: const FirstPage(
+        key: Key('firstPage'),
       ),
+      // home: const Quest(
+      //   key: Key('questPage'),
+      //   currentLevel: 3,
+      // ),
     );
   }
 }
