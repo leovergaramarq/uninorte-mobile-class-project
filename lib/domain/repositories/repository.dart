@@ -4,23 +4,17 @@ import 'package:uninorte_mobile_class_project/data/datasources/remote/user_datas
 import 'package:uninorte_mobile_class_project/domain/models/user.dart';
 
 class Repository {
-  late AuthDatasource _authDatasource;
-  late UserDatasource _userDatasource;
+  final AuthDatasource _authDatasource = AuthDatasource();
+  final UserDatasource _userDatasource = UserDatasource();
   String token = "";
 
   // the base url of the API should end without the /
   final String _baseUrl =
-      "http://ip172-18-0-103-cjvmcv8gftqg00dhebr0-8000.direct.labs.play-with-docker.com";
-
-  Repository() {
-    _authDatasource = AuthDatasource();
-    _userDatasource = UserDatasource();
-  }
+      "http://ip172-19-0-27-ck9pea4snmng0086dj1g-8000.direct.labs.play-with-docker.com";
 
   // authentication methods
 
   Future<bool> login(String email, String password) async {
-    print('sptmdr');
     token = await _authDatasource.login(_baseUrl, email, password);
     return true;
   }

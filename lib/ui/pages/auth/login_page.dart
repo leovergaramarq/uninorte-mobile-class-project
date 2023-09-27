@@ -23,7 +23,14 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final AuthController _authController = AuthController();
+  final AuthController _authController = initAuthController();
+
+  // AuthController get authController {
+  //   if (!Get.isRegistered<AuthController>()) {
+  //     _authController = Get.put<AuthController>(AuthController());
+  //   }
+  //   return _authController;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -135,4 +142,10 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+}
+
+AuthController initAuthController() {
+  return Get.isRegistered<AuthController>()
+      ? Get.find<AuthController>()
+      : Get.put<AuthController>(AuthController());
 }
