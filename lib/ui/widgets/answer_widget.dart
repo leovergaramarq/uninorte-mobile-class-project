@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class AnswerInputWidget extends StatelessWidget {
-  AnswerInputWidget(this.input);
+class AnswerWidget extends StatelessWidget {
+  AnswerWidget(this.input);
 
-  String input;
+  int input;
 
   @override
   Widget build(BuildContext context) {
     return Center(
         child: Text(
-      input,
+      input.toString(),
       style: TextStyle(
         fontSize: 64,
         color: Colors.black,

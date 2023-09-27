@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
 
 class NumpadWidget extends StatelessWidget {
+  NumpadWidget({
+    Key? key,
+    required void Function(int) this.typeNumber,
+    required VoidCallback this.clearAnswer,
+    required VoidCallback this.evalAnswer,
+  });
+
+  void Function(int) typeNumber;
+  VoidCallback clearAnswer;
+  VoidCallback evalAnswer;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -17,7 +28,7 @@ class NumpadWidget extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       fontSize: 32),
                 ),
-                onPressed: () {},
+                onPressed: () => typeNumber(1),
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
@@ -32,7 +43,7 @@ class NumpadWidget extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       fontSize: 32),
                 ),
-                onPressed: () {},
+                onPressed: () => typeNumber(2),
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
@@ -47,7 +58,7 @@ class NumpadWidget extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       fontSize: 32),
                 ),
-                onPressed: () {},
+                onPressed: () => typeNumber(3),
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
@@ -67,7 +78,7 @@ class NumpadWidget extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       fontSize: 32),
                 ),
-                onPressed: () {},
+                onPressed: () => typeNumber(4),
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
@@ -82,7 +93,7 @@ class NumpadWidget extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       fontSize: 32),
                 ),
-                onPressed: () {},
+                onPressed: () => typeNumber(5),
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
@@ -97,7 +108,7 @@ class NumpadWidget extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       fontSize: 32),
                 ),
-                onPressed: () {},
+                onPressed: () => typeNumber(6),
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
@@ -117,7 +128,7 @@ class NumpadWidget extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       fontSize: 32),
                 ),
-                onPressed: () {},
+                onPressed: () => typeNumber(7),
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
@@ -132,7 +143,7 @@ class NumpadWidget extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       fontSize: 32),
                 ),
-                onPressed: () {},
+                onPressed: () => typeNumber(8),
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
@@ -147,7 +158,7 @@ class NumpadWidget extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       fontSize: 32),
                 ),
-                onPressed: () {},
+                onPressed: () => typeNumber(9),
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
@@ -160,12 +171,12 @@ class NumpadWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-                onPressed: () {},
                 child: const Text('0',
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w400,
                         fontSize: 32)),
+                onPressed: () => typeNumber(0),
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
@@ -173,12 +184,12 @@ class NumpadWidget extends StatelessWidget {
                 )),
             SizedBox(width: 36),
             ElevatedButton(
-                onPressed: () {},
                 child: const Text('C',
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w400,
                         fontSize: 32)),
+                onPressed: clearAnswer,
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.deepPurple,
@@ -186,12 +197,12 @@ class NumpadWidget extends StatelessWidget {
                 )),
             SizedBox(width: 36),
             ElevatedButton(
-                onPressed: () {},
                 child: const Text('GO',
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w400,
                         fontSize: 32)),
+                onPressed: evalAnswer,
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                   backgroundColor: Colors.orange,

@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 
 import 'package:uninorte_mobile_class_project/domain/models/question.dart';
-
 import 'package:uninorte_mobile_class_project/domain/repositories/repository.dart';
 
 class QuestionUseCase {
@@ -16,6 +15,15 @@ class QuestionUseCase {
         .toList();
     List<Question> level = questions[levelIndex % questions.length];
     return level[questionIndex % level.length];
+  }
+
+  List<List<Question>> getQuestions() {
+    List<List<dynamic>> questionsRaw = _repository.getQuestions();
+    return questionsRaw
+        .map((questionList) => questionList
+            .map((q) => Question(q["num1"], q["op"], q["num2"]))
+            .toList())
+        .toList();
   }
 }
 

@@ -4,4 +4,9 @@ class Question {
   int num1;
   int num2;
   String op;
+
+  @override
+  String toString() {
+    return "$num1 $op $num2";
+  }
 }

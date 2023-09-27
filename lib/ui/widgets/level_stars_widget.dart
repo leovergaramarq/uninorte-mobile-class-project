@@ -6,6 +6,7 @@ class LevelStarsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('level $level');
     return Row(
       children: List.generate(
           level, (index) => Icon(Icons.star, color: Colors.yellow)),
