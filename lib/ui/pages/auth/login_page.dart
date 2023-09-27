@@ -75,6 +75,13 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
+                        "Sum+",
+                        style: TextStyle(
+                            fontFamily: 'Itim',
+                            fontSize: 70,
+                            color: Colors.black),
+                      ),
+                      const Text(
                         "Login with email",
                         style: TextStyle(fontSize: 20),
                       ),
@@ -133,9 +140,11 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       TextButton(
                           key: const Key('ButtonLoginCreateAccount'),
-                          onPressed: () => Get.to(const SignUpPage(
-                                key: Key('SignUpPage'),
-                              )),
+                          onPressed: () => Get.to(
+                                const SignUpPage(
+                                  key: Key('SignUpPage'),
+                                ),
+                              ),
                           child: const Text('Create account'))
                     ],
                   ),
