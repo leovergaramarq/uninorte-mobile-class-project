@@ -70,164 +70,171 @@ class _SignUpPageState extends State<SignUpPage> {
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        body: Stack(
-          children: [
-            // Capa 1: Imagen de fondo
-            Image.asset(
-              'assets/Seconbg.png', // Reemplaza con la ruta de tu imagen de fondo
-              width: double.infinity,
-              height: double.infinity,
-              fit: BoxFit.cover,
-            ),
+        body: Stack(children: [
+          // Capa 1: Imagen de fondo
+          Image.asset(
+            'assets/Seconbg.png', // Reemplaza con la ruta de tu imagen de fondo
+            width: double.infinity,
+            height: double.infinity,
+            fit: BoxFit.cover,
+          ),
 
-            // Capa 2: Contenido en el centro
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20.0, 25.0, 20.0, 12.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Sum+',
-                        style: TextStyle(
-                          fontFamily: 'Itim',
-                          fontSize: 64,
-                          color: Colors.black,
+          // Capa 2: Contenido en el centro
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20.0, 25.0, 20.0, 12.0),
+              child: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Sum+',
+                      style: TextStyle(
+                        fontFamily: 'Itim',
+                        fontSize: 64,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Text(
+                      "Please fill the form to create an account",
+                      style: TextStyle(fontSize: 17),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      key: const Key('TextFormFieldSignUpEmail'),
+                      controller: _emailController,
+                      decoration: const InputDecoration(labelText: 'Email'),
+                      // onChanged: (value) {
+                      //   _emailController.text = value.trim();
+                      //   _emailController.selection = TextSelection.fromPosition(
+                      //       TextPosition(offset: _emailController.text.length));
+                      // },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Enter email";
+                        } else if (!RegExp(
+                          r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+                        ).hasMatch(value.trim())) {
+                          return "Enter valid email address";
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      key: const Key('TextFormFieldSignUpPassword'),
+                      controller: _passwordController,
+                      decoration: const InputDecoration(labelText: "Password"),
+                      keyboardType: TextInputType.number,
+                      obscureText: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Enter password";
+                        } else if (value.length < 6) {
+                          return "Password should have at least 6 characters";
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: TextFormField(
+                        key: const Key('TextFormFieldSignUpBirthdate'),
+                        controller: _dateController,
+                        decoration: const InputDecoration(
+                          icon: Icon(Icons.calendar_today_rounded),
+                          labelText: "Birthdate",
                         ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const Text(
-                        "Please fill the form to create an account",
-                        style: TextStyle(fontSize: 17),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        key: const Key('TextFormFieldSignUpEmail'),
-                        controller: _emailController,
-                        decoration: const InputDecoration(labelText: 'Email'),
-                        // onChanged: (value) {
-                        //   _emailController.text = value.trim();
-                        //   _emailController.selection = TextSelection.fromPosition(
-                        //       TextPosition(offset: _emailController.text.length));
-                        // },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Enter email";
-                          } else if (!RegExp(
-                            r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-                          ).hasMatch(value.trim())) {
-                            return "Enter valid email address";
-                          } else {
-                            return null;
+                        onTap: () async {
+                          DateTime? pickeddate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime(2050));
+                          if (pickeddate != null) {
+                            _dateController.text =
+                                DateFormat('yyyy-MM-dd').format(pickeddate);
                           }
                         },
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        key: const Key('TextFormFieldSignUpPassword'),
-                        controller: _passwordController,
-                        decoration:
-                            const InputDecoration(labelText: "Password"),
-                        keyboardType: TextInputType.number,
-                        obscureText: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return "Enter password";
-                          } else if (value.length < 6) {
-                            return "Password should have at least 6 characters";
+                            return "Enter birthdate";
                           }
                           return null;
                         },
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: TextFormField(
-                          key: const Key('TextFormFieldSignUpBirthdate'),
-                          controller: _dateController,
-                          decoration: const InputDecoration(
-                            icon: Icon(Icons.calendar_today_rounded),
-                            labelText: "Birthdate",
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      key: const Key('TextFormFieldSignUpSchool'),
+                      controller: _schoolController,
+                      decoration: const InputDecoration(labelText: "School"),
+                      keyboardType: TextInputType.text,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Enter school";
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      key: const Key('TextFormFieldSignUpGrade'),
+                      controller: _gradeController,
+                      decoration: const InputDecoration(labelText: "Grade"),
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Enter grade";
+                        } else if (int.parse(value) < 1 ||
+                            int.parse(value) > 11) {
+                          return "Grade should be between 1 and 11";
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    OutlinedButton(
+                        key: const Key('ButtonSignUpSubmit'),
+                        onPressed: onSubmit,
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 166, 137, 204),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
                           ),
-                          onTap: () async {
-                            DateTime? pickeddate = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime(2000),
-                                lastDate: DateTime(2050));
-                            if (pickeddate != null) {
-                              _dateController.text =
-                                  DateFormat('yyyy-MM-dd').format(pickeddate);
-                            }
-                          },
+                          minimumSize: Size(100, 40),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        key: const Key('TextFormFieldSignUpSchool'),
-                        controller: _schoolController,
-                        decoration: const InputDecoration(labelText: "School"),
-                        keyboardType: TextInputType.text,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Enter school";
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        key: const Key('TextFormFieldSignUpGrade'),
-                        controller: _gradeController,
-                        decoration: const InputDecoration(labelText: "Grade"),
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Enter grade";
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      OutlinedButton(
-                          key: const Key('ButtonSignUpSubmit'),
-                          onPressed: onSubmit,
-                          style: OutlinedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 166, 137, 204),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            minimumSize: Size(100, 40),
-                          ),
-                          child: const Text("Submit",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Inter',
-                                fontSize: 15,
-                              ))),
-                    ],
-                  ),
-                ),
+                        child: const Text("Submit",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Inter',
+                              fontSize: 15,
+                            ))),
+                  ],
+                )),
               ),
             ),
-          ],
-        ));
+          ),
+        ]));
   }
 }
 
