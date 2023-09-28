@@ -1,5 +1,6 @@
-import 'package:uninorte_mobile_class_project/domain/repositories/repository.dart';
 import 'package:get/get.dart';
+
+import 'package:uninorte_mobile_class_project/domain/repositories/repository.dart';
 
 class AuthUseCase {
   final Repository _repository = initRepository();

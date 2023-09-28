@@ -7,6 +7,9 @@ import 'package:uninorte_mobile_class_project/ui/pages/content/home.dart';
 import 'package:uninorte_mobile_class_project/ui/pages/auth/login_page.dart';
 
 import 'package:uninorte_mobile_class_project/ui/controller/auth_controller.dart';
+import 'package:uninorte_mobile_class_project/ui/controller/user_controller.dart';
+
+import 'package:uninorte_mobile_class_project/domain/models/user.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -21,8 +24,10 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _schoolController = TextEditingController();
-  final TextEditingController _gradeController = TextEditingController();
+  final TextEditingController _degreeController = TextEditingController();
+
   final AuthController _authController = initAuthController();
+  final UserController _userController = initUserController();
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +51,14 @@ class _SignUpPageState extends State<SignUpPage> {
       try {
         result = await _authController.signUp(
             _emailController.text.trim(), _passwordController.text);
+        await _userController.addUser(User(
+            id: null,
+            birthDate: _dateController.text,
+            degree: _degreeController.text.trim(),
+            school: _schoolController.text.trim(),
+            email: _emailController.text.trim(),
+            firstName: '',
+            lastName: ''));
       } catch (e) {
         result = false;
         print(e);
@@ -135,7 +148,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       key: const Key('TextFormFieldSignUpPassword'),
                       controller: _passwordController,
                       decoration: const InputDecoration(labelText: "Password"),
-                      keyboardType: TextInputType.number,
+                      // keyboardType: TextInputType.number,
                       obscureText: true,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -197,7 +210,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     TextFormField(
                       key: const Key('TextFormFieldSignUpGrade'),
-                      controller: _gradeController,
+                      controller: _degreeController,
                       decoration: const InputDecoration(labelText: "Grade"),
                       keyboardType: TextInputType.number,
                       validator: (value) {
@@ -242,4 +255,10 @@ AuthController initAuthController() {
   return Get.isRegistered<AuthController>()
       ? Get.find<AuthController>()
       : Get.put<AuthController>(AuthController());
+}
+
+UserController initUserController() {
+  return Get.isRegistered<UserController>()
+      ? Get.find<UserController>()
+      : Get.put<UserController>(UserController());
 }

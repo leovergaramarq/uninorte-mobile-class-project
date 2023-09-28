@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
 
-import '../models/user.dart';
-import '../repositories/repository.dart';
+import 'package:uninorte_mobile_class_project/domain/repositories/repository.dart';
+import 'package:uninorte_mobile_class_project/domain/models/user.dart';
 
 class UserUseCase {
-  final Repository _repository = Get.find();
+  final Repository _repository = initRepository();
 
   UserUseCase();
 
@@ -14,12 +14,18 @@ class UserUseCase {
     return await _repository.getUsers();
   }
 
-  Future<void> addUser(User user) async => await _repository.addUser(user);
+  Future<bool> addUser(User user) async => await _repository.addUser(user);
 
   Future<void> updateUser(User user) async =>
       await _repository.updateUser(user);
 
   deleteUser(int id) async => await _repository.deleteUser(id);
 
-  simulateProcess() async => await _repository.simulateProcess();
+  simulateProcess() async => await _repository.simulateProcessUser();
+}
+
+Repository initRepository() {
+  return Get.isRegistered<Repository>()
+      ? Get.find<Repository>()
+      : Get.put<Repository>(Repository());
 }

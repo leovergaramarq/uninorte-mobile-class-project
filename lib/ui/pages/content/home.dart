@@ -38,7 +38,7 @@ class HomePage extends StatelessWidget {
         children: [
           Row(
             children: [
-              LevelStarsWidget(level: _questionController.levelIndex + 1),
+              Obx(() => LevelStarsWidget(level: _questionController.level)),
             ],
             mainAxisAlignment: MainAxisAlignment.center,
           ),

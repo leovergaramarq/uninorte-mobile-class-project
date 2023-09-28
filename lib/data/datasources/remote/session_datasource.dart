@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:loggy/loggy.dart';
-import 'package:uninorte_mobile_class_project/domain/models/user.dart';
+import 'package:uninorte_mobile_class_project/domain/models/session.dart';
 import 'package:http/http.dart' as http;
 
-class UserDatasource {
-  final String baseUri = 'https://retoolapi.dev/25I9P0/sum-plus';
+class SessionDatasource {
+  final String baseUri = 'https://retoolapi.dev/286DOT/sum-plus';
 
-  Future<List<User>> getUsers() async {
-    List<User> users = [];
+  Future<List<Session>> getSessions() async {
+    List<Session> sessions = [];
     final Uri request = Uri.parse(baseUri).resolveUri(Uri(queryParameters: {
       "format": 'json',
     }));
@@ -18,24 +18,24 @@ class UserDatasource {
       //logInfo(response.body);
       final data = jsonDecode(response.body);
 
-      users = List<User>.from(data.map((x) => User.fromJson(x)));
+      sessions = List<Session>.from(data.map((x) => Session.fromJson(x)));
     } else {
       logError("Got error code ${response.statusCode}");
       return Future.error('Error code ${response.statusCode}');
     }
 
-    return Future.value(users);
+    return Future.value(sessions);
   }
 
-  Future<bool> addUser(User user) async {
-    logInfo("Web service, Adding user");
+  Future<bool> addSession(Session session) async {
+    logInfo("Web service, Adding session");
 
     final response = await http.post(
       Uri.parse(baseUri),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(user.toJson()),
+      body: jsonEncode(session.toJson()),
     );
 
     if (response.statusCode == 201) {
@@ -47,13 +47,13 @@ class UserDatasource {
     }
   }
 
-  Future<bool> updateUser(User user) async {
+  Future<bool> updateSession(Session session) async {
     final response = await http.put(
-      Uri.parse("$baseUri/${user.id}"),
+      Uri.parse("$baseUri/${session.id}"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(user.toJson()),
+      body: jsonEncode(session.toJson()),
     );
 
     if (response.statusCode == 201) {
@@ -65,7 +65,7 @@ class UserDatasource {
     }
   }
 
-  Future<bool> deleteUser(int id) async {
+  Future<bool> deleteSession(int id) async {
     final response = await http.delete(
       Uri.parse("$baseUri/$id"),
       headers: <String, String>{

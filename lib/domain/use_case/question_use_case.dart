@@ -17,7 +17,7 @@ class QuestionUseCase {
     return level[questionIndex % level.length];
   }
 
-  List<List<Question>> getQuestions() {
+  Future<List<List<Question>>> getQuestions() async {
     List<List<dynamic>> questionsRaw = _repository.getQuestions();
     return questionsRaw
         .map((questionList) => questionList

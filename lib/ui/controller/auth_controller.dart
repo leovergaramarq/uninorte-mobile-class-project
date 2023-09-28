@@ -5,24 +5,34 @@ import 'package:uninorte_mobile_class_project/domain/use_case/auth_use_case.dart
 
 class AuthController extends GetxController {
   final AuthUseCase _authUseCase = initAuthUseCase();
-  final RxBool _logged = false.obs;
+  final RxBool _isLogged = false.obs;
+  final RxBool _isGuest = false.obs;
 
-  bool get isLogged => _logged.value;
+  bool get isLogged => _isLogged.value;
+  bool get isGuest => _isGuest.value;
 
   Future<void> login(email, password) async {
     await _authUseCase.login(email, password);
-    _logged.value = true;
+    _isLogged.value = true;
+    if (_isGuest.value) _isGuest.value = false;
   }
 
   Future<bool> signUp(email, password) async {
     logInfo('Controller Sign Up');
     await _authUseCase.signUp(email, password);
-    _logged.value = true;
+    _isLogged.value = true;
+    if (_isGuest.value) _isGuest.value = false;
     return true;
   }
 
   Future<void> logOut() async {
-    _logged.value = false;
+    if (_isLogged.value) _isLogged.value = false;
+    if (_isGuest.value) _isGuest.value = false;
+  }
+
+  Future<void> continueAsGuest() async {
+    _isGuest.value = true;
+    if (_isLogged.value) _isLogged.value = false;
   }
 }
 

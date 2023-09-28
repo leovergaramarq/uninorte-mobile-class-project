@@ -5,40 +5,63 @@ import 'package:uninorte_mobile_class_project/domain/use_case/user_use_case.dart
 import 'package:uninorte_mobile_class_project/domain/models/user.dart';
 
 class UserController extends GetxController {
+  final UserUseCase _userUseCase = initUserUseCase();
   final RxList<User> _users = <User>[].obs;
-  final UserUseCase userUseCase = Get.find();
+  // final Rx<User> _user = Rx<User>(User(
+  //   birthDate: '',
+  //   email: '',
+  //   firstName: '',
+  //   lastName: '',
+  //   password: '',
+  //   degree: '',
+  //   school: '',
+  // ));
+  final RxString _userEmail = ''.obs;
 
   List<User> get users => _users;
+  // User get user => _user.value;
+  String get userEmail => _userEmail.value;
 
   @override
   void onInit() {
-    getUers();
+    getUsers();
     super.onInit();
   }
 
-  getUers() async {
-    logInfo("Getting users");
-    _users.value = await userUseCase.getUsers();
+  setUserEmail(String email) {
+    _userEmail.value = email;
   }
 
-  addUser(User user) async {
+  getUsers() async {
+    logInfo("Getting users");
+    _users.value = await _userUseCase.getUsers();
+  }
+
+  Future<bool> addUser(User user) async {
     logInfo("Add user");
-    await userUseCase.addUser(user);
-    getUers();
+    bool result = await _userUseCase.addUser(user);
+    getUsers();
+    return result;
   }
 
   updateUser(User user) async {
     logInfo("Update user");
-    await userUseCase.updateUser(user);
-    getUers();
+    await _userUseCase.updateUser(user);
+    getUsers();
   }
 
   void deleteUser(int id) async {
-    await userUseCase.deleteUser(id);
-    getUers();
+    await _userUseCase.deleteUser(id);
+    getUsers();
   }
 
   void simulateProcess() async {
-    await userUseCase.simulateProcess();
+    await _userUseCase.simulateProcess();
   }
+}
+
+UserUseCase initUserUseCase() {
+  return Get.isRegistered<UserUseCase>()
+      ? Get.find<UserUseCase>()
+      : Get.put<UserUseCase>(UserUseCase());
 }

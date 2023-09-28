@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:uninorte_mobile_class_project/ui/pages/content/home.dart';
-import 'package:uninorte_mobile_class_project/ui/pages/content/quest_page.dart';
 import 'package:uninorte_mobile_class_project/ui/pages/auth/signup_page.dart';
 
 import 'package:uninorte_mobile_class_project/ui/controller/auth_controller.dart';
+import 'package:uninorte_mobile_class_project/ui/controller/user_controller.dart';
 
 import 'package:uninorte_mobile_class_project/domain/models/user.dart';
 
@@ -24,9 +24,19 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final AuthController _authController = initAuthController();
+  final UserController _userController = initUserController();
 
   @override
   Widget build(BuildContext context) {
+    void onContinueAsGuest() {
+      _authController.continueAsGuest();
+      if (_authController.isGuest) {
+        Get.off(HomePage(
+          key: const Key('HomePage'),
+        ));
+      }
+    }
+
     void onSubmit() async {
       // this line dismiss the keyboard by taking away the focus of the TextFormField and giving it to an unused
       FocusScope.of(context).requestFocus(FocusNode());
@@ -40,14 +50,17 @@ class _LoginPageState extends State<LoginPage> {
       }
 
       if (!form.validate()) return;
+
+      String email = _emailController.text.trim();
+
       try {
-        await _authController.login(
-            _emailController.text.trim(), _passwordController.text);
+        await _authController.login(email, _passwordController.text);
       } catch (e) {
         print(e);
       }
 
       if (_authController.isLogged) {
+        _userController.setUserEmail(email);
         Get.off(HomePage(
           key: const Key('HomePage'),
         ));
@@ -119,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                         controller: _passwordController,
                         decoration:
                             const InputDecoration(labelText: "Password"),
-                        keyboardType: TextInputType.number,
+                        // keyboardType: TextInputType.number,
                         obscureText: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -147,7 +160,17 @@ class _LoginPageState extends State<LoginPage> {
                                   key: Key('SignUpPage'),
                                 ),
                               ),
-                          child: const Text('Create account'))
+                          child: const Text('Create account')),
+                      // const SizedBox(
+                      //   height: 8,
+                      // ),
+                      TextButton(
+                          key: const Key('ButtonLoginContinueAsGuest'),
+                          onPressed: onContinueAsGuest,
+                          child: const Text(
+                            'Continue as guest',
+                            style: TextStyle(color: Colors.black54),
+                          ))
                     ],
                   ),
                 ),
@@ -162,4 +185,10 @@ AuthController initAuthController() {
   return Get.isRegistered<AuthController>()
       ? Get.find<AuthController>()
       : Get.put<AuthController>(AuthController());
+}
+
+UserController initUserController() {
+  return Get.isRegistered<UserController>()
+      ? Get.find<UserController>()
+      : Get.put<UserController>(UserController());
 }
