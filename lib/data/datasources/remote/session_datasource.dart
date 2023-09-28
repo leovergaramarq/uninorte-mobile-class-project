@@ -4,7 +4,7 @@ import 'package:uninorte_mobile_class_project/domain/models/session.dart';
 import 'package:http/http.dart' as http;
 
 class SessionDatasource {
-  final String baseUri = 'https://retoolapi.dev/25I9P0/sum-plus';
+  final String baseUri = 'https://retoolapi.dev/286DOT/sum-plus';
 
   Future<List<Session>> getSessions() async {
     List<Session> sessions = [];

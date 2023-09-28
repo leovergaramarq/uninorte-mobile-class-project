@@ -76,9 +76,30 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
     super.dispose();
   }
 
+  String formatTime(int seconds) {
+    int hours = seconds ~/ 3600;
+    int minutes = (seconds % 3600) ~/ 60;
+    int remainingSeconds = seconds % 60;
+
+    String formattedTime = '';
+
+    if (hours > 0) {
+      formattedTime += '$hours h, ';
+    }
+
+    if (minutes > 0 || hours > 0) {
+      formattedTime += '$minutes m, ';
+    }
+
+    formattedTime += '$remainingSeconds s';
+
+    return formattedTime;
+  }
+
   @override
   Widget build(BuildContext context) {
     void typeNumber(int number) {
+      if (_questionController.didAnswer) return;
       _questionController.typeNumber(number);
     }
 
@@ -126,8 +147,7 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
           children: [
             Text('Nivel:'),
             SizedBox(width: 8),
-            Obx(() =>
-                LevelStarsWidget(level: _questionController.levelIndex + 1)),
+            Obx(() => LevelStarsWidget(level: _questionController.level)),
           ],
         ),
       ),
@@ -161,10 +181,23 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
           ),
           Row(
             children: [
-              Obx(() => Text(
-                    'Tiempo: ${_questionController.answerSeconds} s',
-                    style: TextStyle(fontSize: 16),
-                  )),
+              Column(
+                children: [
+                  Obx(() => Text(
+                        'Tiempo: ${formatTime(_questionController.answerSeconds)}',
+                        style: TextStyle(fontSize: 16),
+                      )),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  IconButton(
+                      onPressed: nextQuestion,
+                      icon: const Icon(
+                        Icons.refresh,
+                        size: 40,
+                      ))
+                ],
+              ),
             ],
             mainAxisAlignment: MainAxisAlignment.end,
           )

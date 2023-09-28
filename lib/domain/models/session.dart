@@ -4,7 +4,6 @@ class Session {
   Session({
     this.id,
     required this.answers,
-    required this.level,
     required this.userEmail,
     required this.totalSeconds,
     required this.numCorrectAnswers,
@@ -13,16 +12,15 @@ class Session {
 
   final int? id;
   final List<Answer> answers;
-  final int level;
   final String userEmail;
-  final int totalSeconds;
-  final int numCorrectAnswers;
-  final int numAnswers;
+  int totalSeconds;
+  int numCorrectAnswers;
+  int numAnswers;
 
   factory Session.fromJson(Map<String, dynamic> json) => Session(
         id: json['id'],
-        answers: json['answers'],
-        level: json['level'],
+        // answers: json['answers'],
+        answers: [],
         userEmail: json['userEmail'],
         totalSeconds: json['totalSeconds'],
         numCorrectAnswers: json['numCorrectAnswers'],
@@ -31,8 +29,7 @@ class Session {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'answers': answers,
-        'level': level,
+        // 'answers': answers,
         'userEmail': userEmail,
         'totalSeconds': totalSeconds,
         'numCorrectAnswers': numCorrectAnswers,

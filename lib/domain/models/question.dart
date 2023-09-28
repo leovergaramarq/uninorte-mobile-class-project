@@ -5,6 +5,10 @@ class Question {
   int num2;
   String op;
 
+  int get level {
+    return (num1.toString().length + num2.toString().length) ~/ 2;
+  }
+
   @override
   String toString() {
     return "$num1 $op $num2";
