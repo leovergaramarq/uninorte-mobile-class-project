@@ -20,8 +20,8 @@ class AuthController extends GetxController {
   Future<bool> signUp(email, password) async {
     logInfo('Controller Sign Up');
     await _authUseCase.signUp(email, password);
-    _isLogged.value = true;
-    if (_isGuest.value) _isGuest.value = false;
+    // _isLogged.value = true;
+    // if (_isGuest.value) _isGuest.value = false;
     return true;
   }
 
@@ -33,6 +33,10 @@ class AuthController extends GetxController {
   Future<void> continueAsGuest() async {
     _isGuest.value = true;
     if (_isLogged.value) _isLogged.value = false;
+  }
+
+  void setLoggedIn() {
+    _isLogged.value = true;
   }
 }
 

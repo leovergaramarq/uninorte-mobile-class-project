@@ -19,6 +19,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -29,59 +30,91 @@ class _SignUpPageState extends State<SignUpPage> {
   final AuthController _authController = initAuthController();
   final UserController _userController = initUserController();
 
-  @override
-  Widget build(BuildContext context) {
-    void onSubmit() async {
-      // this line dismiss the keyboard by taking away the focus of the TextFormField and giving it to an unused
-      FocusScope.of(context).requestFocus(FocusNode());
-      final FormState? form = _formKey.currentState;
+  void onSubmit() async {
+    BuildContext context;
+    try {
+      context = _scaffoldKey.currentContext!;
+    } catch (e) {
+      print(e);
+      return;
+    }
+
+    // this line dismiss the keyboard by taking away the focus of the TextFormField and giving it to an unused
+    FocusScope.of(context).requestFocus(FocusNode());
+    final FormState? form = _formKey.currentState;
+
+    try {
+      print(form);
+      form!.save();
+    } catch (e) {
+      print(e);
+      return;
+    }
+
+    if (!form.validate()) return;
+
+    String email = _emailController.text.trim();
+    bool result;
+
+    try {
+      result = await _authController.signUp(email, _passwordController.text);
+    } catch (e) {
+      result = false;
+      print(e);
+    }
+
+    if (result) {
+      print('Registration successful');
+      User newUser = User(
+          id: null,
+          birthDate: _dateController.text,
+          degree: _degreeController.text.trim(),
+          school: _schoolController.text.trim(),
+          email: email,
+          firstName: '',
+          lastName: '');
 
       try {
-        print(form);
-        form!.save();
+        User prevUser = await _userController.getUser(email);
+        print('User exists: ${_userController.user}');
+
+        newUser.id = prevUser.id;
+        try {
+          result = await _userController.updateUser(newUser);
+        } catch (e) {}
+        print(result ? 'User updated' : 'User not updated');
       } catch (e) {
         print(e);
-        return;
-      }
-
-      if (!form.validate()) return;
-
-      bool result;
-
-      try {
-        result = await _authController.signUp(
-            _emailController.text.trim(), _passwordController.text);
-        await _userController.addUser(User(
-            id: null,
-            birthDate: _dateController.text,
-            degree: _degreeController.text.trim(),
-            school: _schoolController.text.trim(),
-            email: _emailController.text.trim(),
-            firstName: '',
-            lastName: ''));
-      } catch (e) {
-        result = false;
-        print(e);
+        result = await _userController.addUser(newUser);
+        print(result ? 'User added' : 'User not added');
       }
 
       if (result) {
-        if (_authController.isLogged) {
-          Get.off(HomePage(
-            key: const Key('HomePage'),
-          ));
-        } else {
-          Get.off(LoginPage(
-            key: const Key('LoginPage'),
-          ));
-        }
+        _authController.setLoggedIn();
+        Get.off(HomePage(
+          key: const Key('HomePage'),
+        ));
+        // Get.off(LoginPage(
+        //   key: const Key('LoginPage'),
+        // ));
       } else {
+        print('Registration in Web Service failed');
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('User or password not ok'),
+          content: Text('Registration failed'),
         ));
       }
+    } else {
+      print('Registration in Auth Server failed');
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Registration failed'),
+      ));
     }
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldKey,
         resizeToAvoidBottomInset: false,
         body: Stack(
           children: [

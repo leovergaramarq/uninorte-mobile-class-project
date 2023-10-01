@@ -8,6 +8,7 @@ class Session {
     required this.totalSeconds,
     required this.numCorrectAnswers,
     required this.numAnswers,
+    required this.avgLevel,
   });
 
   final int? id;
@@ -16,6 +17,7 @@ class Session {
   int totalSeconds;
   int numCorrectAnswers;
   int numAnswers;
+  int avgLevel;
 
   factory Session.fromJson(Map<String, dynamic> json) => Session(
         id: json['id'],
@@ -25,6 +27,7 @@ class Session {
         totalSeconds: json['totalSeconds'],
         numCorrectAnswers: json['numCorrectAnswers'],
         numAnswers: json['numAnswers'],
+        avgLevel: json['avgLevel'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -34,5 +37,6 @@ class Session {
         'totalSeconds': totalSeconds,
         'numCorrectAnswers': numCorrectAnswers,
         'numAnswers': numAnswers,
+        'avgLevel': avgLevel,
       };
 }

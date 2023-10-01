@@ -28,6 +28,9 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('Loging out');
+    _authController.logOut();
+
     void onContinueAsGuest() {
       _authController.continueAsGuest();
       if (_authController.isGuest) {

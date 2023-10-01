@@ -27,6 +27,28 @@ class UserDatasource {
     return Future.value(users);
   }
 
+  Future<User> getUser(String email) async {
+    final Uri request = Uri.parse(baseUri).resolveUri(Uri(queryParameters: {
+      "format": 'json',
+      "email": email,
+    }));
+
+    final http.Response response = await http.get(request);
+
+    if (response.statusCode == 200) {
+      //logInfo(response.body);
+      final data = jsonDecode(response.body);
+
+      List<User> users = List<User>.from(data.map((x) => User.fromJson(x)));
+      print(data);
+      if (users.length != 0) return users[0];
+      return Future.error('User not found');
+    } else {
+      logError("Got error code ${response.statusCode}");
+      return Future.error('Error code ${response.statusCode}');
+    }
+  }
+
   Future<bool> addUser(User user) async {
     logInfo("Web service, Adding user");
 
@@ -47,7 +69,20 @@ class UserDatasource {
     }
   }
 
+  // Future<bool> addUserIfNotExists(User user) async {
+  //   logInfo("Web service, Adding user");
+
+  //   try {
+  //     await getUser(user.email);
+  //     return Future.value(false);
+  //   } catch (e) {}
+
+  //   return await addUser(user);
+  // }
+
   Future<bool> updateUser(User user) async {
+    // print("$baseUri/${user.id}");
+    // print(user.toJson());
     final response = await http.put(
       Uri.parse("$baseUri/${user.id}"),
       headers: <String, String>{
@@ -56,7 +91,9 @@ class UserDatasource {
       body: jsonEncode(user.toJson()),
     );
 
-    if (response.statusCode == 201) {
+    // print(response.statusCode);
+
+    if (response.statusCode == 200) {
       //logInfo(response.body);
       return Future.value(true);
     } else {

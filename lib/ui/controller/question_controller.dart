@@ -31,7 +31,8 @@ class QuestionController extends GetxController {
       answers: [],
       numCorrectAnswers: 0,
       numAnswers: 0,
-      totalSeconds: 0));
+      totalSeconds: 0,
+      avgLevel: 0));
   final RxBool _isSessionActive = false.obs;
   final _answerSeconds = 0.obs;
 
@@ -59,7 +60,8 @@ class QuestionController extends GetxController {
         answers: [],
         numCorrectAnswers: 0,
         numAnswers: 0,
-        totalSeconds: 0);
+        totalSeconds: 0,
+        avgLevel: 0);
     _isSessionActive.value = true;
   }
 
@@ -85,7 +87,8 @@ class QuestionController extends GetxController {
         answers: [],
         numCorrectAnswers: 0,
         numAnswers: 0,
-        totalSeconds: 0);
+        totalSeconds: 0,
+        avgLevel: 0);
     _isSessionActive.value = false;
     _answerSeconds.value = 0;
   }
@@ -180,13 +183,17 @@ class QuestionController extends GetxController {
         userEmail: _session.value.userEmail,
         seconds: seconds);
 
+    _level.value = getNewLevel();
+    print('newLevel ${_level.value}');
+
     _session.value.answers.add(newAnswer);
     _session.value.numAnswers++;
     _session.value.numCorrectAnswers += newAnswer.isCorrect ? 1 : 0;
     _session.value.totalSeconds += seconds;
-
-    _level.value = getNewLevel();
-    print('newLevel ${_level.value}');
+    _session.value.avgLevel += _level.value;
+    if (_session.value.numAnswers == questionsPerSession) {
+      _session.value.avgLevel ~/= questionsPerSession;
+    }
 
     return newAnswer;
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:uninorte_mobile_class_project/ui/pages/content/quest_page.dart';
+// import 'package:uninorte_mobile_class_project/ui/pages/content/quest_page.dart';
 import 'package:uninorte_mobile_class_project/ui/pages/auth/first_page.dart';
 
 void main() {

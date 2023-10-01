@@ -10,6 +10,7 @@ import 'package:uninorte_mobile_class_project/ui/widgets/level_stars_widget.dart
 
 import 'package:uninorte_mobile_class_project/ui/controller/question_controller.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/user_controller.dart';
+import 'package:uninorte_mobile_class_project/ui/controller/session_controller.dart';
 
 import 'package:uninorte_mobile_class_project/domain/models/answer.dart';
 
@@ -23,22 +24,28 @@ class QuestPage extends StatefulWidget {
 class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
   final QuestionController _questionController = initQuestionController();
   final UserController _userController = initUserController();
+  final SessionController _sessionController = initSessionController();
   // final Stopwatch stopwatch = Stopwatch();
   // late DateTime dateQuestionLoad;
   Timer answerTimer = Timer(const Duration(), () {});
 
   void nextQuestion() {
     if (_questionController.userAnswer != 0) _questionController.clearAnswer();
-    _questionController.nextQuestion();
-    // stopwatch.start();
-    // dateQuestionLoad = DateTime.now();
+    bool result = _questionController.nextQuestion();
 
-    _questionController.setAnswerSeconds(0);
+    if (result) {
+      // stopwatch.start();
+      // dateQuestionLoad = DateTime.now();
 
-    if (answerTimer.isActive) answerTimer.cancel();
-    answerTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      _questionController.setAnswerSeconds(timer.tick);
-    });
+      _questionController.setAnswerSeconds(0);
+
+      if (answerTimer.isActive) answerTimer.cancel();
+      answerTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        _questionController.setAnswerSeconds(timer.tick);
+      });
+    } else {
+      _sessionController.addSession(_questionController.session);
+    }
   }
 
   Widget OptionalContinueWidget() {
@@ -217,4 +224,10 @@ UserController initUserController() {
   return Get.isRegistered<UserController>()
       ? Get.find<UserController>()
       : Get.put<UserController>(UserController());
+}
+
+SessionController initSessionController() {
+  return Get.isRegistered<SessionController>()
+      ? Get.find<SessionController>()
+      : Get.put<SessionController>(SessionController());
 }

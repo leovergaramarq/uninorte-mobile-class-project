@@ -10,13 +10,18 @@ class UserUseCase {
   UserUseCase();
 
   Future<List<User>> getUsers() async {
-    logInfo("Getting users  from UseCase");
+    logInfo("Getting users from UseCase");
     return await _repository.getUsers();
+  }
+
+  Future<User> getUser(String email) async {
+    logInfo("Getting user from UseCase");
+    return await _repository.getUser(email);
   }
 
   Future<bool> addUser(User user) async => await _repository.addUser(user);
 
-  Future<void> updateUser(User user) async =>
+  Future<bool> updateUser(User user) async =>
       await _repository.updateUser(user);
 
   deleteUser(int id) async => await _repository.deleteUser(id);
