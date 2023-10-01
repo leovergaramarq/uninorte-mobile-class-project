@@ -24,10 +24,10 @@ class Session {
         // answers: json['answers'],
         answers: [],
         userEmail: json['userEmail'],
-        totalSeconds: json['totalSeconds'],
-        numCorrectAnswers: json['numCorrectAnswers'],
-        numAnswers: json['numAnswers'],
-        avgLevel: json['avgLevel'],
+        totalSeconds: int.parse(json['totalSeconds'].toString()),
+        numCorrectAnswers: int.parse(json['numCorrectAnswers'].toString()),
+        numAnswers: int.parse(json['numAnswers'].toString()),
+        avgLevel: int.parse(json['avgLevel'].toString()),
       );
 
   Map<String, dynamic> toJson() => {

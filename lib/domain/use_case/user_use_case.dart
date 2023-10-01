@@ -1,36 +1,23 @@
-import 'package:get/get.dart';
-import 'package:loggy/loggy.dart';
-
-import 'package:uninorte_mobile_class_project/domain/repositories/repository.dart';
+import 'package:uninorte_mobile_class_project/domain/repositories/user_repository.dart';
 import 'package:uninorte_mobile_class_project/domain/models/user.dart';
 
 class UserUseCase {
-  final Repository _repository = initRepository();
+  final UserRepository _userRepository = UserRepository();
 
   UserUseCase();
 
   Future<List<User>> getUsers() async {
-    logInfo("Getting users from UseCase");
-    return await _repository.getUsers();
+    return await _userRepository.getUsers();
   }
 
   Future<User> getUser(String email) async {
-    logInfo("Getting user from UseCase");
-    return await _repository.getUser(email);
+    return await _userRepository.getUser(email);
   }
 
-  Future<bool> addUser(User user) async => await _repository.addUser(user);
+  Future<bool> addUser(User user) async => await _userRepository.addUser(user);
 
   Future<bool> updateUser(User user) async =>
-      await _repository.updateUser(user);
+      await _userRepository.updateUser(user);
 
-  deleteUser(int id) async => await _repository.deleteUser(id);
-
-  simulateProcess() async => await _repository.simulateProcessUser();
-}
-
-Repository initRepository() {
-  return Get.isRegistered<Repository>()
-      ? Get.find<Repository>()
-      : Get.put<Repository>(Repository());
+  deleteUser(int id) async => await _userRepository.deleteUser(id);
 }

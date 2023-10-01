@@ -12,8 +12,8 @@ import 'package:uninorte_mobile_class_project/ui/controller/question_controller.
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
 
-  final AuthController _authController = initAuthController();
-  final QuestionController _questionController = initQuestionController();
+  final AuthController _authController = Get.find<AuthController>();
+  final QuestionController _questionController = Get.find<QuestionController>();
 
   void onLogout() async {
     await _authController.logOut();
@@ -60,16 +60,4 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
-}
-
-AuthController initAuthController() {
-  return Get.isRegistered<AuthController>()
-      ? Get.find<AuthController>()
-      : Get.put<AuthController>(AuthController());
-}
-
-QuestionController initQuestionController() {
-  return Get.isRegistered<QuestionController>()
-      ? Get.find<QuestionController>()
-      : Get.put<QuestionController>(QuestionController());
 }

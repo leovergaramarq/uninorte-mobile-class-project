@@ -1,32 +1,22 @@
-import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
 
-import 'package:uninorte_mobile_class_project/domain/repositories/repository.dart';
+import 'package:uninorte_mobile_class_project/domain/repositories/session_repository.dart';
 import 'package:uninorte_mobile_class_project/domain/models/session.dart';
 
 class SessionUseCase {
-  final Repository _repository = initRepository();
-
-  SessionUseCase();
+  final SessionRepository _sessionRepository = SessionRepository();
 
   Future<List<Session>> getSessions() async {
     logInfo("Getting sessions  from UseCase");
-    return await _repository.getSessions();
+    return await _sessionRepository.getSessions();
   }
 
   Future<bool> addSession(Session session) async =>
-      await _repository.addSession(session);
+      await _sessionRepository.addSession(session);
 
   Future<void> updateSession(Session session) async =>
-      await _repository.updateSession(session);
+      await _sessionRepository.updateSession(session);
 
-  deleteSession(int id) async => await _repository.deleteSession(id);
-
-  simulateProcess() async => await _repository.simulateProcessUser();
-}
-
-Repository initRepository() {
-  return Get.isRegistered<Repository>()
-      ? Get.find<Repository>()
-      : Get.put<Repository>(Repository());
+  Future<bool> deleteSession(int id) async =>
+      await _sessionRepository.deleteSession(id);
 }

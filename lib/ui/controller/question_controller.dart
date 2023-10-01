@@ -15,16 +15,15 @@ class QuestionController extends GetxController {
   static const int minWrongToLevelDown = 2;
 
   // attributes
-  final QuestionUseCase _questionUseCase = initQuestionUseCase();
+  final QuestionUseCase _questionUseCase = QuestionUseCase();
   // final RxInt _levelIndex = 0.obs;
   // final RxInt _questionIndex = 0.obs;
   final RxInt _level = 1.obs;
   final RxInt _userAnswer = 0.obs;
   // final Rx<Question> _question = Rx<Question>(Question(0, '', 0));
-  final Rx<List<List<Question>>> _questions = Rx<List<List<Question>>>([]);
+  // final Rx<List<List<Question>>> _questions = Rx<List<List<Question>>>([]);
   final Rx<Question> _question = Rx<Question>(Question(0, '', 0));
   final RxBool _isQuestionReady = false.obs;
-  final RxBool _areQuestionsFetched = false.obs;
   final RxBool _didAnswer = false.obs;
   final Rx<Session> _session = Rx<Session>(Session(
       userEmail: '',
@@ -36,25 +35,28 @@ class QuestionController extends GetxController {
   final RxBool _isSessionActive = false.obs;
   final _answerSeconds = 0.obs;
 
-  // getters
+  // Getters
   // int get levelIndex => _levelIndex.value;
   // int get questionIndex => _questionIndex.value;
   int get level => _level.value;
   int get userAnswer => _userAnswer.value;
   Question get question => _question.value;
-  List<List<Question>> get questions => _questions.value;
+  // List<List<Question>> get questions => _questions.value;
   bool get isQuestionReady => _isQuestionReady.value;
-  bool get areQuestionsFetched => _areQuestionsFetched.value;
   bool get didAnswer => _didAnswer.value;
   Session get session => _session.value;
   bool get isSessionActive => _isSessionActive.value;
   int get answerSeconds => _answerSeconds.value;
 
-  Future<void> startSession(String userEmail) async {
+  void startSession(String userEmail) {
+    if (isSessionActive) {
+      print('session is already active');
+      return;
+    }
+
     if (userEmail.isEmpty) {
       print('email is empty');
     }
-    await fetchQuestions();
     _session.value = Session(
         userEmail: userEmail,
         answers: [],
@@ -66,6 +68,12 @@ class QuestionController extends GetxController {
   }
 
   void finishSession() {
+    if (!isSessionActive) {
+      print('session is not active');
+      return;
+    }
+
+    // Summarize session
     // _session.value.numAnswers = _session.value.answers.length;
     // _session.value.numCorrectAnswers =
     //     _session.value.answers.where((answer) => answer.isCorrect).length;
@@ -73,14 +81,14 @@ class QuestionController extends GetxController {
     //     .map((answer) => answer.seconds)
     //     .reduce((value, element) => value + element);
 
+    // Reset values
     // _levelIndex.value = 0;
     // _questionIndex.value = 0;
     // _level.value = 1;
     _userAnswer.value = 0;
-    _questions.value = [];
+    // _questions.value = [];
     _question.value = Question(0, '', 0);
     _isQuestionReady.value = false;
-    _areQuestionsFetched.value = false;
     _didAnswer.value = false;
     _session.value = Session(
         userEmail: '',
@@ -93,105 +101,95 @@ class QuestionController extends GetxController {
     _answerSeconds.value = 0;
   }
 
-  Question genQuestion() {
-    Random random = Random();
+  Future<Question?> getQuestion() async {
+    if (!isSessionActive) {
+      print('session is not active');
+      return null;
+    }
 
-    // Calculate the range for random numbers based on the number of digits
-    int minRange = pow(10, _level.value - 1).toInt();
-    int maxRange = pow(10, _level.value).toInt() - 1;
+    if (isQuestionReady) _isQuestionReady.value = false;
 
-    // Generate random numbers within the specified range
-    int num1 = minRange + random.nextInt(maxRange - minRange);
-    int num2 = minRange + random.nextInt(maxRange - minRange);
+    Question question = await _questionUseCase.getQuestion(level);
+    _question.value = question;
+    _isQuestionReady.value = true;
 
-    return Question(num1, '+', num2);
+    return question;
   }
 
-  Future<void> fetchQuestions() async {
-    if (_areQuestionsFetched.value) _areQuestionsFetched.value = false;
-    _questions.value = await _questionUseCase.getQuestions();
-    _areQuestionsFetched.value = true;
-  }
+  Future<bool> nextQuestion() async {
+    if (!isSessionActive) return false;
 
-  bool nextQuestion() {
-    if (_isSessionActive.value && _areQuestionsFetched.value) {
-      // if (!_isQuestionReady.value) {
-      //   _questionIndex.value = 0;
-      //   _levelIndex.value = 0;
-      // } else {
-      //   _questionIndex.value++;
-      //   if (_questionIndex.value >= _questions.value[levelIndex].length) {
-      //     _questionIndex.value = 0;
-      //     _levelIndex.value++;
-      //     if (_levelIndex.value >= _questions.value.length) {
-      //       _levelIndex.value = 0;
-      //     }
-      //   }
-      // }
-      // _question.value = _questions.value[levelIndex][questionIndex];
-      if (_session.value.answers.length >= questionsPerSession) {
-        // finishSession();
-        _isQuestionReady.value = false;
-        return false;
-      } else {
-        _question.value = genQuestion();
-
-        if (!_isQuestionReady.value) _isQuestionReady.value = true;
-        if (_didAnswer.value) _didAnswer.value = false;
-        return true;
-      }
-    } else {
+    if (session.answers.length >= questionsPerSession) {
+      // finishSession();
+      _isQuestionReady.value = false;
       return false;
+    } else {
+      await getQuestion();
+
+      // if (!isQuestionReady) _isQuestionReady.value = true;
+      if (didAnswer) _didAnswer.value = false;
+      return true;
     }
   }
 
   int performOperation() {
-    switch (_question.value.op) {
+    switch (question.op) {
       case '+':
-        return _question.value.num1 + _question.value.num2;
+        return question.num1 + question.num2;
       case '-':
-        return _question.value.num1 - _question.value.num2;
+        return question.num1 - question.num2;
       case '*':
-        return _question.value.num1 * _question.value.num2;
+        return question.num1 * question.num2;
       case '/':
-        return _question.value.num1 ~/ _question.value.num2;
+        return question.num1 ~/ question.num2;
       default:
         return 0;
     }
   }
 
   void typeNumber(int number) {
-    if (!_areQuestionsFetched.value) return;
+    if (!isSessionActive || !isQuestionReady) {
+      print('session is not active or question is not ready');
+      return;
+    }
 
     String answerString = userAnswer.toString() + number.toString();
     _userAnswer.value = int.parse(answerString);
-    // print(_userAnswer.value);
   }
 
   void clearAnswer() {
-    if (!_areQuestionsFetched.value) return;
+    if (!isSessionActive || !isQuestionReady) {
+      print('session is not active or question is not ready');
+      return;
+    }
+
     _userAnswer.value = 0;
   }
 
-  Answer answer(int seconds) {
+  Answer? answer(int seconds) {
+    if (!isSessionActive || !isQuestionReady) {
+      print('session is not active or question is not ready');
+      return null;
+    }
+
     _didAnswer.value = true;
 
     Answer newAnswer = Answer(
-        userAnswer: _userAnswer.value,
-        isCorrect: _userAnswer.value == performOperation(),
-        question: _question.value,
-        userEmail: _session.value.userEmail,
+        userAnswer: userAnswer,
+        isCorrect: userAnswer == performOperation(),
+        question: question,
+        userEmail: session.userEmail,
         seconds: seconds);
 
     _level.value = getNewLevel();
-    print('newLevel ${_level.value}');
+    print('newLevel $level');
 
     _session.value.answers.add(newAnswer);
     _session.value.numAnswers++;
     _session.value.numCorrectAnswers += newAnswer.isCorrect ? 1 : 0;
     _session.value.totalSeconds += seconds;
-    _session.value.avgLevel += _level.value;
-    if (_session.value.numAnswers == questionsPerSession) {
+    _session.value.avgLevel += level;
+    if (session.numAnswers == questionsPerSession) {
       _session.value.avgLevel ~/= questionsPerSession;
     }
 
@@ -203,7 +201,7 @@ class QuestionController extends GetxController {
       return min(max(newLevel, 1), 5);
     }
 
-    List<Answer> answers = _session.value.answers;
+    List<Answer> answers = session.answers;
     if (answers.length >= minCorrectToLevelUp) {
       List<Answer> lastAnswers = answers
           .getRange(answers.length - minCorrectToLevelUp, answers.length)
@@ -211,7 +209,7 @@ class QuestionController extends GetxController {
 
       if (!lastAnswers.every(
           (answer) => answer.question.level == lastAnswers[0].question.level)) {
-        return boundLevel(_level.value);
+        return boundLevel(level);
       }
 
       int numCorrect = 0;
@@ -228,27 +226,25 @@ class QuestionController extends GetxController {
 
       if (numCorrect >= minCorrectToLevelUp) {
         if (numCorrectInTime >= numCorrect / 2) {
-          return boundLevel(_level.value + 1);
+          return boundLevel(level + 1);
         } else {
-          return boundLevel(_level.value);
+          return boundLevel(level);
         }
       } else if (lastAnswers.length - numCorrect >= minWrongToLevelDown) {
-        return boundLevel(_level.value - 1);
+        return boundLevel(level - 1);
       } else {
-        return boundLevel(_level.value);
+        return boundLevel(level);
       }
     } else {
-      return boundLevel(_level.value);
+      return boundLevel(level);
     }
   }
 
   void setAnswerSeconds(int answerSeconds) {
+    if (!isSessionActive || !isQuestionReady) {
+      print('session is not active or question is not ready');
+      return;
+    }
     _answerSeconds.value = answerSeconds;
   }
-}
-
-QuestionUseCase initQuestionUseCase() {
-  return Get.isRegistered<QuestionUseCase>()
-      ? Get.find<QuestionUseCase>()
-      : Get.put<QuestionUseCase>(QuestionUseCase());
 }

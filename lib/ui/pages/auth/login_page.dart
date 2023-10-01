@@ -7,8 +7,6 @@ import 'package:uninorte_mobile_class_project/ui/pages/auth/signup_page.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/auth_controller.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/user_controller.dart';
 
-import 'package:uninorte_mobile_class_project/domain/models/user.dart';
-
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -21,8 +19,8 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final AuthController _authController = initAuthController();
-  final UserController _userController = initUserController();
+  final AuthController _authController = Get.find<AuthController>();
+  final UserController _userController = Get.find<UserController>();
 
   @override
   void initState() {
@@ -194,16 +192,4 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
           ],
         ));
   }
-}
-
-AuthController initAuthController() {
-  return Get.isRegistered<AuthController>()
-      ? Get.find<AuthController>()
-      : Get.put<AuthController>(AuthController());
-}
-
-UserController initUserController() {
-  return Get.isRegistered<UserController>()
-      ? Get.find<UserController>()
-      : Get.put<UserController>(UserController());
 }

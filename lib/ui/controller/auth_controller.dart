@@ -4,7 +4,7 @@ import 'package:loggy/loggy.dart';
 import 'package:uninorte_mobile_class_project/domain/use_case/auth_use_case.dart';
 
 class AuthController extends GetxController {
-  final AuthUseCase _authUseCase = initAuthUseCase();
+  final AuthUseCase _authUseCase = AuthUseCase();
   final RxBool _isLogged = false.obs;
   final RxBool _isGuest = false.obs;
 
@@ -40,10 +40,4 @@ class AuthController extends GetxController {
   void setLoggedIn() {
     _isLogged.value = true;
   }
-}
-
-AuthUseCase initAuthUseCase() {
-  return Get.isRegistered<AuthUseCase>()
-      ? Get.find<AuthUseCase>()
-      : Get.put<AuthUseCase>(AuthUseCase());
 }

@@ -1,21 +1,13 @@
-import 'package:get/get.dart';
-
-import 'package:uninorte_mobile_class_project/domain/repositories/repository.dart';
+import 'package:uninorte_mobile_class_project/domain/repositories/auth_repository.dart';
 
 class AuthUseCase {
-  final Repository _repository = initRepository();
+  final AuthRepository _authRepository = AuthRepository();
 
   Future<bool> login(String email, String password) async =>
-      await _repository.login(email, password);
+      await _authRepository.login(email, password);
 
   Future<bool> signUp(String email, String password) async =>
-      await _repository.signUp(email, password);
+      await _authRepository.signUp(email, password);
 
-  Future<bool> logOut() async => await _repository.logOut();
-}
-
-Repository initRepository() {
-  return Get.isRegistered<Repository>()
-      ? Get.find<Repository>()
-      : Get.put<Repository>(Repository());
+  Future<bool> logOut() async => await _authRepository.logOut();
 }

@@ -5,8 +5,8 @@ import 'package:uninorte_mobile_class_project/domain/use_case/user_use_case.dart
 import 'package:uninorte_mobile_class_project/domain/models/user.dart';
 
 class UserController extends GetxController {
-  final UserUseCase _userUseCase = initUserUseCase();
-  final RxList<User> _users = <User>[].obs;
+  final UserUseCase _userUseCase = UserUseCase();
+  final Rx<List<User>> _users = Rx<List<User>>([]);
   final Rx<User> _user = Rx<User>(User(
     birthDate: '',
     email: '',
@@ -27,7 +27,7 @@ class UserController extends GetxController {
   // ));
   final RxString _userEmail = ''.obs;
 
-  List<User> get users => _users;
+  List<User> get users => _users.value;
   User get user => _user.value;
   String get userEmail => _userEmail.value;
 
@@ -73,14 +73,4 @@ class UserController extends GetxController {
     await _userUseCase.deleteUser(id);
     getUsers();
   }
-
-  void simulateProcess() async {
-    await _userUseCase.simulateProcess();
-  }
-}
-
-UserUseCase initUserUseCase() {
-  return Get.isRegistered<UserUseCase>()
-      ? Get.find<UserUseCase>()
-      : Get.put<UserUseCase>(UserUseCase());
 }

@@ -5,7 +5,7 @@ import 'package:uninorte_mobile_class_project/domain/use_case/session_use_case.d
 import 'package:uninorte_mobile_class_project/domain/models/session.dart';
 
 class SessionController extends GetxController {
-  final SessionUseCase _sessionUseCase = initSessionUseCase();
+  final SessionUseCase _sessionUseCase = SessionUseCase();
   final RxList<Session> _sessions = <Session>[].obs;
 
   List<Session> get sessions => _sessions;
@@ -38,14 +38,4 @@ class SessionController extends GetxController {
     await _sessionUseCase.deleteSession(id);
     getSessions();
   }
-
-  void simulateProcess() async {
-    await _sessionUseCase.simulateProcess();
-  }
-}
-
-SessionUseCase initSessionUseCase() {
-  return Get.isRegistered<SessionUseCase>()
-      ? Get.find<SessionUseCase>()
-      : Get.put<SessionUseCase>(SessionUseCase());
 }

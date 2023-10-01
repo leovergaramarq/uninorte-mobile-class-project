@@ -24,20 +24,17 @@ class QuestPage extends StatefulWidget {
 class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final QuestionController _questionController = initQuestionController();
-  final UserController _userController = initUserController();
-  final SessionController _sessionController = initSessionController();
+  final QuestionController _questionController = Get.find<QuestionController>();
+  final UserController _userController = Get.find<UserController>();
+  final SessionController _sessionController = Get.find<SessionController>();
   // final Stopwatch stopwatch = Stopwatch();
   // late DateTime dateQuestionLoad;
   Timer answerTimer = Timer(const Duration(), () {});
 
   @override
   void initState() {
-    _questionController
-        .startSession(_userController.userEmail)
-        .then((value) => nextQuestion())
-        .catchError(() {});
-
+    _questionController.startSession(_userController.userEmail);
+    nextQuestion();
     super.initState();
   }
 
@@ -50,9 +47,9 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  void nextQuestion() {
+  Future<void> nextQuestion() async {
     if (_questionController.userAnswer != 0) _questionController.clearAnswer();
-    bool result = _questionController.nextQuestion();
+    bool result = await _questionController.nextQuestion();
 
     if (result) {
       // stopwatch.start();
@@ -67,6 +64,10 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
     } else {
       _sessionController.addSession(_questionController.session);
     }
+  }
+
+  Future<void> changeQuestion() async {
+    if (!_questionController.didAnswer) await nextQuestion();
   }
 
   Widget OptionalContinueWidget() {
@@ -88,7 +89,7 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
   }
 
   Widget QuestionOrLoadWidget() {
-    if (_questionController.areQuestionsFetched) {
+    if (_questionController.isQuestionReady) {
       return QuestionWidget(question: _questionController.question);
     } else {
       return const CircularProgressIndicator();
@@ -149,12 +150,18 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
 
       print('seconds ${_questionController.answerSeconds}');
 
-      Answer newAnswer =
+      Answer? newAnswer =
           _questionController.answer(_questionController.answerSeconds);
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(newAnswer.isCorrect ? 'Correcto!' : 'Incorrecto!'),
-      ));
+      if (newAnswer != null) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(newAnswer.isCorrect ? 'Correcto!' : 'Incorrecto!'),
+        ));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Error al responder la pregunta'),
+        ));
+      }
     }
   }
 
@@ -212,7 +219,7 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
                     height: 10,
                   ),
                   IconButton(
-                      onPressed: nextQuestion,
+                      onPressed: changeQuestion,
                       icon: const Icon(
                         Icons.refresh,
                         size: 40,
@@ -226,22 +233,4 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
       ),
     );
   }
-}
-
-QuestionController initQuestionController() {
-  return Get.isRegistered<QuestionController>()
-      ? Get.find<QuestionController>()
-      : Get.put<QuestionController>(QuestionController());
-}
-
-UserController initUserController() {
-  return Get.isRegistered<UserController>()
-      ? Get.find<UserController>()
-      : Get.put<UserController>(UserController());
-}
-
-SessionController initSessionController() {
-  return Get.isRegistered<SessionController>()
-      ? Get.find<SessionController>()
-      : Get.put<SessionController>(SessionController());
 }

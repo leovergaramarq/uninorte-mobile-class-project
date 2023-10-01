@@ -25,8 +25,8 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
   final TextEditingController _schoolController = TextEditingController();
   final TextEditingController _degreeController = TextEditingController();
 
-  final AuthController _authController = initAuthController();
-  final UserController _userController = initUserController();
+  final AuthController _authController = Get.find<AuthController>();
+  final UserController _userController = Get.find<UserController>();
 
   @override
   void initState() {
@@ -282,16 +282,4 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
           ],
         ));
   }
-}
-
-AuthController initAuthController() {
-  return Get.isRegistered<AuthController>()
-      ? Get.find<AuthController>()
-      : Get.put<AuthController>(AuthController());
-}
-
-UserController initUserController() {
-  return Get.isRegistered<UserController>()
-      ? Get.find<UserController>()
-      : Get.put<UserController>(UserController());
 }
