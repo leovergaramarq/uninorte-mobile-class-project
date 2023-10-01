@@ -22,12 +22,33 @@ class QuestPage extends StatefulWidget {
 }
 
 class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   final QuestionController _questionController = initQuestionController();
   final UserController _userController = initUserController();
   final SessionController _sessionController = initSessionController();
   // final Stopwatch stopwatch = Stopwatch();
   // late DateTime dateQuestionLoad;
   Timer answerTimer = Timer(const Duration(), () {});
+
+  @override
+  void initState() {
+    _questionController
+        .startSession(_userController.userEmail)
+        .then((value) => nextQuestion())
+        .catchError(() {});
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // stopwatch.stop();
+    // stopwatch.reset();
+    print('dispose');
+    answerTimer.cancel();
+    super.dispose();
+  }
 
   void nextQuestion() {
     if (_questionController.userAnswer != 0) _questionController.clearAnswer();
@@ -74,15 +95,6 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
     }
   }
 
-  @override
-  void dispose() {
-    // stopwatch.stop();
-    // stopwatch.reset();
-    print('dispose');
-    answerTimer.cancel();
-    super.dispose();
-  }
-
   String formatTime(int seconds) {
     int hours = seconds ~/ 3600;
     int minutes = (seconds % 3600) ~/ 60;
@@ -103,51 +115,53 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
     return formattedTime;
   }
 
+  void typeNumber(int number) {
+    if (_questionController.didAnswer) return;
+    _questionController.typeNumber(number);
+  }
+
+  void clearAnswer() {
+    _questionController.clearAnswer();
+  }
+
+  void answer() {
+    BuildContext context;
+    try {
+      context = _scaffoldKey.currentContext!;
+    } catch (e) {
+      print(e);
+      return;
+    }
+    if (!_questionController.isQuestionReady) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Please wait for the question to load'),
+      ));
+    } else if (_questionController.didAnswer) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('You already answered this question'),
+      ));
+    } else {
+      // int seconds = DateTime.now().difference(dateQuestionLoad).inSeconds;
+      // int seconds = stopwatch.elapsed.inSeconds;
+      // stopwatch.stop();
+      // stopwatch.reset();
+      answerTimer.cancel();
+
+      print('seconds ${_questionController.answerSeconds}');
+
+      Answer newAnswer =
+          _questionController.answer(_questionController.answerSeconds);
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(newAnswer.isCorrect ? 'Correcto!' : 'Incorrecto!'),
+      ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    void typeNumber(int number) {
-      if (_questionController.didAnswer) return;
-      _questionController.typeNumber(number);
-    }
-
-    void clearAnswer() {
-      _questionController.clearAnswer();
-    }
-
-    void answer() {
-      if (!_questionController.isQuestionReady) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Please wait for the question to load'),
-        ));
-      } else if (_questionController.didAnswer) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('You already answered this question'),
-        ));
-      } else {
-        // int seconds = DateTime.now().difference(dateQuestionLoad).inSeconds;
-        // int seconds = stopwatch.elapsed.inSeconds;
-        // stopwatch.stop();
-        // stopwatch.reset();
-        answerTimer.cancel();
-
-        print('seconds ${_questionController.answerSeconds}');
-
-        Answer newAnswer =
-            _questionController.answer(_questionController.answerSeconds);
-
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(newAnswer.isCorrect ? 'Correcto!' : 'Incorrecto!'),
-        ));
-      }
-    }
-
-    // _questionController.getQuestions().catchError(() {});
-    _questionController
-        .startSession(_userController.userEmail)
-        .then((value) => nextQuestion())
-        .catchError(() {});
-
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,

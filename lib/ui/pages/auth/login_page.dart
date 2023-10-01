@@ -10,16 +10,14 @@ import 'package:uninorte_mobile_class_project/ui/controller/user_controller.dart
 import 'package:uninorte_mobile_class_project/domain/models/user.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
-
-  String email = '';
-  String password = '';
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -27,10 +25,57 @@ class _LoginPageState extends State<LoginPage> {
   final UserController _userController = initUserController();
 
   @override
-  Widget build(BuildContext context) {
-    print('Loging out');
-    _authController.logOut();
+  void initState() {
+    if (_authController.isLogged) {
+      print('Loging out');
+      _authController.logOut();
+    }
+    super.initState();
+  }
 
+  void onSubmit() async {
+    BuildContext context;
+    try {
+      context = _scaffoldKey.currentContext!;
+    } catch (e) {
+      print(e);
+      return;
+    }
+    // this line dismiss the keyboard by taking away the focus of the TextFormField and giving it to an unused
+    FocusScope.of(context).requestFocus(FocusNode());
+    final FormState? form = _formKey.currentState;
+
+    try {
+      form!.save();
+    } catch (e) {
+      print(e);
+      return;
+    }
+
+    if (!form.validate()) return;
+
+    String email = _emailController.text.trim();
+
+    try {
+      await _authController.login(email, _passwordController.text);
+    } catch (e) {
+      print(e);
+    }
+
+    if (_authController.isLogged) {
+      _userController.setUserEmail(email);
+      Get.off(HomePage(
+        key: const Key('HomePage'),
+      ));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('User or password not ok'),
+      ));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     void onContinueAsGuest() {
       _authController.continueAsGuest();
       if (_authController.isGuest) {
@@ -40,41 +85,8 @@ class _LoginPageState extends State<LoginPage> {
       }
     }
 
-    void onSubmit() async {
-      // this line dismiss the keyboard by taking away the focus of the TextFormField and giving it to an unused
-      FocusScope.of(context).requestFocus(FocusNode());
-      final FormState? form = _formKey.currentState;
-
-      try {
-        form!.save();
-      } catch (e) {
-        print(e);
-        return;
-      }
-
-      if (!form.validate()) return;
-
-      String email = _emailController.text.trim();
-
-      try {
-        await _authController.login(email, _passwordController.text);
-      } catch (e) {
-        print(e);
-      }
-
-      if (_authController.isLogged) {
-        _userController.setUserEmail(email);
-        Get.off(HomePage(
-          key: const Key('HomePage'),
-        ));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('User or password not ok'),
-        ));
-      }
-    }
-
     return Scaffold(
+        key: _scaffoldKey,
         resizeToAvoidBottomInset: false,
         body: Stack(
           children: [

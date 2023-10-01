@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:loggy/loggy.dart';
 
 import 'package:uninorte_mobile_class_project/ui/pages/content/home.dart';
-import 'package:uninorte_mobile_class_project/ui/pages/auth/login_page.dart';
 
 import 'package:uninorte_mobile_class_project/ui/controller/auth_controller.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/user_controller.dart';
@@ -18,7 +16,7 @@ class SignUpPage extends StatefulWidget {
   State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
@@ -29,6 +27,15 @@ class _SignUpPageState extends State<SignUpPage> {
 
   final AuthController _authController = initAuthController();
   final UserController _userController = initUserController();
+
+  @override
+  void initState() {
+    if (_authController.isLogged) {
+      print('Loging out');
+      _authController.logOut();
+    }
+    super.initState();
+  }
 
   void onSubmit() async {
     BuildContext context;
