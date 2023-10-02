@@ -55,7 +55,8 @@ class QuestionUseCase {
       for (Answer answer in lastAnswers) {
         if (answer.isCorrect) {
           numCorrect++;
-          if (answer.seconds <= answer.question.level * 6) {
+          if (answer.seconds <=
+              getSecondsExpectedForLevel(answer.question.level)) {
             numCorrectInTime++;
           }
         }
@@ -75,5 +76,9 @@ class QuestionUseCase {
     } else {
       return boundLevel(level);
     }
+  }
+
+  int getSecondsExpectedForLevel(int level) {
+    return 8 * level;
   }
 }

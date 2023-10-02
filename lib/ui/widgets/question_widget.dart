@@ -24,17 +24,17 @@ class QuestionWidget extends StatelessWidget {
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       Text(
         question.num1.toString(),
-        style: TextStyle(fontSize: 64),
+        style: TextStyle(fontSize: 56),
       ),
       SizedBox(width: 16),
       Text(
         question.op,
-        style: TextStyle(fontSize: 64, color: Colors.purple),
+        style: TextStyle(fontSize: 56, color: Colors.purple),
       ),
       SizedBox(width: 16),
       Text(
         question.num2.toString(),
-        style: TextStyle(fontSize: 64),
+        style: TextStyle(fontSize: 56),
       )
     ]));
   }

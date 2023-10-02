@@ -7,13 +7,12 @@ class AnswerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Text(
+    return Text(
       input.toString(),
       style: TextStyle(
-        fontSize: 64,
+        fontSize: 56,
         color: Colors.black,
       ),
-    ));
+    );
   }
 }

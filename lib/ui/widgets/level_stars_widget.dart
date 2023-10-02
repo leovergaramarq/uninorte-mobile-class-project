@@ -11,6 +11,7 @@ class LevelStarsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     print('level $level');
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(
           level,
           (index) => Icon(

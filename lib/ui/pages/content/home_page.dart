@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    if (widget.fetchSessions) {
+    if (widget.fetchSessions && _authController.isLoggedIn) {
       _sessionController
           .getSessionsFromUser(_userController.user.email,
               limit: _sessionController.numSummarizeSessions)

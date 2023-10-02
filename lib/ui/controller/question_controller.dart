@@ -34,6 +34,7 @@ class QuestionController extends GetxController {
       void Function()? onDone,
       Function? onError}) get listenLevel => _level.listen;
   int get maxLevel => QuestionUseCase.maxLevel;
+  int get questionsPerSession => QuestionUseCase.questionsPerSession;
 
   void startSession(String userEmail) {
     if (isSessionActive) {
@@ -141,6 +142,17 @@ class QuestionController extends GetxController {
     print('newLevel $level');
 
     return newAnswer;
+  }
+
+  bool isLastAnswerCorrect() {
+    if (!isSessionActive || !isQuestionReady) {
+      print('session is not active or question is not ready');
+      return false;
+    }
+
+    if (session.answers.isEmpty) return false;
+
+    return session.answers.last.isCorrect;
   }
 
   void setAnswerSeconds(int answerSeconds) {

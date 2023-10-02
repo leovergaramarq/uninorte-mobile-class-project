@@ -1,17 +1,20 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import 'package:uninorte_mobile_class_project/ui/pages/content/session_summary_page.dart';
 
 import 'package:uninorte_mobile_class_project/ui/widgets/answer_widget.dart';
 import 'package:uninorte_mobile_class_project/ui/widgets/app_bar_widget.dart';
 import 'package:uninorte_mobile_class_project/ui/widgets/question_widget.dart';
 import 'package:uninorte_mobile_class_project/ui/widgets/numpad_widget.dart';
-// import 'package:uninorte_mobile_class_project/ui/widgets/level_stars_widget.dart';
+import 'package:uninorte_mobile_class_project/ui/widgets/level_stars_widget.dart';
 
 import 'package:uninorte_mobile_class_project/ui/controller/question_controller.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/user_controller.dart';
-// import 'package:uninorte_mobile_class_project/ui/controller/auth_controller.dart';
+import 'package:uninorte_mobile_class_project/ui/controller/auth_controller.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/session_controller.dart';
 
 import 'package:uninorte_mobile_class_project/domain/models/answer.dart';
@@ -27,7 +30,7 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final QuestionController _questionController = Get.find<QuestionController>();
-  // final AuthController _authController = Get.find<AuthController>();
+  final AuthController _authController = Get.find<AuthController>();
   final SessionController _sessionController = Get.find<SessionController>();
   final UserController _userController = Get.find<UserController>();
   Timer answerTimer = Timer(const Duration(), () {});
@@ -38,15 +41,17 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
     nextQuestion().catchError((e) {
       print(e);
     });
-    _questionController.listenLevel((level) async {
-      if (level == _userController.user.level) return;
-      print('Updating level from ${_userController.user.level} to $level');
-      try {
-        await _userController.updatePartialUser(level: level);
-      } catch (e) {
-        print(e);
-      }
-    });
+    if (_authController.isLoggedIn) {
+      _questionController.listenLevel((level) async {
+        if (level == _userController.user.level) return;
+        print('Updating level from ${_userController.user.level} to $level');
+        try {
+          await _userController.updatePartialUser(level: level);
+        } catch (e) {
+          print(e);
+        }
+      });
+    }
     super.initState();
   }
 
@@ -60,9 +65,9 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
 
   Future<void> nextQuestion() async {
     if (_questionController.userAnswer != 0) _questionController.clearAnswer();
-    bool result = await _questionController.nextQuestion();
+    bool nextQuestionObtained = await _questionController.nextQuestion();
 
-    if (result) {
+    if (nextQuestionObtained) {
       if (answerTimer.isActive) answerTimer.cancel();
       _questionController.setAnswerSeconds(0);
 
@@ -70,12 +75,23 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
         _questionController.setAnswerSeconds(timer.tick);
       });
     } else {
+      // There aren't more questions
       _questionController.wrapSessionUp();
-      try {
-        await _sessionController.addSession(_questionController.session);
-      } catch (e) {
-        print(e);
+      if (_authController.isLoggedIn) {
+        // try {
+        //   await _sessionController.addSession(_questionController.session);
+        // } catch (e) {
+        //   print(e);
+        // }
+        _sessionController
+            .addSession(_questionController.session)
+            .catchError((e) {
+          print(e);
+        });
       }
+      Get.off(() => SessionSummaryPage(
+            key: Key('SessionSummaryPage'),
+          ));
     }
   }
 
@@ -84,33 +100,41 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
   }
 
   Widget OptionalContinueWidget() {
-    if (_questionController.didAnswer) {
-      return Column(
-        children: [
-          SizedBox(
-            height: 24,
-          ),
-          ElevatedButton(
-            onPressed: nextQuestion,
-            child: Text('Siguiente', style: TextStyle(fontSize: 20)),
-          )
-        ],
-      );
-    } else {
-      return Container();
-    }
+    return Obx(() {
+      if (_questionController.didAnswer) {
+        return Column(
+          children: [
+            SizedBox(
+              height: 24,
+            ),
+            ElevatedButton(
+              onPressed: nextQuestion,
+              child: Text('Next', style: TextStyle(fontSize: 20)),
+            )
+          ],
+        );
+      } else {
+        return Container(
+          height: 20,
+        );
+      }
+    });
   }
 
   Widget QuestionOrLoadWidget() {
-    if (_questionController.isQuestionReady) {
-      return QuestionWidget(question: _questionController.question);
-    } else {
-      return const CircularProgressIndicator();
-    }
+    return Obx(() {
+      if (_questionController.isQuestionReady) {
+        return QuestionWidget(question: _questionController.question);
+      } else {
+        return const CircularProgressIndicator();
+      }
+    });
   }
 
   void typeNumber(int number) {
-    if (_questionController.didAnswer) return;
+    if (_questionController.didAnswer ||
+        _questionController.userAnswer.toString().length >=
+            _questionController.maxLevel + 1) return;
     _questionController.typeNumber(number);
   }
 
@@ -144,11 +168,11 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
 
       if (newAnswer != null) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(newAnswer.isCorrect ? 'Correcto!' : 'Incorrecto!'),
+          content: Text(newAnswer.isCorrect ? 'Correct!' : 'Incorrect'),
         ));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Error al responder la pregunta'),
+          content: Text('Error when answering the question'),
         ));
       }
     }
@@ -156,55 +180,158 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xF2F2F2).withOpacity(1),
-      key: _scaffoldKey,
-      appBar: AppBarWidget(
-        text: 'Nivel: ${_questionController.level}',
-        backButton: true,
-        logoutButton: false,
-      ),
-      body: Stack(
-        children: [
-          Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Obx(QuestionOrLoadWidget),
-                Obx(() => AnswerWidget(_questionController.userAnswer)),
-                NumpadWidget(
-                  typeNumber: typeNumber,
-                  clearAnswer: clearAnswer,
-                  answer: answer,
-                ),
-                Obx(OptionalContinueWidget),
-              ],
-            ),
-          ),
-          Row(
-            children: [
-              Column(
+    return WillPopScope(
+      onWillPop: () async {
+        return Future<bool>(() async =>
+            await showDialog<bool>(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                      title: Text("Are you sure?"),
+                      content: Text(
+                          "If you go back, the current session will not be saved."),
+                      actions: [
+                        TextButton(
+                          child: Text("Cancel"),
+                          onPressed: () {
+                            // result = false;
+                            Navigator.of(context).pop(false);
+                          },
+                        ),
+                        TextButton(
+                          child: Text("Continue"),
+                          onPressed: () {
+                            // result = true;
+                            Navigator.of(context).pop(true);
+                          },
+                        ),
+                      ],
+                    )) ??
+            false);
+      },
+      child: Scaffold(
+        backgroundColor: Color(0xF2F2F2).withOpacity(1),
+        key: _scaffoldKey,
+        appBar: AppBarWidget(
+          text: 'Exercise',
+          backButton: true,
+          logoutButton: false,
+        ),
+        body: Stack(
+          children: [
+            Container(
+              padding: const EdgeInsets.fromLTRB(16, 6, 16, 48),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Obx(() => Text(
-                        'Tiempo: ${Answer.formatTime(_questionController.answerSeconds)}',
-                        style: TextStyle(fontSize: 16),
-                      )),
-                  SizedBox(
-                    height: 10,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Obx(() => Text(
+                            'Question ${_questionController.session.answers.length + 1}/${_questionController.questionsPerSession}',
+                            style: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w500),
+                          )),
+                      Row(
+                        children: [
+                          Text(
+                            'Level:',
+                            style: const TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.w500),
+                          ),
+                          Obx(() => LevelStarsWidget(
+                                level: min(_questionController.level,
+                                    _questionController.maxLevel),
+                              )),
+                        ],
+                      ),
+                      Obx(() => Text(
+                            'Time: ${Answer.formatTime(_questionController.answerSeconds)}',
+                            style: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w500),
+                          )),
+                    ],
                   ),
-                  IconButton(
-                      onPressed: changeQuestion,
-                      icon: const Icon(
-                        Icons.refresh,
-                        size: 40,
-                      ))
+                  QuestionOrLoadWidget(),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 300, 0),
+                        child: Text(
+                          '=',
+                          style: TextStyle(fontSize: 56),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(300, 0, 0, 0),
+                        child: Obx(() {
+                          if (_questionController.didAnswer) {
+                            if (_questionController.isLastAnswerCorrect()) {
+                              return Icon(Icons.check,
+                                  size: 56, color: Colors.green.shade600);
+                            } else {
+                              return Icon(Icons.close,
+                                  size: 56, color: Colors.red.shade600);
+                            }
+                          } else {
+                            return Container();
+                          }
+                        }),
+                      ),
+                      Container(
+                          width: 256,
+                          decoration: BoxDecoration(
+                              border: Border(
+                            bottom: BorderSide(width: 3, color: Colors.black),
+                          )),
+                          child: Center(
+                            child: Obx(() => SingleChildScrollView(
+                                  child: AnswerWidget(
+                                      _questionController.userAnswer),
+                                  scrollDirection: Axis.horizontal,
+                                )),
+                          )),
+                    ],
+                  ),
+                  // Stack(
+                  //   alignment: Alignment.center,
+                  //   children: [
+                  //     Positioned(
+                  //       left: 0,
+                  //       child: Text('=asd'),
+                  //     ),
+                  //     Obx(() => AnswerWidget(_questionController.userAnswer)),
+                  //     // Text(
+                  //     //   '=',
+                  //     //   style: TextStyle(fontSize: 56),
+                  //     // ),
+                  //   ],
+                  // ),
+                  NumpadWidget(
+                    typeNumber: typeNumber,
+                    clearAnswer: clearAnswer,
+                    answer: answer,
+                  ),
+                  OptionalContinueWidget(),
                 ],
               ),
-            ],
-            mainAxisAlignment: MainAxisAlignment.end,
-          )
-        ],
+            ),
+            Align(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 36, 24, 0),
+                child: IconButton(
+                    onPressed: changeQuestion,
+                    icon: const Icon(
+                      Icons.refresh,
+                      size: 56,
+                      color: Colors.purple,
+                    )),
+              ),
+              alignment: Alignment.topRight,
+            )
+          ],
+        ),
       ),
     );
   }

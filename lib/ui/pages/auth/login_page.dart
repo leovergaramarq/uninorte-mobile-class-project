@@ -104,9 +104,9 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
 
     if (loggedIn) {
       if (_authController.isLoggedIn) {
-        Get.off(HomePage(
-          key: const Key('HomePage'),
-        ));
+        Get.off(() => HomePage(
+              key: const Key('HomePage'),
+            ));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Unexpected error'),
@@ -120,17 +120,17 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
   }
 
   void onGoBack() {
-    Get.off(const FirstPage(
-      key: const Key('FirstPage'),
-    ));
+    Get.off(() => const FirstPage(
+          key: const Key('FirstPage'),
+        ));
   }
 
   void onContinueAsGuest() {
     _authController.continueAsGuest();
     if (_authController.isGuest) {
-      Get.off(HomePage(
-        key: const Key('HomePage'),
-      ));
+      Get.off(() => HomePage(
+            key: const Key('HomePage'),
+          ));
     }
   }
 

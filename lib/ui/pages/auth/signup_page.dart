@@ -149,13 +149,13 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
 
     if (signedUp) {
       if (_authController.isLoggedIn) {
-        Get.off(HomePage(
-          key: const Key('HomePage'),
-        ));
+        Get.off(() => HomePage(
+              key: const Key('HomePage'),
+            ));
       } else {
-        Get.off(LoginPage(
-          key: const Key('LoginPage'),
-        ));
+        Get.off(() => const LoginPage(
+              key: const Key('LoginPage'),
+            ));
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

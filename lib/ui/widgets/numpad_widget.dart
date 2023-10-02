@@ -205,7 +205,7 @@ class NumpadWidget extends StatelessWidget {
                 onPressed: answer,
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
-                  backgroundColor: Colors.orange,
+                  backgroundColor: Color(0xD7542B).withOpacity(1),
                   padding: EdgeInsets.all(12),
                 )),
           ],
