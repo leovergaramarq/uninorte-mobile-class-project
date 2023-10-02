@@ -66,6 +66,11 @@ flutter:
     - assets/2.png
     - assets/First.png
     - assets/Seconbg.png
+    - assets/img/exercise.png
+    - assets/img/exercise_bg.png
+    - assets/img/random_art.png
+    - assets/img/profile_photo_1.jpg
+    - assets/img/profile_photo_2.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

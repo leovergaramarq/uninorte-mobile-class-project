@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:uninorte_mobile_class_project/ui/widgets/answer_widget.dart';
+import 'package:uninorte_mobile_class_project/ui/widgets/app_bar_widget.dart';
 import 'package:uninorte_mobile_class_project/ui/widgets/question_widget.dart';
 import 'package:uninorte_mobile_class_project/ui/widgets/numpad_widget.dart';
 import 'package:uninorte_mobile_class_project/ui/widgets/level_stars_widget.dart';
@@ -175,15 +176,20 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Nivel:'),
-            SizedBox(width: 8),
-            Obx(() => LevelStarsWidget(level: _questionController.level)),
-          ],
-        ),
+      // appBar: AppBarWidget(
+      //   title: Row(
+      //     mainAxisAlignment: MainAxisAlignment.center,
+      //     children: [
+      //       Text('Nivel:'),
+      //       SizedBox(width: 8),
+      //       Obx(() => LevelStarsWidget(level: _questionController.level)),
+      //     ],
+      //   ),
+      // ),
+      appBar: AppBarWidget(
+        text: 'Nivel: ${_questionController.level}',
+        backButton: true,
+        logoutButton: false,
       ),
       body: Stack(
         children: [

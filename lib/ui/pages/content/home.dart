@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import 'package:uninorte_mobile_class_project/ui/pages/auth/login_page.dart';
 import 'package:uninorte_mobile_class_project/ui/pages/content/quest_page.dart';
+import 'package:uninorte_mobile_class_project/ui/widgets/app_bar_widget.dart';
 
 import 'package:uninorte_mobile_class_project/ui/widgets/level_stars_widget.dart';
 
@@ -25,15 +26,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Suma Pop"),
-        actions: [
-          IconButton(
-              key: const Key('ButtonHomeLogOff'),
-              onPressed: onLogout,
-              icon: const Icon(Icons.logout))
-        ],
-      ),
+      appBar:
+          AppBarWidget(text: 'Home', logoutButton: true, onLogout: onLogout),
       body: Column(
         children: [
           Row(
@@ -57,6 +51,27 @@ class HomePage extends StatelessWidget {
           )
         ],
         mainAxisAlignment: MainAxisAlignment.center,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 0, // Set the initial selected index
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        selectedItemColor: Colors.blue,
+        onTap: (int index) {
+          // Handle navigation here
+        },
       ),
     );
   }

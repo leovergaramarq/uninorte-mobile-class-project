@@ -134,10 +134,10 @@ class QuestionController extends GetxController {
         userEmail: session.userEmail,
         seconds: seconds);
 
+    _session.value.answers.add(newAnswer);
+
     _level.value = _questionUseCase.getNewLevel(session, level);
     print('newLevel $level');
-
-    _session.value.answers.add(newAnswer);
 
     return newAnswer;
   }
