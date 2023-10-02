@@ -97,7 +97,12 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
       // Update existing user in Web Service
       bool userUpdated;
       try {
-        await _userController.updateUser(newUser);
+        await _userController.updatePartialUser(
+            birthDate: newUser.birthDate,
+            degree: newUser.degree,
+            school: newUser.school,
+            firstName: newUser.firstName,
+            lastName: newUser.lastName);
         userUpdated = true;
       } catch (e) {
         print(e);

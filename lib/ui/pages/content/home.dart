@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'dart:math';
 
 import 'package:uninorte_mobile_class_project/ui/pages/auth/login_page.dart';
 import 'package:uninorte_mobile_class_project/ui/pages/content/quest_page.dart';
@@ -148,7 +149,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           // fit: BoxFit.cover,
                         ),
                         Obx(() => LevelStarsWidget(
-                              level: _questionController.level,
+                              level: min(_questionController.level,
+                                  _questionController.maxLevel),
                               starSize: 36,
                             ))
                       ],
@@ -162,8 +164,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               key: Key('QuestPage'),
                             ));
                       },
-                      child: const Text('Let\'s go!',
-                          style: TextStyle(fontSize: 20)),
+                      child: Obx(() => Text(
+                          // _sessionController.areSessionsFetched &&
+                          _sessionController.sessions.isNotEmpty
+                              ? 'Continue'
+                              : 'Let\'s go!',
+                          style: TextStyle(fontSize: 20))),
                     ),
                   ],
                 )
