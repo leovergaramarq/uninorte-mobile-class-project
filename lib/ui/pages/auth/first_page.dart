@@ -38,6 +38,7 @@ class _FirstPageState extends State<FirstPage> {
                 ),
                 SizedBox(height: 50),
                 ElevatedButton(
+                  key: const Key('LoginButton'),
                   onPressed: () {
                     Get.to(
                       LoginPage(
@@ -47,7 +48,6 @@ class _FirstPageState extends State<FirstPage> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF997AC1),
-                    onPrimary: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0),
                     ),

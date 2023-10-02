@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:uninorte_mobile_class_project/ui/pages/auth/signup_page.dart';
 
 import 'package:uninorte_mobile_class_project/ui/pages/auth/first_page.dart';
+import 'package:uninorte_mobile_class_project/ui/pages/auth/signup_page.dart';
 
 import 'package:uninorte_mobile_class_project/ui/controller/auth_controller.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/question_controller.dart';
@@ -44,8 +46,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
-      home: const FirstPage(
-        key: Key('FirstPage'),
+      home: const SignUpPage(
+        key: Key('SignUpPage'),
       ),
     );
   }
