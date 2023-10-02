@@ -7,7 +7,7 @@ import 'package:uninorte_mobile_class_project/domain/models/user.dart';
 class UserController extends GetxController {
   final UserUseCase _userUseCase = UserUseCase();
   final Rx<User> _user = Rx<User>(User.defaultUser());
-  final RxBool _userFetched = false.obs;
+  final RxBool _userFetched = RxBool(false);
 
   User get user => _user.value;
   bool get userFetched => _userFetched.value;

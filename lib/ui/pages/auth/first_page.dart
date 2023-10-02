@@ -15,6 +15,7 @@ class _FirstPageState extends State<FirstPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xF2F2F2).withOpacity(1),
       body: Stack(
         children: [
           Image.asset(

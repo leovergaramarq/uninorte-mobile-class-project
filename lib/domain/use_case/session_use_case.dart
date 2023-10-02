@@ -9,6 +9,9 @@ class SessionUseCase {
   //     Get.find<SessionRetoolRepository>();
   final SessionRetoolRepository _sessionRepository = SessionRetoolRepository();
 
+  // static fields
+  static const int numSummarizeSessions = 5;
+
   Future<List<Session>> getSessionsFromUser(String userEmail,
           {int? limit}) async =>
       await _sessionRepository.getSessionsFromUser(userEmail, limit: limit);

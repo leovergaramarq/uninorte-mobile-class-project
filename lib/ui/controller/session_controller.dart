@@ -6,16 +6,23 @@ import 'package:uninorte_mobile_class_project/domain/models/session.dart';
 
 class SessionController extends GetxController {
   final SessionUseCase _sessionUseCase = SessionUseCase();
+
+  // states
   final Rx<List<Session>> _sessions = Rx<List<Session>>([]);
+  final RxBool _areSessionsFetched = RxBool(false);
 
   List<Session> get sessions => _sessions.value;
+  bool get areSessionsFetched => _areSessionsFetched.value;
+  int get numSummarizeSessions => SessionUseCase.numSummarizeSessions;
 
   Future<List<Session>> getSessionsFromUser(String userEmail,
       {int? limit}) async {
     logInfo("Getting sessions");
+    if (areSessionsFetched) _areSessionsFetched.value = false;
     List<Session> sessions =
         await _sessionUseCase.getSessionsFromUser(userEmail, limit: limit);
     _sessions.value = sessions;
+    _areSessionsFetched.value = true;
     return sessions;
   }
 
@@ -36,4 +43,9 @@ class SessionController extends GetxController {
   //   await _sessionUseCase.deleteSession(id);
   //   getSessions();
   // }
+
+  void resetSessions() {
+    _sessions.value = [];
+    _areSessionsFetched.value = false;
+  }
 }

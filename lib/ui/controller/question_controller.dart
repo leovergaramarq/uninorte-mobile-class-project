@@ -11,14 +11,14 @@ import 'package:uninorte_mobile_class_project/domain/models/answer.dart';
 class QuestionController extends GetxController {
   // states
   final QuestionUseCase _questionUseCase = QuestionUseCase();
-  final RxInt _level = 1.obs;
-  final RxInt _userAnswer = 0.obs;
+  final RxInt _level = RxInt(1);
+  final RxInt _userAnswer = RxInt(0);
   final Rx<Question> _question = Rx<Question>(Question.defaultQuestion());
-  final RxBool _isQuestionReady = false.obs;
-  final RxBool _didAnswer = false.obs;
+  final RxBool _isQuestionReady = RxBool(false);
+  final RxBool _didAnswer = RxBool(false);
   final Rx<Session> _session = Rx<Session>(Session.defaultSession());
-  final RxBool _isSessionActive = false.obs;
-  final _answerSeconds = 0.obs;
+  final RxBool _isSessionActive = RxBool(false);
+  final _answerSeconds = RxInt(0);
 
   // Getters
   int get level => _level.value;

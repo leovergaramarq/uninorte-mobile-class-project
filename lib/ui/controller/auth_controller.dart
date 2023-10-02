@@ -5,8 +5,8 @@ import 'package:uninorte_mobile_class_project/domain/use_case/auth_use_case.dart
 
 class AuthController extends GetxController {
   final AuthUseCase _authUseCase = AuthUseCase();
-  final RxBool _isLoggedIn = false.obs;
-  final RxBool _isGuest = false.obs;
+  final RxBool _isLoggedIn = RxBool(false);
+  final RxBool _isGuest = RxBool(false);
 
   bool get isLoggedIn => _isLoggedIn.value;
   bool get isGuest => _isGuest.value;

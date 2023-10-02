@@ -168,6 +168,7 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Color(0xF2F2F2).withOpacity(1),
         key: _scaffoldKey,
         resizeToAvoidBottomInset: false,
         body: SafeArea(

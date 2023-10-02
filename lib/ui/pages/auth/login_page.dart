@@ -137,6 +137,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Color(0xF2F2F2).withOpacity(1),
         key: _scaffoldKey,
         resizeToAvoidBottomInset: false,
         body: SafeArea(

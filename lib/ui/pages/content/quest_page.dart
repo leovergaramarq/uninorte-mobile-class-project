@@ -7,7 +7,7 @@ import 'package:uninorte_mobile_class_project/ui/widgets/answer_widget.dart';
 import 'package:uninorte_mobile_class_project/ui/widgets/app_bar_widget.dart';
 import 'package:uninorte_mobile_class_project/ui/widgets/question_widget.dart';
 import 'package:uninorte_mobile_class_project/ui/widgets/numpad_widget.dart';
-import 'package:uninorte_mobile_class_project/ui/widgets/level_stars_widget.dart';
+// import 'package:uninorte_mobile_class_project/ui/widgets/level_stars_widget.dart';
 
 import 'package:uninorte_mobile_class_project/ui/controller/question_controller.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/user_controller.dart';
@@ -35,7 +35,9 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
   @override
   void initState() {
     _questionController.startSession(_userController.user.email);
-    nextQuestion().catchError((e) {});
+    nextQuestion().catchError((e) {
+      print(e);
+    });
     _questionController.listenLevel((level) async {
       if (level == _userController.user.level) return;
       print('Updating level from ${_userController.user.level} to $level');
@@ -107,26 +109,6 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
     }
   }
 
-  String formatTime(int seconds) {
-    int hours = seconds ~/ 3600;
-    int minutes = (seconds % 3600) ~/ 60;
-    int remainingSeconds = seconds % 60;
-
-    String formattedTime = '';
-
-    if (hours > 0) {
-      formattedTime += '$hours h, ';
-    }
-
-    if (minutes > 0 || hours > 0) {
-      formattedTime += '$minutes m, ';
-    }
-
-    formattedTime += '$remainingSeconds s';
-
-    return formattedTime;
-  }
-
   void typeNumber(int number) {
     if (_questionController.didAnswer) return;
     _questionController.typeNumber(number);
@@ -175,17 +157,8 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xF2F2F2).withOpacity(1),
       key: _scaffoldKey,
-      // appBar: AppBarWidget(
-      //   title: Row(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: [
-      //       Text('Nivel:'),
-      //       SizedBox(width: 8),
-      //       Obx(() => LevelStarsWidget(level: _questionController.level)),
-      //     ],
-      //   ),
-      // ),
       appBar: AppBarWidget(
         text: 'Nivel: ${_questionController.level}',
         backButton: true,
@@ -214,7 +187,7 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
               Column(
                 children: [
                   Obx(() => Text(
-                        'Tiempo: ${formatTime(_questionController.answerSeconds)}',
+                        'Tiempo: ${Answer.formatTime(_questionController.answerSeconds)}',
                         style: TextStyle(fontSize: 16),
                       )),
                   SizedBox(
