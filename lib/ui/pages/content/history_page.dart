@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:uninorte_mobile_class_project/ui/pages/auth/login_page.dart';
 import 'package:uninorte_mobile_class_project/ui/pages/content/quest_page.dart';
 import 'package:uninorte_mobile_class_project/ui/widgets/app_bar_widget.dart';
-import 'package:uninorte_mobile_class_project/ui/widgets/bottom_nav_widget.dart';
+import 'package:uninorte_mobile_class_project/ui/widgets/bottom_nav_bar_widget.dart';
 
 import 'package:uninorte_mobile_class_project/ui/widgets/level_stars_widget.dart';
 
@@ -31,7 +31,7 @@ class HistoryPage extends StatelessWidget {
       appBar:
           AppBarWidget(text: 'History', logoutButton: true, onLogout: onLogout),
       bottomNavigationBar:
-          BottomNavWidget(section: BottomNavWidgetSections.history),
+          BottomNavBarWidget(section: BottomNavBarWidgetSections.history),
     );
   }
 }

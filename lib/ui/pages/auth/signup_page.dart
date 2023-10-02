@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import 'package:uninorte_mobile_class_project/ui/pages/content/home.dart';
+import 'package:uninorte_mobile_class_project/ui/pages/content/home_page.dart';
 import 'package:uninorte_mobile_class_project/ui/pages/auth/login_page.dart';
 import 'package:uninorte_mobile_class_project/ui/pages/auth/first_page.dart';
 
