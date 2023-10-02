@@ -9,9 +9,9 @@ class UserRepository {
   Future<User> getUser(String email) async =>
       await _userDatasource.getUser(email);
 
-  Future<bool> addUser(User user) async => await _userDatasource.addUser(user);
+  Future<User> addUser(User user) async => await _userDatasource.addUser(user);
 
-  Future<bool> updateUser(User user) async =>
+  Future<User> updateUser(User user) async =>
       await _userDatasource.updateUser(user);
 
   Future<bool> deleteUser(int id) async => await _userDatasource.deleteUser(id);

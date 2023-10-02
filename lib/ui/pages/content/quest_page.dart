@@ -10,6 +10,7 @@ import 'package:uninorte_mobile_class_project/ui/widgets/level_stars_widget.dart
 
 import 'package:uninorte_mobile_class_project/ui/controller/question_controller.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/user_controller.dart';
+import 'package:uninorte_mobile_class_project/ui/controller/auth_controller.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/session_controller.dart';
 
 import 'package:uninorte_mobile_class_project/domain/models/answer.dart';
@@ -25,23 +26,20 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final QuestionController _questionController = Get.find<QuestionController>();
-  final UserController _userController = Get.find<UserController>();
+  final AuthController _authController = Get.find<AuthController>();
   final SessionController _sessionController = Get.find<SessionController>();
-  // final Stopwatch stopwatch = Stopwatch();
-  // late DateTime dateQuestionLoad;
+  final UserController _userController = Get.find<UserController>();
   Timer answerTimer = Timer(const Duration(), () {});
 
   @override
   void initState() {
-    _questionController.startSession(_userController.userEmail);
+    _questionController.startSession(_userController.user.email);
     nextQuestion();
     super.initState();
   }
 
   @override
   void dispose() {
-    // stopwatch.stop();
-    // stopwatch.reset();
     print('dispose');
     answerTimer.cancel();
     super.dispose();
@@ -52,9 +50,6 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
     bool result = await _questionController.nextQuestion();
 
     if (result) {
-      // stopwatch.start();
-      // dateQuestionLoad = DateTime.now();
-
       _questionController.setAnswerSeconds(0);
 
       if (answerTimer.isActive) answerTimer.cancel();
@@ -142,10 +137,6 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
         content: Text('You already answered this question'),
       ));
     } else {
-      // int seconds = DateTime.now().difference(dateQuestionLoad).inSeconds;
-      // int seconds = stopwatch.elapsed.inSeconds;
-      // stopwatch.stop();
-      // stopwatch.reset();
       answerTimer.cancel();
 
       print('seconds ${_questionController.answerSeconds}');
@@ -186,18 +177,8 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                // SizedBox(
-                //   height: 12,
-                // ),
                 Obx(QuestionOrLoadWidget),
-                // QuestionOrLoadWidget(),
-                // SizedBox(
-                //   height: 12,
-                // ),
                 Obx(() => AnswerWidget(_questionController.userAnswer)),
-                // SizedBox(
-                //   height: 12,
-                // ),
                 NumpadWidget(
                   typeNumber: typeNumber,
                   clearAnswer: clearAnswer,

@@ -7,12 +7,13 @@ class AuthRepository {
   final String _baseUrl =
       "http://ip172-18-0-70-ckcsb6ssnmng00b1ufvg-8000.direct.labs.play-with-docker.com";
 
-  Future<bool> login(String email, String password) async {
-    token = await _authDatasource.login(_baseUrl, email, password);
-    return true;
+  Future<String> login(String email, String password) async {
+    String token = await _authDatasource.login(_baseUrl, email, password);
+    this.token = token;
+    return token;
   }
 
-  Future<bool> signUp(String email, String password) async =>
+  Future<void> signUp(String email, String password) async =>
       await _authDatasource.signUp(_baseUrl, email, password);
 
   Future<bool> logOut() async => await _authDatasource.logOut();

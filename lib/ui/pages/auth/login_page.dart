@@ -7,6 +7,8 @@ import 'package:uninorte_mobile_class_project/ui/pages/auth/signup_page.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/auth_controller.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/user_controller.dart';
 
+import 'package:uninorte_mobile_class_project/domain/models/user.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -24,9 +26,12 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    if (_authController.isLogged) {
-      print('Loging out');
+    if (_authController.isLoggedIn || _authController.isGuest) {
+      print('Logging out');
       _authController.logOut();
+    }
+    if (_userController.userFetched) {
+      _userController.resetUser();
     }
     super.initState();
   }
@@ -43,6 +48,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
     FocusScope.of(context).requestFocus(FocusNode());
     final FormState? form = _formKey.currentState;
 
+    // Save form
     try {
       form!.save();
     } catch (e) {
@@ -50,24 +56,54 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
       return;
     }
 
+    // Validate form
     if (!form.validate()) return;
 
     String email = _emailController.text.trim();
 
+    // Validate if user exists in Web Service
+    bool userExists;
     try {
-      await _authController.login(email, _passwordController.text);
+      await _userController.getUser(email);
+      userExists = true;
     } catch (e) {
       print(e);
+      userExists = false;
+    }
+    print(userExists
+        ? 'User exists in Web Service: ${_userController.user}'
+        : 'User doesn\'t exist in Web Service');
+
+    if (!userExists) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('User doesn\'t exist in Web Service'),
+      ));
+      return;
     }
 
-    if (_authController.isLogged) {
-      _userController.setUserEmail(email);
-      Get.off(HomePage(
-        key: const Key('HomePage'),
-      ));
+    // Login in Auth Service
+    bool loggedIn;
+    try {
+      await _authController.login(email, _passwordController.text);
+      loggedIn = true;
+    } catch (e) {
+      print(e);
+      loggedIn = false;
+    }
+
+    if (loggedIn) {
+      if (_authController.isLoggedIn) {
+        Get.off(HomePage(
+          key: const Key('HomePage'),
+        ));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Unexpected error'),
+        ));
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('User or password not ok'),
+        content: Text('Login failed'),
       ));
     }
   }

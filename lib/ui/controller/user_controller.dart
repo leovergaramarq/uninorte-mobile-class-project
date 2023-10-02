@@ -6,71 +6,34 @@ import 'package:uninorte_mobile_class_project/domain/models/user.dart';
 
 class UserController extends GetxController {
   final UserUseCase _userUseCase = UserUseCase();
-  final Rx<List<User>> _users = Rx<List<User>>([]);
-  final Rx<User> _user = Rx<User>(User(
-    birthDate: '',
-    email: '',
-    firstName: '',
-    lastName: '',
-    password: '',
-    degree: '',
-    school: '',
-  ));
-  // final Rx<User> _user = Rx<User>(User(
-  //   birthDate: '',
-  //   email: '',
-  //   firstName: '',
-  //   lastName: '',
-  //   password: '',
-  //   degree: '',
-  //   school: '',
-  // ));
-  final RxString _userEmail = ''.obs;
+  final Rx<User> _user = Rx<User>(User.defaultUser());
+  final RxBool _userFetched = false.obs;
 
-  List<User> get users => _users.value;
   User get user => _user.value;
-  String get userEmail => _userEmail.value;
+  bool get userFetched => _userFetched.value;
 
-  @override
-  void onInit() {
-    getUsers();
-    super.onInit();
-  }
-
-  void setUserEmail(String email) {
-    _userEmail.value = email;
-  }
-
-  Future<List<User>> getUsers() async {
+  Future<void> getUser(String email) async {
     logInfo("Getting users");
-    List<User> users = await _userUseCase.getUsers();
-    _users.value = users;
-    return users;
+    _user.value = await _userUseCase.getUser(email);
+    _userFetched.value = true;
   }
 
-  Future<User> getUser(String email) async {
-    logInfo("Getting users");
-    User user = await _userUseCase.getUser(email);
-    _user.value = user;
-    return user;
-  }
-
-  Future<bool> addUser(User user) async {
+  Future<User> addUser(User user) async {
     logInfo("Add user");
-    bool result = await _userUseCase.addUser(user);
-    // getUsers();
-    return result;
+    return await _userUseCase.addUser(user);
   }
 
-  Future<bool> updateUser(User user) async {
+  Future<User> updateUser(User user) async {
     logInfo("Update user");
-    bool result = await _userUseCase.updateUser(user);
-    // getUsers();
-    return result;
+    return await _userUseCase.updateUser(user);
   }
 
   void deleteUser(int id) async {
     await _userUseCase.deleteUser(id);
-    getUsers();
+  }
+
+  void resetUser() {
+    _user.value = User.defaultUser();
+    _userFetched.value = false;
   }
 }

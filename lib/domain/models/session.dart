@@ -11,13 +11,43 @@ class Session {
     required this.avgLevel,
   });
 
+  Session.defaultSession()
+      : id = null,
+        answers = [],
+        userEmail = '',
+        totalSeconds = 0,
+        numCorrectAnswers = 0,
+        numAnswers = 0,
+        avgLevel = 0;
+
   final int? id;
   final List<Answer> answers;
-  final String userEmail;
+  String userEmail;
   int totalSeconds;
   int numCorrectAnswers;
   int numAnswers;
   int avgLevel;
+
+  void wrapUp(int? lastLevel) {
+    numAnswers = answers.length;
+    numCorrectAnswers = answers.where((answer) => answer.isCorrect).length;
+    totalSeconds = answers
+        .map((answer) => answer.seconds)
+        .reduce((value, element) => value + element);
+
+    if (lastLevel == null) {
+      avgLevel = answers
+              .map((answer) => answer.question.level)
+              .reduce((value, element) => value + element) ~/
+          answers.length;
+    } else {
+      for (int i = 1; i < answers.length; i++) {
+        avgLevel += answers[i].question.level;
+      }
+      avgLevel += lastLevel;
+      avgLevel ~/= answers.length;
+    }
+  }
 
   factory Session.fromJson(Map<String, dynamic> json) => Session(
         id: json['id'],

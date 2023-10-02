@@ -1,15 +1,13 @@
-import 'package:loggy/loggy.dart';
+import 'package:get/get.dart';
 
 import 'package:uninorte_mobile_class_project/domain/repositories/session_repository.dart';
 import 'package:uninorte_mobile_class_project/domain/models/session.dart';
 
 class SessionUseCase {
-  final SessionRepository _sessionRepository = SessionRepository();
+  final SessionRepository _sessionRepository = Get.find<SessionRepository>();
 
-  Future<List<Session>> getSessions() async {
-    logInfo("Getting sessions  from UseCase");
-    return await _sessionRepository.getSessions();
-  }
+  Future<List<Session>> getSessions() async =>
+      await _sessionRepository.getSessions();
 
   Future<bool> addSession(Session session) async =>
       await _sessionRepository.addSession(session);

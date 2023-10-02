@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:loggy/loggy.dart';
-import 'package:uninorte_mobile_class_project/domain/models/user.dart';
 import 'package:http/http.dart' as http;
+
+import 'package:uninorte_mobile_class_project/domain/models/user.dart';
 
 class UserDatasource {
   final String baseUri = 'https://retoolapi.dev/25I9P0/sum-plus';
@@ -49,7 +50,7 @@ class UserDatasource {
     }
   }
 
-  Future<bool> addUser(User user) async {
+  Future<User> addUser(User user) async {
     logInfo("Web service, Adding user");
 
     final response = await http.post(
@@ -62,27 +63,14 @@ class UserDatasource {
 
     if (response.statusCode == 201) {
       //logInfo(response.body);
-      return Future.value(true);
+      return Future.value(User.fromJson(jsonDecode(response.body)));
     } else {
       logError("Got error code ${response.statusCode}");
-      return Future.value(false);
+      return Future.error('Error code ${response.statusCode}');
     }
   }
 
-  // Future<bool> addUserIfNotExists(User user) async {
-  //   logInfo("Web service, Adding user");
-
-  //   try {
-  //     await getUser(user.email);
-  //     return Future.value(false);
-  //   } catch (e) {}
-
-  //   return await addUser(user);
-  // }
-
-  Future<bool> updateUser(User user) async {
-    // print("$baseUri/${user.id}");
-    // print(user.toJson());
+  Future<User> updateUser(User user) async {
     final response = await http.put(
       Uri.parse("$baseUri/${user.id}"),
       headers: <String, String>{
@@ -95,10 +83,10 @@ class UserDatasource {
 
     if (response.statusCode == 200) {
       //logInfo(response.body);
-      return Future.value(true);
+      return Future.value(User.fromJson(jsonDecode(response.body)));
     } else {
       logError("Got error code ${response.statusCode}");
-      return Future.value(false);
+      return Future.error('Error code ${response.statusCode}');
     }
   }
 

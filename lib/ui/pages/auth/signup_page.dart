@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import 'package:uninorte_mobile_class_project/ui/pages/content/home.dart';
+import 'package:uninorte_mobile_class_project/ui/pages/auth/login_page.dart';
 
 import 'package:uninorte_mobile_class_project/ui/controller/auth_controller.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/user_controller.dart';
@@ -30,9 +31,12 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    if (_authController.isLogged) {
-      print('Loging out');
+    if (_authController.isLoggedIn || _authController.isGuest) {
+      print('Logging out');
       _authController.logOut();
+    }
+    if (_userController.userFetched) {
+      _userController.resetUser();
     }
     super.initState();
   }
@@ -50,6 +54,7 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
     FocusScope.of(context).requestFocus(FocusNode());
     final FormState? form = _formKey.currentState;
 
+    // Save form
     try {
       print(form);
       form!.save();
@@ -58,60 +63,95 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
       return;
     }
 
+    // Validate form
     if (!form.validate()) return;
 
     String email = _emailController.text.trim();
-    bool result;
 
+    // New user
+    User newUser = User(
+        id: null,
+        birthDate: _dateController.text,
+        degree: _degreeController.text.trim(),
+        school: _schoolController.text.trim(),
+        email: email,
+        firstName: '',
+        lastName: '');
+
+    // Check if user already exists in Web Service. If so, update it. If not, create it.
+    bool userExists;
     try {
-      result = await _authController.signUp(email, _passwordController.text);
+      await _userController.getUser(email);
+      userExists = true;
     } catch (e) {
-      result = false;
-      print(e);
+      userExists = false;
     }
+    print(userExists
+        ? 'User exists in Web Service: ${_userController.user}'
+        : 'User doesn\'t exist in Web Service');
 
-    if (result) {
-      print('Registration successful');
-      User newUser = User(
-          id: null,
-          birthDate: _dateController.text,
-          degree: _degreeController.text.trim(),
-          school: _schoolController.text.trim(),
-          email: email,
-          firstName: '',
-          lastName: '');
+    if (userExists) {
+      newUser.id = _userController.user.id;
 
+      // Update existing user in Web Service
+      bool userUpdated;
       try {
-        User prevUser = await _userController.getUser(email);
-        print('User exists: ${_userController.user}');
-
-        newUser.id = prevUser.id;
-        try {
-          result = await _userController.updateUser(newUser);
-        } catch (e) {}
-        print(result ? 'User updated' : 'User not updated');
+        await _userController.updateUser(newUser);
+        userUpdated = true;
       } catch (e) {
         print(e);
-        result = await _userController.addUser(newUser);
-        print(result ? 'User added' : 'User not added');
+        userUpdated = false;
       }
+      print(userUpdated ? 'User updated' : 'User not updated');
 
-      if (result) {
-        _authController.setLoggedIn();
+      if (!userUpdated) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('User update failed in Web Service'),
+        ));
+        return;
+      }
+    } else {
+      // Create new user in Web Service
+      bool userCreated;
+      try {
+        await _userController.addUser(newUser);
+        userCreated = true;
+      } catch (e) {
+        print(e);
+        userCreated = false;
+      }
+      print(userCreated ? 'User created' : 'User not created');
+
+      if (!userCreated) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('User creation failed in Web Service'),
+        ));
+        return;
+      }
+    }
+
+    // Sign up in Auth Service
+    bool signedUp;
+    try {
+      await _authController.signUp(email, _passwordController.text);
+      signedUp = true;
+    } catch (e) {
+      print(e);
+      signedUp = false;
+    }
+    print(signedUp ? 'Signed up' : 'Not signed up');
+
+    if (signedUp) {
+      if (_authController.isLoggedIn) {
         Get.off(HomePage(
           key: const Key('HomePage'),
         ));
-        // Get.off(LoginPage(
-        //   key: const Key('LoginPage'),
-        // ));
       } else {
-        print('Registration in Web Service failed');
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Registration failed'),
+        Get.off(LoginPage(
+          key: const Key('LoginPage'),
         ));
       }
     } else {
-      print('Registration in Auth Server failed');
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Registration failed'),
       ));

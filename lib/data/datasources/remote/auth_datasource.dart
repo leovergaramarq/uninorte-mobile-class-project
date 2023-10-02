@@ -26,7 +26,7 @@ class AuthDatasource {
     }
   }
 
-  Future<bool> signUp(String baseUrl, String email, String password) async {
+  Future<void> signUp(String baseUrl, String email, String password) async {
     final http.Response response = await http.post(
       Uri.parse("$baseUrl/register"),
       headers: <String, String>{
@@ -43,7 +43,7 @@ class AuthDatasource {
     logInfo(response.statusCode);
     if (response.statusCode == 200) {
       //logInfo(response.body);
-      return Future.value(true);
+      return Future.value();
     } else {
       logError("Got error code ${response.statusCode}");
       return Future.error('Error code ${response.statusCode}');
