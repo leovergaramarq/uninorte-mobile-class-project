@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class NumpadWidget extends StatelessWidget {
   NumpadWidget({
     Key? key,
-    required void Function(int) this.typeNumber,
-    required VoidCallback this.clearAnswer,
-    required VoidCallback this.answer,
+    required this.typeNumber,
+    required this.answer,
+    required this.clearAnswer,
   });
 
   void Function(int) typeNumber;

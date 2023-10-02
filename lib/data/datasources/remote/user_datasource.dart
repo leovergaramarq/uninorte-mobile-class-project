@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:uninorte_mobile_class_project/domain/models/user.dart';
 
 class UserDatasource {
-  final String baseUri = 'https://retoolapi.dev/25I9P0/sum-plus';
+  final String baseUri = 'https://retoolapi.dev/0zLAjT/sum-plus';
 
   Future<List<User>> getUsers() async {
     List<User> users = [];
@@ -77,6 +77,43 @@ class UserDatasource {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(user.toJson()),
+    );
+
+    // print(response.statusCode);
+
+    if (response.statusCode == 200) {
+      //logInfo(response.body);
+      return Future.value(User.fromJson(jsonDecode(response.body)));
+    } else {
+      logError("Got error code ${response.statusCode}");
+      return Future.error('Error code ${response.statusCode}');
+    }
+  }
+
+  Future<User> updatePartialUser(int id,
+      {String? firstName,
+      String? lastName,
+      String? email,
+      String? birthDate,
+      String? degree,
+      String? school,
+      int? level}) async {
+    final response = await http.patch(
+      Uri.parse("$baseUri/$id"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        {
+          if (firstName != null) 'firstName': firstName,
+          if (lastName != null) 'lastName': lastName,
+          if (email != null) 'email': email,
+          if (birthDate != null) 'birthDate': birthDate,
+          if (degree != null) 'degree': degree,
+          if (school != null) 'school': school,
+          if (level != null) 'level': level,
+        },
+      ),
     );
 
     // print(response.statusCode);

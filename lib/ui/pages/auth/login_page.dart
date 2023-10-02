@@ -6,6 +6,7 @@ import 'package:uninorte_mobile_class_project/ui/pages/auth/signup_page.dart';
 
 import 'package:uninorte_mobile_class_project/ui/controller/auth_controller.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/user_controller.dart';
+import 'package:uninorte_mobile_class_project/ui/controller/question_controller.dart';
 
 import 'package:uninorte_mobile_class_project/domain/models/user.dart';
 
@@ -21,8 +22,10 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
   final AuthController _authController = Get.find<AuthController>();
   final UserController _userController = Get.find<UserController>();
+  final QuestionController _questionController = Get.find<QuestionController>();
 
   @override
   void initState() {
@@ -79,6 +82,13 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
         content: Text('User doesn\'t exist in Web Service'),
       ));
       return;
+    }
+
+    try {
+      _questionController.setLevel(_userController.user.level!);
+    } catch (err) {
+      print('Couldn\'t set level ${_userController.user.level}');
+      print(err);
     }
 
     // Login in Auth Service

@@ -1,15 +1,19 @@
 import 'package:get/get.dart';
 
-import 'package:uninorte_mobile_class_project/domain/repositories/session_repository.dart';
+// import 'package:uninorte_mobile_class_project/domain/repositories/session_repository.dart';
+import 'package:uninorte_mobile_class_project/data/repositories/session_retool_repository.dart';
 import 'package:uninorte_mobile_class_project/domain/models/session.dart';
 
 class SessionUseCase {
-  final SessionRepository _sessionRepository = Get.find<SessionRepository>();
+  // final SessionRetoolRepository _sessionRepository =
+  //     Get.find<SessionRetoolRepository>();
+  final SessionRetoolRepository _sessionRepository = SessionRetoolRepository();
 
-  Future<List<Session>> getSessions() async =>
-      await _sessionRepository.getSessions();
+  Future<List<Session>> getSessionsFromUser(String userEmail,
+          {int? limit}) async =>
+      await _sessionRepository.getSessionsFromUser(userEmail, limit: limit);
 
-  Future<bool> addSession(Session session) async =>
+  Future<Session> addSession(Session session) async =>
       await _sessionRepository.addSession(session);
 
   Future<void> updateSession(Session session) async =>

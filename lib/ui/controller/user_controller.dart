@@ -20,12 +20,43 @@ class UserController extends GetxController {
 
   Future<User> addUser(User user) async {
     logInfo("Add user");
-    return await _userUseCase.addUser(user);
+    User newUser = await _userUseCase.addUser(user);
+    _user.value = newUser;
+    return newUser;
   }
 
   Future<User> updateUser(User user) async {
     logInfo("Update user");
-    return await _userUseCase.updateUser(user);
+    if (user.id == null) {
+      return Future.error('User id is null');
+    }
+    User updatedUser = await _userUseCase.updateUser(user);
+    _user.value = updatedUser;
+    return updatedUser;
+  }
+
+  Future<User> updatePartialUser(
+      {String? firstName,
+      String? lastName,
+      String? email,
+      String? birthDate,
+      String? degree,
+      String? school,
+      int? level}) async {
+    logInfo("Update user");
+    if (user.id == null) {
+      return Future.error('User id is null');
+    }
+    User updatedUser = await _userUseCase.updatePartialUser(user.id!,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        birthDate: birthDate,
+        degree: degree,
+        school: school,
+        level: level);
+    _user.value = updatedUser;
+    return updatedUser;
   }
 
   void deleteUser(int id) async {

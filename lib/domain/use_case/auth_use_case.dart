@@ -1,9 +1,12 @@
 import 'package:get/get.dart';
 
-import 'package:uninorte_mobile_class_project/domain/repositories/auth_repository.dart';
+// import 'package:uninorte_mobile_class_project/domain/repositories/auth_repository.dart';
+import 'package:uninorte_mobile_class_project/data/repositories/auth_authserver_repository.dart';
 
 class AuthUseCase {
-  final AuthRepository _authRepository = Get.find<AuthRepository>();
+  // final AuthAuthserverRepository _authRepository =
+  //     Get.find<AuthAuthserverRepository>();
+  final AuthAuthserverRepository _authRepository = AuthAuthserverRepository();
 
   Future<String> login(String email, String password) async =>
       await _authRepository.login(email, password);

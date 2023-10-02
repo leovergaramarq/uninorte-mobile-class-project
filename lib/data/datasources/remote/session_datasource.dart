@@ -4,12 +4,15 @@ import 'package:uninorte_mobile_class_project/domain/models/session.dart';
 import 'package:http/http.dart' as http;
 
 class SessionDatasource {
-  final String baseUri = 'https://retoolapi.dev/x74Ldx/sum-plus';
+  final String baseUri = 'https://retoolapi.dev/0fkNBk/sum-plus';
 
-  Future<List<Session>> getSessions() async {
+  Future<List<Session>> getSessionsFromUser(String userEmail,
+      {int? limit}) async {
     List<Session> sessions = [];
     final Uri request = Uri.parse(baseUri).resolveUri(Uri(queryParameters: {
       "format": 'json',
+      "userEmail": userEmail,
+      if (limit != null) "_limit": limit.toString(),
     }));
 
     final http.Response response = await http.get(request);
@@ -27,7 +30,7 @@ class SessionDatasource {
     return Future.value(sessions);
   }
 
-  Future<bool> addSession(Session session) async {
+  Future<Session> addSession(Session session) async {
     logInfo("Web service, Adding session");
 
     final response = await http.post(
@@ -40,10 +43,10 @@ class SessionDatasource {
 
     if (response.statusCode == 201) {
       //logInfo(response.body);
-      return Future.value(true);
+      return Future.value(Session.fromJson(jsonDecode(response.body)));
     } else {
       logError("Got error code ${response.statusCode}");
-      return Future.value(false);
+      return Future.error('Error code ${response.statusCode}');
     }
   }
 

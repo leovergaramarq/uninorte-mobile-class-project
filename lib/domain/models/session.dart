@@ -9,6 +9,7 @@ class Session {
     required this.numCorrectAnswers,
     required this.numAnswers,
     required this.avgLevel,
+    required this.dateStart,
   });
 
   Session.defaultSession()
@@ -18,7 +19,8 @@ class Session {
         totalSeconds = 0,
         numCorrectAnswers = 0,
         numAnswers = 0,
-        avgLevel = 0;
+        avgLevel = 0,
+        dateStart = DateTime.now().toString();
 
   final int? id;
   final List<Answer> answers;
@@ -27,6 +29,7 @@ class Session {
   int numCorrectAnswers;
   int numAnswers;
   int avgLevel;
+  final String dateStart;
 
   void wrapUp(int? lastLevel) {
     numAnswers = answers.length;
@@ -58,6 +61,7 @@ class Session {
         numCorrectAnswers: int.parse(json['numCorrectAnswers'].toString()),
         numAnswers: int.parse(json['numAnswers'].toString()),
         avgLevel: int.parse(json['avgLevel'].toString()),
+        dateStart: json['dateStart'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -68,5 +72,6 @@ class Session {
         'numCorrectAnswers': numCorrectAnswers,
         'numAnswers': numAnswers,
         'avgLevel': avgLevel,
+        'dateStart': dateStart,
       };
 }

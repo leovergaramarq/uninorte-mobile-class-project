@@ -6,36 +6,34 @@ import 'package:uninorte_mobile_class_project/domain/models/session.dart';
 
 class SessionController extends GetxController {
   final SessionUseCase _sessionUseCase = SessionUseCase();
-  final RxList<Session> _sessions = <Session>[].obs;
+  final Rx<List<Session>> _sessions = Rx<List<Session>>([]);
 
-  List<Session> get sessions => _sessions;
+  List<Session> get sessions => _sessions.value;
 
-  @override
-  void onInit() {
-    getSessions();
-    super.onInit();
-  }
-
-  getSessions() async {
+  Future<List<Session>> getSessionsFromUser(String userEmail,
+      {int? limit}) async {
     logInfo("Getting sessions");
-    _sessions.value = await _sessionUseCase.getSessions();
+    List<Session> sessions =
+        await _sessionUseCase.getSessionsFromUser(userEmail, limit: limit);
+    _sessions.value = sessions;
+    return sessions;
   }
 
-  Future<bool> addSession(Session session) async {
+  Future<Session> addSession(Session session) async {
     logInfo("Add session");
-    bool result = await _sessionUseCase.addSession(session);
-    getSessions();
-    return result;
+    Session newSession = await _sessionUseCase.addSession(session);
+    _sessions.value.add(newSession);
+    return newSession;
   }
 
-  updateSession(Session session) async {
-    logInfo("Update session");
-    await _sessionUseCase.updateSession(session);
-    getSessions();
-  }
+  // updateSession(Session session) async {
+  //   logInfo("Update session");
+  //   await _sessionUseCase.updateSession(session);
+  //   getSessions();
+  // }
 
-  void deleteSession(int id) async {
-    await _sessionUseCase.deleteSession(id);
-    getSessions();
-  }
+  // void deleteSession(int id) async {
+  //   await _sessionUseCase.deleteSession(id);
+  //   getSessions();
+  // }
 }

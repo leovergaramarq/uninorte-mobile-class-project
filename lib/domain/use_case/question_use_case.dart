@@ -2,13 +2,17 @@ import 'dart:math';
 import 'package:get/get.dart';
 
 import 'package:uninorte_mobile_class_project/domain/models/question.dart';
-import 'package:uninorte_mobile_class_project/domain/repositories/question_repository.dart';
+// import 'package:uninorte_mobile_class_project/domain/repositories/question_repository.dart';
+import 'package:uninorte_mobile_class_project/data/repositories/question_local_repository.dart';
 
 import 'package:uninorte_mobile_class_project/domain/models/session.dart';
 import 'package:uninorte_mobile_class_project/domain/models/answer.dart';
 
 class QuestionUseCase {
-  final QuestionRepository _questionRepository = Get.find<QuestionRepository>();
+  // final QuestionLocalRepository _questionRepository =
+  //     Get.find<QuestionLocalRepository>();
+  final QuestionLocalRepository _questionRepository = QuestionLocalRepository();
+
   // static fields
   static const int questionsPerSession = 6;
   static const int maxLevel = 5;

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 
 import 'package:uninorte_mobile_class_project/domain/use_case/question_use_case.dart';
@@ -27,6 +29,10 @@ class QuestionController extends GetxController {
   Session get session => _session.value;
   bool get isSessionActive => _isSessionActive.value;
   int get answerSeconds => _answerSeconds.value;
+  StreamSubscription<int> Function(void Function(int),
+      {bool? cancelOnError,
+      void Function()? onDone,
+      Function? onError}) get listenLevel => _level.listen;
 
   void startSession(String userEmail) {
     if (isSessionActive) {
@@ -42,24 +48,26 @@ class QuestionController extends GetxController {
     _isSessionActive.value = true;
   }
 
-  void finishSession() {
+  void endSession() {
     if (!isSessionActive) {
       print('session is not active');
       return;
     }
 
-    // Wrap session up
-    _session.value.wrapUp(level);
+    resetStates();
+  }
 
-    // Reset values
-    // _level.value = 1;
-    _userAnswer.value = 0;
-    _question.value = Question.defaultQuestion();
-    _isQuestionReady.value = false;
-    _didAnswer.value = false;
-    _session.value = Session.defaultSession();
-    _isSessionActive.value = false;
-    _answerSeconds.value = 0;
+  void cancelSesion() {
+    if (!isSessionActive) {
+      print('session is not active');
+      return;
+    }
+
+    resetStates();
+  }
+
+  void wrapSessionUp() {
+    _session.value.wrapUp(level);
   }
 
   Future<Question?> getQuestion() async {
@@ -81,7 +89,6 @@ class QuestionController extends GetxController {
     if (!isSessionActive) return false;
 
     if (_questionUseCase.areAllQuestionsAnswered(session.answers)) {
-      // finishSession();
       _isQuestionReady.value = false;
       return false;
     } else {
@@ -141,5 +148,21 @@ class QuestionController extends GetxController {
       return;
     }
     _answerSeconds.value = answerSeconds;
+  }
+
+  void setLevel(int level) {
+    _level.value = level;
+  }
+
+  void resetStates() {
+    // Reset values
+    // _level.value = 1;
+    _userAnswer.value = 0;
+    _question.value = Question.defaultQuestion();
+    _isQuestionReady.value = false;
+    _didAnswer.value = false;
+    _session.value = Session.defaultSession();
+    _isSessionActive.value = false;
+    _answerSeconds.value = 0;
   }
 }

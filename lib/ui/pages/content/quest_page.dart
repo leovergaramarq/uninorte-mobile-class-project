@@ -10,7 +10,7 @@ import 'package:uninorte_mobile_class_project/ui/widgets/level_stars_widget.dart
 
 import 'package:uninorte_mobile_class_project/ui/controller/question_controller.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/user_controller.dart';
-import 'package:uninorte_mobile_class_project/ui/controller/auth_controller.dart';
+// import 'package:uninorte_mobile_class_project/ui/controller/auth_controller.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/session_controller.dart';
 
 import 'package:uninorte_mobile_class_project/domain/models/answer.dart';
@@ -26,7 +26,7 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final QuestionController _questionController = Get.find<QuestionController>();
-  final AuthController _authController = Get.find<AuthController>();
+  // final AuthController _authController = Get.find<AuthController>();
   final SessionController _sessionController = Get.find<SessionController>();
   final UserController _userController = Get.find<UserController>();
   Timer answerTimer = Timer(const Duration(), () {});
@@ -34,7 +34,16 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
   @override
   void initState() {
     _questionController.startSession(_userController.user.email);
-    nextQuestion();
+    nextQuestion().catchError((e) {});
+    _questionController.listenLevel((level) async {
+      if (level == _userController.user.level) return;
+      print('Updating level from ${_userController.user.level} to $level');
+      try {
+        await _userController.updatePartialUser(level: level);
+      } catch (e) {
+        print(e);
+      }
+    });
     super.initState();
   }
 
@@ -42,6 +51,7 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
   void dispose() {
     print('dispose');
     answerTimer.cancel();
+    _questionController.endSession();
     super.dispose();
   }
 
@@ -50,14 +60,19 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
     bool result = await _questionController.nextQuestion();
 
     if (result) {
+      if (answerTimer.isActive) answerTimer.cancel();
       _questionController.setAnswerSeconds(0);
 
-      if (answerTimer.isActive) answerTimer.cancel();
       answerTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
         _questionController.setAnswerSeconds(timer.tick);
       });
     } else {
-      _sessionController.addSession(_questionController.session);
+      _questionController.wrapSessionUp();
+      try {
+        await _sessionController.addSession(_questionController.session);
+      } catch (e) {
+        print(e);
+      }
     }
   }
 
