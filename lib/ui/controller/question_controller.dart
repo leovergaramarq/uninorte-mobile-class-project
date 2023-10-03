@@ -74,7 +74,7 @@ class QuestionController extends GetxController {
     _session.value.wrapUp(level);
   }
 
-  Future<Question?> getQuestion() async {
+  Question? getQuestion() {
     if (!isSessionActive) {
       print('session is not active');
       return null;
@@ -82,7 +82,7 @@ class QuestionController extends GetxController {
 
     if (isQuestionReady) _isQuestionReady.value = false;
 
-    Question question = await _questionUseCase.getQuestion(level);
+    Question question = _questionUseCase.getQuestion(level);
     _question.value = question;
     _isQuestionReady.value = true;
 

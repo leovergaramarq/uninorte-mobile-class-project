@@ -127,7 +127,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    print('${_sessionController.sessions}');
     return Scaffold(
       backgroundColor: Color(0xF2F2F2).withOpacity(1),
       appBar: AppBarWidget(text: 'Home', logoutButton: true),
