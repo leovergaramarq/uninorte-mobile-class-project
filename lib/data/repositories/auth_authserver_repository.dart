@@ -6,7 +6,7 @@ class AuthAuthserverRepository implements AuthRepository {
   String token = "";
   // the base url of the API should end without the /
   final String _baseUrl =
-      "http://ip172-19-0-36-cke388ksnmng00fluojg-8000.direct.labs.play-with-docker.com";
+      "http://ip172-18-0-20-cke919mfml8g00fl6vtg-8000.direct.labs.play-with-docker.com";
 
   Future<String> login(String email, String password) async {
     String token = await _authDatasource.login(_baseUrl, email, password);

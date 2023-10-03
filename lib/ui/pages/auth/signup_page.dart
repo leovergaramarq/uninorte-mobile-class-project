@@ -156,6 +156,15 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
 
     if (signedUp) {
       if (_authController.isLoggedIn) {
+        if (userExists) {
+          try {
+            _questionController.setLevel(_userController.user.level!);
+          } catch (err) {
+            print('Couldn\'t set level ${_userController.user.level}');
+            print(err);
+          }
+        }
+
         Get.off(() => HomePage(
               key: const Key('HomePage'),
             ));

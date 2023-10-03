@@ -33,8 +33,8 @@ class QuestionController extends GetxController {
       {bool? cancelOnError,
       void Function()? onDone,
       Function? onError}) get listenLevel => _level.listen;
-  int get maxLevel => QuestionUseCase.maxLevel;
-  int get questionsPerSession => QuestionUseCase.questionsPerSession;
+  int get maxLevel => _questionUseCase.maxLevel;
+  int get questionsPerSession => _questionUseCase.questionsPerSession;
 
   void startSession(String userEmail) {
     if (isSessionActive) {

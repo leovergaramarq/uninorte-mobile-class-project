@@ -9,8 +9,8 @@ import 'package:uninorte_mobile_class_project/domain/models/answer.dart';
 
 class QuestionUseCase {
   // static fields
-  static const int questionsPerSession = 6;
-  static int maxLevel = _levelsConfig.length;
+  final int questionsPerSession = 6;
+  final int maxLevel = _levelsConfig.length;
 
   Question getQuestion(int level) {
     if (level < 1 || level > maxLevel) {

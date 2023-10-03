@@ -53,10 +53,24 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Last ${_sessionController.numSummarizeSessions} sessions',
-                style: const TextStyle(fontSize: 22),
-              ),
+              Obx(() {
+                int numSessionsShown = _sessionController.areSessionsFetched
+                    ? _sessionController.sessions.length
+                    : _sessionController.numSummarizeSessions;
+                String message;
+                if (numSessionsShown == 0) {
+                  message = 'No sessions yet';
+                } else if (numSessionsShown == 1) {
+                  message = 'Last session';
+                } else {
+                  message = 'Last $numSessionsShown sessions';
+                }
+
+                return Text(
+                  message,
+                  style: const TextStyle(fontSize: 22),
+                );
+              }),
               SizedBox(height: 16),
               Obx(() {
                 // print(
@@ -158,7 +172,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       //   height: 24,
                       // ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
                             width: 200,
@@ -169,6 +183,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                   alignment: Alignment.center,
                                   child: Image.asset(
                                     'assets/img/exercise_bg.png',
+                                    width: 180,
+                                    height: 180,
                                   ),
                                 ),
                                 Obx(() => LevelStarsWidget(
@@ -179,9 +195,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               ],
                             ),
                           ),
-                          const SizedBox(
-                            width: 24,
-                          ),
+                          // const SizedBox(
+                          //   width: 24,
+                          // ),
                           ElevatedButton(
                             key: const Key('StartButton'),
                             style: ElevatedButton.styleFrom(

@@ -13,7 +13,7 @@ class SessionController extends GetxController {
 
   List<Session> get sessions => _sessions.value;
   bool get areSessionsFetched => _areSessionsFetched.value;
-  int get numSummarizeSessions => SessionUseCase.numSummarizeSessions;
+  int get numSummarizeSessions => _sessionUseCase.numSummarizeSessions;
 
   Future<List<Session>> getSessionsFromUser(String userEmail,
       {int? limit}) async {

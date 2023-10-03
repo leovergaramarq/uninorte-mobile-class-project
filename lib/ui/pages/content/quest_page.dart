@@ -77,11 +77,6 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
       // There aren't more questions
       _questionController.wrapSessionUp();
       if (_authController.isLoggedIn) {
-        // try {
-        //   await _sessionController.addSession(_questionController.session);
-        // } catch (e) {
-        //   print(e);
-        // }
         _sessionController
             .addSession(_questionController.session)
             .catchError((e) {
@@ -160,7 +155,7 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
     } else {
       answerTimer.cancel();
 
-      print('seconds ${_questionController.answerSeconds}');
+      // print('seconds ${_questionController.answerSeconds}');
 
       Answer? newAnswer =
           _questionController.answer(_questionController.answerSeconds);

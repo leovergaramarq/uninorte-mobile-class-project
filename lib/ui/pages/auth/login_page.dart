@@ -89,14 +89,6 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
       ));
       return;
     }
-
-    try {
-      _questionController.setLevel(_userController.user.level!);
-    } catch (err) {
-      print('Couldn\'t set level ${_userController.user.level}');
-      print(err);
-    }
-
     // Login in Auth Service
     bool loggedIn;
     try {
@@ -110,6 +102,13 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
 
     if (loggedIn) {
       if (_authController.isLoggedIn) {
+        try {
+          _questionController.setLevel(_userController.user.level!);
+        } catch (err) {
+          print('Couldn\'t set level ${_userController.user.level}');
+          print(err);
+        }
+
         Get.off(() => HomePage(
               key: const Key('HomePage'),
             ));
