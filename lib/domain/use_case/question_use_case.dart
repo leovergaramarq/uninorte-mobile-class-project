@@ -19,14 +19,15 @@ class QuestionUseCase {
     _LevelConfig levelConfig = _levelsConfig[level - 1];
 
     Random random = Random();
-    int num1 = genNumberWithDigits(levelConfig
-            .operandsDigits[random.nextInt(levelConfig.operandsDigits.length)]
-            .index +
-        1);
-    int num2 = genNumberWithDigits(levelConfig
-            .operandsDigits[random.nextInt(levelConfig.operandsDigits.length)]
-            .index +
-        1);
+
+    OperandsDigits operandsDigits = levelConfig
+        .operandsDigits[random.nextInt(levelConfig.operandsDigits.length)];
+
+    int digitsNum1 = operandsDigits != OperandsDigits.twoTwo ? 1 : 2;
+    int digitsNum2 = operandsDigits != OperandsDigits.oneOne ? 2 : 1;
+
+    int num1 = genNumberWithDigits(digitsNum1);
+    int num2 = genNumberWithDigits(digitsNum2);
 
     Operation op =
         levelConfig.operations[random.nextInt(levelConfig.operations.length)];
@@ -35,7 +36,7 @@ class QuestionUseCase {
       num1 = num2;
       num2 = temp;
     }
-    return Question(num1, Operation.add, num2);
+    return Question(num1, op, num2);
   }
 
   bool isAnswerCorrect(Question question, int answer) =>

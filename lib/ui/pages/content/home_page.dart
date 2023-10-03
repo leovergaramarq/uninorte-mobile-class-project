@@ -151,17 +151,20 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Column(
-                        children: [
-                          Image.asset(
-                            'assets/img/exercise_bg.png', // Reemplaza con la ruta de tu imagen de fondo
-                          ),
-                          Obx(() => LevelStarsWidget(
-                                level: min(_questionController.level,
-                                    _questionController.maxLevel),
-                                starSize: 36,
-                              ))
-                        ],
+                      Container(
+                        width: 200,
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              'assets/img/exercise_bg.png', // Reemplaza con la ruta de tu imagen de fondo
+                            ),
+                            Obx(() => LevelStarsWidget(
+                                  level: min(_questionController.level,
+                                      _questionController.maxLevel),
+                                  starSize: 36,
+                                ))
+                          ],
+                        ),
                       ),
                       const SizedBox(
                         width: 24,
