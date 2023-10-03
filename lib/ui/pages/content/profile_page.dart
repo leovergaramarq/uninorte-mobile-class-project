@@ -15,7 +15,7 @@ class ProfilePage extends StatelessWidget {
       backgroundColor: Color(0xF2F2F2).withOpacity(1),
       appBar: AppBarWidget(text: 'Profile', logoutButton: true),
       bottomNavigationBar:
-          BottomNavBarWidget(section: BottomNavBarWidgetSections.profile),
+          BottomNavBarWidget(section: BottomNavBarWidgetSection.profile),
       body: ListView(
         children: [
           SizedBox(height: 20.0), // Espacio entre AppBar y Container

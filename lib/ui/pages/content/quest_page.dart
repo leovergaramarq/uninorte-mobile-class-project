@@ -227,6 +227,7 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Obx(() {
                         int numQuestion =
@@ -238,10 +239,10 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
                               fontSize: 14, fontWeight: FontWeight.w500),
                         );
                       }),
-                      Row(
+                      Column(
                         children: [
                           Text(
-                            'Level:',
+                            'Level',
                             style: const TextStyle(
                                 fontSize: 24, fontWeight: FontWeight.w500),
                           ),

@@ -42,6 +42,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
     if (_sessionController.areSessionsFetched) {
       _sessionController.resetSessions();
     }
+    _questionController.resetLevel();
     super.initState();
   }
 
@@ -101,6 +102,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
     bool loggedIn;
     try {
       await _authController.login(email, _passwordController.text);
+      // print('Success');
       loggedIn = true;
     } catch (e) {
       print(e);
@@ -229,7 +231,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                         TextButton(
                             key: const Key('ButtonLoginCreateAccount'),
                             onPressed: () => Get.to(
-                                  const SignUpPage(
+                                  () => const SignUpPage(
                                     key: Key('SignUpPage'),
                                   ),
                                 ),

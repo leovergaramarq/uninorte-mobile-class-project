@@ -10,22 +10,33 @@ import 'package:uninorte_mobile_class_project/domain/models/answer.dart';
 class QuestionUseCase {
   // static fields
   static const int questionsPerSession = 6;
-  static const int maxLevel = 5;
-  static const int minCorrectToLevelUp = 2;
-  static const int minWrongToLevelDown = 2;
+  static int maxLevel = _levelsConfig.length;
 
   Question getQuestion(int level) {
+    if (level < 1 || level > maxLevel) {
+      level = _boundLevel(level);
+    }
+    _LevelConfig levelConfig = _levelsConfig[level - 1];
+
     Random random = Random();
 
-    // Calculate the range for random numbers based on the number of digits
-    int minRange = pow(10, level - 1).toInt();
-    int maxRange = pow(10, level).toInt() - 1;
+    OperandsDigits operandsDigits = levelConfig
+        .operandsDigits[random.nextInt(levelConfig.operandsDigits.length)];
 
-    // Generate random numbers within the specified range
-    int num1 = minRange + random.nextInt(maxRange - minRange);
-    int num2 = minRange + random.nextInt(maxRange - minRange);
+    int digitsNum1 = operandsDigits != OperandsDigits.twoTwo ? 1 : 2;
+    int digitsNum2 = operandsDigits != OperandsDigits.oneOne ? 2 : 1;
 
-    return Question(num1, '+', num2);
+    int num1 = genNumberWithDigits(digitsNum1);
+    int num2 = genNumberWithDigits(digitsNum2);
+
+    Operation op =
+        levelConfig.operations[random.nextInt(levelConfig.operations.length)];
+    if ((op == Operation.div || op == Operation.sub) && num1 < num2) {
+      int temp = num1;
+      num1 = num2;
+      num2 = temp;
+    }
+    return Question(num1, op, num2);
   }
 
   bool isAnswerCorrect(Question question, int answer) =>
@@ -37,20 +48,26 @@ class QuestionUseCase {
   bool areAllQuestionsAnswered(List<Answer> answers) =>
       answers.length >= questionsPerSession;
 
-  int getNewLevel(Session session, int level) {
-    int boundLevel(int newLevel) {
-      return min(max(newLevel, 1), maxLevel);
-    }
+  int _boundLevel(int newLevel) {
+    return min(max(newLevel, 1), maxLevel);
+  }
 
+  int getNewLevel(Session session, int level) {
+    if (level < 1 || level > maxLevel) {
+      return _boundLevel(level);
+    }
+    _LevelConfig levelConfig = _levelsConfig[level - 1];
     List<Answer> answers = session.answers;
-    if (answers.length >= minCorrectToLevelUp) {
+
+    if (answers.length >= levelConfig.numCorrectToLevelUp) {
       List<Answer> lastAnswers = answers
-          .getRange(answers.length - minCorrectToLevelUp, answers.length)
+          .getRange(
+              answers.length - levelConfig.numCorrectToLevelUp, answers.length)
           .toList();
 
       if (!lastAnswers.every(
           (answer) => answer.question.level == lastAnswers[0].question.level)) {
-        return boundLevel(level);
+        return _boundLevel(level);
       }
 
       int numCorrect = 0;
@@ -59,30 +76,164 @@ class QuestionUseCase {
       for (Answer answer in lastAnswers) {
         if (answer.isCorrect) {
           numCorrect++;
-          if (answer.seconds <=
-              getSecondsExpectedForLevel(answer.question.level)) {
+          if (answer.seconds <= levelConfig.secondsExpected) {
             numCorrectInTime++;
           }
         }
       }
 
-      if (numCorrect >= minCorrectToLevelUp) {
+      if (numCorrect >= levelConfig.numCorrectToLevelUp) {
         if (numCorrectInTime >= numCorrect / 2) {
-          return boundLevel(level + 1);
+          return _boundLevel(level + 1);
         } else {
-          return boundLevel(level);
+          return _boundLevel(level);
         }
-      } else if (lastAnswers.length - numCorrect >= minWrongToLevelDown) {
-        return boundLevel(level - 1);
+      } else if (lastAnswers.length - numCorrect >=
+          levelConfig.numWrongToLevelDown) {
+        return _boundLevel(level - 1);
       } else {
-        return boundLevel(level);
+        return _boundLevel(level);
       }
     } else {
-      return boundLevel(level);
+      return _boundLevel(level);
     }
   }
 
-  int getSecondsExpectedForLevel(int level) {
-    return 8 * level;
+  int genNumberWithDigits(int numDigits) {
+    Random random = Random();
+
+    int minRange = pow(10, numDigits - 1).toInt();
+    int maxRange = pow(10, numDigits).toInt() - 1;
+
+    return minRange + random.nextInt(maxRange - minRange);
   }
 }
+
+const List<_LevelConfig> _levelsConfig = [
+  // additions and subtractions
+  const _LevelConfig(
+    numCorrectToLevelUp: 2,
+    numWrongToLevelDown: -1,
+    operations: [Operation.add],
+    operandsDigits: [OperandsDigits.oneOne],
+    secondsExpected: 6,
+  ),
+  const _LevelConfig(
+    numCorrectToLevelUp: 2,
+    numWrongToLevelDown: 2,
+    operations: [Operation.add],
+    operandsDigits: [OperandsDigits.oneTwo],
+    secondsExpected: 10,
+  ),
+  const _LevelConfig(
+    numCorrectToLevelUp: 2,
+    numWrongToLevelDown: 2,
+    operations: [Operation.sub],
+    operandsDigits: [OperandsDigits.oneOne],
+    secondsExpected: 8,
+  ),
+  const _LevelConfig(
+    numCorrectToLevelUp: 2,
+    numWrongToLevelDown: 2,
+    operations: [Operation.sub],
+    operandsDigits: [OperandsDigits.oneTwo],
+    secondsExpected: 12,
+  ),
+  const _LevelConfig(
+    numCorrectToLevelUp: 2,
+    numWrongToLevelDown: 2,
+    operations: [Operation.add],
+    operandsDigits: [OperandsDigits.twoTwo],
+    secondsExpected: 15,
+  ),
+  const _LevelConfig(
+    numCorrectToLevelUp: 2,
+    numWrongToLevelDown: 2,
+    operations: [Operation.sub],
+    operandsDigits: [OperandsDigits.twoTwo],
+    secondsExpected: 20,
+  ),
+  const _LevelConfig(
+    numCorrectToLevelUp: 3,
+    numWrongToLevelDown: 3,
+    operations: [Operation.add, Operation.sub],
+    operandsDigits: [OperandsDigits.oneTwo, OperandsDigits.twoTwo],
+    secondsExpected: 20,
+  ),
+  // multiplications and divisions
+  const _LevelConfig(
+    numCorrectToLevelUp: 2,
+    numWrongToLevelDown: 2,
+    operations: [Operation.mul],
+    operandsDigits: [OperandsDigits.oneOne],
+    secondsExpected: 10,
+  ),
+  const _LevelConfig(
+    numCorrectToLevelUp: 2,
+    numWrongToLevelDown: 2,
+    operations: [Operation.mul],
+    operandsDigits: [OperandsDigits.oneTwo],
+    secondsExpected: 15,
+  ),
+  const _LevelConfig(
+    numCorrectToLevelUp: 2,
+    numWrongToLevelDown: 2,
+    operations: [Operation.div],
+    operandsDigits: [OperandsDigits.oneOne],
+    secondsExpected: 12,
+  ),
+  const _LevelConfig(
+    numCorrectToLevelUp: 2,
+    numWrongToLevelDown: 2,
+    operations: [Operation.div],
+    operandsDigits: [OperandsDigits.oneTwo],
+    secondsExpected: 20,
+  ),
+  const _LevelConfig(
+    numCorrectToLevelUp: 2,
+    numWrongToLevelDown: 2,
+    operations: [Operation.mul],
+    operandsDigits: [OperandsDigits.twoTwo],
+    secondsExpected: 25,
+  ),
+  const _LevelConfig(
+    numCorrectToLevelUp: 2,
+    numWrongToLevelDown: 2,
+    operations: [Operation.div],
+    operandsDigits: [OperandsDigits.twoTwo],
+    secondsExpected: 30,
+  ),
+  const _LevelConfig(
+    numCorrectToLevelUp: 3,
+    numWrongToLevelDown: 3,
+    operations: [Operation.mul, Operation.div],
+    operandsDigits: [OperandsDigits.oneTwo, OperandsDigits.twoTwo],
+    secondsExpected: 25,
+  ),
+  // all operations
+  const _LevelConfig(
+    numCorrectToLevelUp: -1,
+    numWrongToLevelDown: 3,
+    operations: [Operation.add, Operation.sub, Operation.mul, Operation.div],
+    operandsDigits: [OperandsDigits.twoTwo],
+    secondsExpected: 30,
+  ),
+];
+
+class _LevelConfig {
+  const _LevelConfig({
+    required this.numCorrectToLevelUp,
+    required this.numWrongToLevelDown,
+    required this.operations,
+    required this.operandsDigits,
+    required this.secondsExpected,
+  });
+
+  final int numCorrectToLevelUp;
+  final int numWrongToLevelDown;
+  final List<Operation> operations;
+  final List<OperandsDigits> operandsDigits;
+  final int secondsExpected;
+}
+
+enum OperandsDigits { oneOne, oneTwo, twoTwo }

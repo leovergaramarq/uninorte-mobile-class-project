@@ -42,7 +42,7 @@ class _FirstPageState extends State<FirstPage> {
                   key: const Key('LoginButton'),
                   onPressed: () {
                     Get.to(
-                      LoginPage(
+                      () => const LoginPage(
                         key: Key('LoginPage'),
                       ),
                     );

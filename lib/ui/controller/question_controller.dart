@@ -171,6 +171,10 @@ class QuestionController extends GetxController {
     _level.value = level;
   }
 
+  void resetLevel() {
+    _level.value = 1;
+  }
+
   void resetStates() {
     print('Resetting states');
     // _level.value = 1;

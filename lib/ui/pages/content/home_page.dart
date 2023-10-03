@@ -206,7 +206,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         ),
       ),
       bottomNavigationBar:
-          BottomNavBarWidget(section: BottomNavBarWidgetSections.home),
+          BottomNavBarWidget(section: BottomNavBarWidgetSection.home),
     );
   }
 }

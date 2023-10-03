@@ -9,6 +9,7 @@ import 'package:uninorte_mobile_class_project/ui/pages/auth/first_page.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/auth_controller.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/user_controller.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/session_controller.dart';
+import 'package:uninorte_mobile_class_project/ui/controller/question_controller.dart';
 
 import 'package:uninorte_mobile_class_project/domain/models/user.dart';
 
@@ -31,6 +32,7 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
   final AuthController _authController = Get.find<AuthController>();
   final UserController _userController = Get.find<UserController>();
   final SessionController _sessionController = Get.find<SessionController>();
+  final QuestionController _questionController = Get.find<QuestionController>();
 
   @override
   void initState() {
@@ -44,6 +46,7 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
     if (_sessionController.areSessionsFetched) {
       _sessionController.resetSessions();
     }
+    _questionController.resetLevel();
     super.initState();
   }
 
@@ -285,6 +288,15 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return "Enter birthdate";
+                            }
+                            DateTime date;
+                            try {
+                              date = DateTime.parse(value);
+                            } catch (e) {
+                              return "Enter birthdate in valid format";
+                            }
+                            if (date.isAfter(DateTime.now())) {
+                              return "Enter valid birthdate";
                             }
                             return null;
                           },
