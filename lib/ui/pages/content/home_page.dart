@@ -161,9 +161,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         children: [
                           Image.asset(
                             'assets/img/exercise_bg.png', // Reemplaza con la ruta de tu imagen de fondo
-                            // width: double.infinity,
-                            // height: double.infinity,
-                            // fit: BoxFit.cover,
                           ),
                           Obx(() => LevelStarsWidget(
                                 level: min(_questionController.level,

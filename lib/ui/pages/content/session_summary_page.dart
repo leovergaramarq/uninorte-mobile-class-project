@@ -1,96 +1,163 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'dart:math';
 
-import 'package:uninorte_mobile_class_project/ui/pages/auth/login_page.dart';
 import 'package:uninorte_mobile_class_project/ui/pages/content/quest_page.dart';
 import 'package:uninorte_mobile_class_project/ui/widgets/app_bar_widget.dart';
-import 'package:uninorte_mobile_class_project/ui/widgets/bottom_nav_bar_widget.dart';
+import 'package:uninorte_mobile_class_project/ui/widgets/answer_item_widget.dart';
 
 import 'package:uninorte_mobile_class_project/ui/widgets/level_stars_widget.dart';
 
 import 'package:uninorte_mobile_class_project/ui/controller/auth_controller.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/question_controller.dart';
 
-class SessionSummaryPage extends StatelessWidget {
-  SessionSummaryPage({Key? key}) : super(key: key);
+import 'package:uninorte_mobile_class_project/domain/models/answer.dart';
 
+class SessionSummaryPage extends StatefulWidget {
+  const SessionSummaryPage({Key? key}) : super(key: key);
+
+  @override
+  _SessionSummaryPageState createState() => _SessionSummaryPageState();
+}
+
+class _SessionSummaryPageState extends State<SessionSummaryPage>
+    with WidgetsBindingObserver {
   // final AuthController _authController = Get.find<AuthController>();
   final QuestionController _questionController = Get.find<QuestionController>();
 
+  // @override
+  // void dispose() {
+  //   print('Disposing SessionSummaryPage');
+  //   SchedulerBinding.instance.addPostFrameCallback((_) {
+  //     if (_questionController.isSessionActive) _questionController.endSession();
+  //   });
+  //   super.dispose();
+  // }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xF2F2F2).withOpacity(1),
-      appBar: AppBarWidget(
-        text: 'Results',
-        logoutButton: false,
-        backButton: true,
-      ),
-      body: Container(
-        padding: const EdgeInsets.fromLTRB(16, 56, 16, 36),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Column(
-                children: [
-                  Column(
-                    children: [
-                      LevelStarsWidget(
-                        level: min(_questionController.level,
-                            _questionController.maxLevel),
-                        starSize: 96,
-                      ),
-                      const Text('New level!',
-                          style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.w500)),
-                    ],
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const Text('Answers',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w500)),
-                      ListView(
-                        children: _questionController.session.answers
-                            .map((answer) => Container(
-                                child: Text(answer.isCorrect.toString())))
-                            .toList(),
-                      )
-                    ],
-                  )
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey.shade400,
-                        foregroundColor: Colors.black87),
-                    onPressed: () {
-                      Get.back();
-                    },
-                    child: const Text('Back to menu',
-                        style: TextStyle(fontSize: 20)),
-                  ),
-                  SizedBox(
-                    width: 24,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Get.off(() => const QuestPage(
-                            key: Key('QuestPage'),
-                          ));
-                    },
-                    child:
-                        const Text('Try again', style: TextStyle(fontSize: 20)),
-                  ),
-                ],
-              )
-            ]),
+    return WillPopScope(
+      onWillPop: () async {
+        // SchedulerBinding.instance.addPostFrameCallback((_) {
+        //     if (_questionController.isSessionActive) _questionController.endSession();
+        //   });
+        _questionController.endSession();
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: Color(0xF2F2F2).withOpacity(1),
+        appBar: AppBarWidget(
+          text: 'Results',
+          logoutButton: false,
+          backButton: true,
+        ),
+        body: Container(
+          padding: const EdgeInsets.fromLTRB(16, 48, 16, 36),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    Column(
+                      children: [
+                        LevelStarsWidget(
+                          level: min(_questionController.level,
+                              _questionController.maxLevel),
+                          starSize: 96,
+                        ),
+                        const Text('New level!',
+                            style: TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.w500)),
+                        Text(
+                            '${_questionController.session.numCorrectAnswers}/${_questionController.session.numAnswers} correct answers',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w500)),
+                        Text(
+                            'Total time: ${Answer.formatTime(_questionController.session.totalSeconds)}',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w500)),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Column(
+                      // mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Answers',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w500)),
+                        Container(
+                          height: 360,
+                          // child: ListView(
+                          //   children: _questionController.session.answers
+                          //       .asMap()
+                          //       .map((i, answer) => MapEntry(
+                          //           i,
+                          //           AnswerItemWidget(
+                          //             answer: answer,
+                          //             numAnswer: i + 1,
+                          //           )))
+                          //       .values
+                          //       .toList(),
+                          // ),
+                          child: _questionController.session.answers.length != 0
+                              ? ListView.separated(
+                                  separatorBuilder:
+                                      (BuildContext context, int index) {
+                                    return const SizedBox(height: 6);
+                                  },
+                                  // scrollDirection: Axis.horizontal,
+                                  shrinkWrap: true,
+                                  itemCount: _questionController
+                                      .session.answers.length,
+                                  itemBuilder: (context, i) =>
+                                      (AnswerItemWidget(
+                                    answer:
+                                        _questionController.session.answers[i],
+                                    numAnswer: i + 1,
+                                  )),
+                                )
+                              : Container(),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey.shade400,
+                          foregroundColor: Colors.black87),
+                      onPressed: () {
+                        _questionController.endSession();
+                        Get.back();
+                      },
+                      child: const Text('Back to menu',
+                          style: TextStyle(fontSize: 20)),
+                    ),
+                    SizedBox(
+                      width: 24,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        _questionController.endSession();
+                        Get.off(() => const QuestPage(
+                              key: Key('QuestPage'),
+                            ));
+                      },
+                      child: const Text('Try again',
+                          style: TextStyle(fontSize: 20)),
+                    ),
+                  ],
+                )
+              ]),
+        ),
       ),
     );
   }

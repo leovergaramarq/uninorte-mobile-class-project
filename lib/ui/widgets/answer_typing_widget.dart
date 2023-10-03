@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class AnswerWidget extends StatelessWidget {
-  AnswerWidget(this.input);
+class AnswerTypingWidget extends StatelessWidget {
+  AnswerTypingWidget(this.input);
 
   int input;
 

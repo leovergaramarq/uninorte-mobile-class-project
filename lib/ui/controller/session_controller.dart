@@ -30,6 +30,7 @@ class SessionController extends GetxController {
     logInfo("Add session");
     Session newSession = await _sessionUseCase.addSession(session);
     _sessions.value.add(newSession);
+    _sessions.refresh();
     return newSession;
   }
 

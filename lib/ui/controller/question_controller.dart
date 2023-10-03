@@ -45,6 +45,8 @@ class QuestionController extends GetxController {
     if (userEmail.isEmpty) {
       print('email is empty');
     }
+
+    print('Starting session');
     _session.value = Session.defaultSession();
     _session.value.userEmail = userEmail;
     _isSessionActive.value = true;
@@ -137,9 +139,11 @@ class QuestionController extends GetxController {
         seconds: seconds);
 
     _session.value.answers.add(newAnswer);
+    _session.refresh();
 
     _level.value = _questionUseCase.getNewLevel(session, level);
     print('newLevel $level');
+    print(session.answers.length);
 
     return newAnswer;
   }
@@ -168,7 +172,7 @@ class QuestionController extends GetxController {
   }
 
   void resetStates() {
-    // Reset values
+    print('Resetting states');
     // _level.value = 1;
     _userAnswer.value = 0;
     _question.value = Question.defaultQuestion();

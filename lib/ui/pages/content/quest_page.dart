@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 
 import 'package:uninorte_mobile_class_project/ui/pages/content/session_summary_page.dart';
 
-import 'package:uninorte_mobile_class_project/ui/widgets/answer_widget.dart';
+import 'package:uninorte_mobile_class_project/ui/widgets/answer_typing_widget.dart';
 import 'package:uninorte_mobile_class_project/ui/widgets/app_bar_widget.dart';
 import 'package:uninorte_mobile_class_project/ui/widgets/question_widget.dart';
 import 'package:uninorte_mobile_class_project/ui/widgets/numpad_widget.dart';
@@ -57,9 +57,8 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    print('dispose');
+    print('Disposing QuestPage');
     answerTimer.cancel();
-    _questionController.endSession();
     super.dispose();
   }
 
@@ -182,7 +181,7 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        return Future<bool>(() async =>
+        bool leaveSession = await Future<bool>(() async =>
             await showDialog<bool>(
                 context: context,
                 builder: (BuildContext context) => AlertDialog(
@@ -207,6 +206,8 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
                       ],
                     )) ??
             false);
+        if (leaveSession) _questionController.cancelSesion();
+        return leaveSession;
       },
       child: Scaffold(
         backgroundColor: Color(0xF2F2F2).withOpacity(1),
@@ -227,11 +228,16 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Obx(() => Text(
-                            'Question ${_questionController.session.answers.length + 1}/${_questionController.questionsPerSession}',
-                            style: const TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w500),
-                          )),
+                      Obx(() {
+                        int numQuestion =
+                            _questionController.session.answers.length;
+                        if (!_questionController.didAnswer) numQuestion += 1;
+                        return Text(
+                          'Question $numQuestion/${_questionController.questionsPerSession}',
+                          style: const TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w500),
+                        );
+                      }),
                       Row(
                         children: [
                           Text(
@@ -287,7 +293,7 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
                           )),
                           child: Center(
                             child: Obx(() => SingleChildScrollView(
-                                  child: AnswerWidget(
+                                  child: AnswerTypingWidget(
                                       _questionController.userAnswer),
                                   scrollDirection: Axis.horizontal,
                                 )),
