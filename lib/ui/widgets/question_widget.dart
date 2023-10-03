@@ -17,7 +17,7 @@ class QuestionWidget extends StatelessWidget {
       ),
       SizedBox(width: 16),
       Text(
-        question.op,
+        question.opString,
         style: TextStyle(fontSize: 56, color: Colors.purple),
       ),
       SizedBox(width: 16),

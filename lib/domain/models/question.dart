@@ -3,26 +3,41 @@ class Question {
 
   Question.defaultQuestion()
       : num1 = 0,
-        op = '',
+        op = Operation.none,
         num2 = 0;
 
   int num1;
   int num2;
-  String op;
+  Operation op;
 
   int get level {
     return (num1.toString().length + num2.toString().length) ~/ 2;
   }
 
+  String get opString {
+    switch (op) {
+      case Operation.add:
+        return '+';
+      case Operation.sub:
+        return '-';
+      case Operation.mul:
+        return 'x';
+      case Operation.div:
+        return '÷';
+      default:
+        return '?';
+    }
+  }
+
   int getAnswer() {
     switch (op) {
-      case '+':
+      case Operation.add:
         return num1 + num2;
-      case '-':
+      case Operation.sub:
         return num1 - num2;
-      case '*':
+      case Operation.mul:
         return num1 * num2;
-      case '/':
+      case Operation.div:
         return num1 ~/ num2;
       default:
         return 0;
@@ -31,6 +46,8 @@ class Question {
 
   @override
   String toString() {
-    return "$num1 $op $num2";
+    return "$num1 $opString $num2";
   }
 }
+
+enum Operation { add, sub, mul, div, none }

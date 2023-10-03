@@ -229,7 +229,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                         TextButton(
                             key: const Key('ButtonLoginCreateAccount'),
                             onPressed: () => Get.to(
-                                  const SignUpPage(
+                                  () => const SignUpPage(
                                     key: Key('SignUpPage'),
                                   ),
                                 ),

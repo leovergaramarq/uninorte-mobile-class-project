@@ -286,6 +286,15 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
                             if (value == null || value.isEmpty) {
                               return "Enter birthdate";
                             }
+                            DateTime date;
+                            try {
+                              date = DateTime.parse(value);
+                            } catch (e) {
+                              return "Enter birthdate in valid format";
+                            }
+                            if (date.isAfter(DateTime.now())) {
+                              return "Enter valid birthdate";
+                            }
                             return null;
                           },
                         ),

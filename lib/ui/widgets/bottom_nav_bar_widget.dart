@@ -8,7 +8,7 @@ import 'package:uninorte_mobile_class_project/ui/pages/content/history_page.dart
 class BottomNavBarWidget extends StatelessWidget {
   BottomNavBarWidget({Key? key, required this.section}) : super(key: key);
 
-  final BottomNavBarWidgetSections section;
+  final BottomNavBarWidgetSection section;
 
   @override
   Widget build(BuildContext context) {
@@ -60,4 +60,4 @@ class BottomNavBarWidget extends StatelessWidget {
   }
 }
 
-enum BottomNavBarWidgetSections { home, profile, history }
+enum BottomNavBarWidgetSection { home, profile, history }

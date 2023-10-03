@@ -25,7 +25,7 @@ class HistoryPage extends StatelessWidget {
       backgroundColor: Color(0xF2F2F2).withOpacity(1),
       appBar: AppBarWidget(text: 'History', logoutButton: true),
       bottomNavigationBar:
-          BottomNavBarWidget(section: BottomNavBarWidgetSections.history),
+          BottomNavBarWidget(section: BottomNavBarWidgetSection.history),
     );
   }
 }
