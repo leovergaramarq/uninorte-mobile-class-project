@@ -7,9 +7,10 @@ import 'package:uninorte_mobile_class_project/ui/pages/auth/first_page.dart';
 
 import 'package:uninorte_mobile_class_project/ui/controller/auth_controller.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/user_controller.dart';
+import 'package:uninorte_mobile_class_project/ui/controller/session_controller.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/question_controller.dart';
 
-import 'package:uninorte_mobile_class_project/domain/models/user.dart';
+// import 'package:uninorte_mobile_class_project/domain/models/user.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -26,6 +27,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
 
   final AuthController _authController = Get.find<AuthController>();
   final UserController _userController = Get.find<UserController>();
+  final SessionController _sessionController = Get.find<SessionController>();
   final QuestionController _questionController = Get.find<QuestionController>();
 
   @override
@@ -34,8 +36,11 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
       print('Logging out');
       _authController.logOut();
     }
-    if (_userController.userFetched) {
+    if (_userController.isUserFetched) {
       _userController.resetUser();
+    }
+    if (_sessionController.areSessionsFetched) {
+      _sessionController.resetSessions();
     }
     super.initState();
   }

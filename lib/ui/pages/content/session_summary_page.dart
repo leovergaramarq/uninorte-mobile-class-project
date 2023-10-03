@@ -26,22 +26,10 @@ class _SessionSummaryPageState extends State<SessionSummaryPage>
   // final AuthController _authController = Get.find<AuthController>();
   final QuestionController _questionController = Get.find<QuestionController>();
 
-  // @override
-  // void dispose() {
-  //   print('Disposing SessionSummaryPage');
-  //   SchedulerBinding.instance.addPostFrameCallback((_) {
-  //     if (_questionController.isSessionActive) _questionController.endSession();
-  //   });
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        // SchedulerBinding.instance.addPostFrameCallback((_) {
-        //     if (_questionController.isSessionActive) _questionController.endSession();
-        //   });
         _questionController.endSession();
         return true;
       },
@@ -65,7 +53,7 @@ class _SessionSummaryPageState extends State<SessionSummaryPage>
                         LevelStarsWidget(
                           level: min(_questionController.level,
                               _questionController.maxLevel),
-                          starSize: 96,
+                          starSize: 78,
                         ),
                         const Text('New level!',
                             style: TextStyle(

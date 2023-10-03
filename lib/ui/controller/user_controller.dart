@@ -7,15 +7,15 @@ import 'package:uninorte_mobile_class_project/domain/models/user.dart';
 class UserController extends GetxController {
   final UserUseCase _userUseCase = UserUseCase();
   final Rx<User> _user = Rx<User>(User.defaultUser());
-  final RxBool _userFetched = RxBool(false);
+  final RxBool _isUserFetched = RxBool(false);
 
   User get user => _user.value;
-  bool get userFetched => _userFetched.value;
+  bool get isUserFetched => _isUserFetched.value;
 
   Future<void> getUser(String email) async {
     logInfo("Getting users");
     _user.value = await _userUseCase.getUser(email);
-    _userFetched.value = true;
+    _isUserFetched.value = true;
   }
 
   Future<User> addUser(User user) async {
@@ -65,6 +65,6 @@ class UserController extends GetxController {
 
   void resetUser() {
     _user.value = User.defaultUser();
-    _userFetched.value = false;
+    _isUserFetched.value = false;
   }
 }

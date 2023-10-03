@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:math';
 
-import 'package:uninorte_mobile_class_project/ui/pages/auth/login_page.dart';
+// import 'package:uninorte_mobile_class_project/ui/pages/auth/login_page.dart';
 import 'package:uninorte_mobile_class_project/ui/pages/content/quest_page.dart';
 import 'package:uninorte_mobile_class_project/ui/widgets/app_bar_widget.dart';
 import 'package:uninorte_mobile_class_project/ui/widgets/bottom_nav_bar_widget.dart';
@@ -40,13 +40,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       });
     }
     super.initState();
-  }
-
-  void onLogout() async {
-    await _authController.logOut();
-    Get.off(() => LoginPage(
-          key: const Key('LoginPage'),
-        ));
   }
 
   Widget SessionsSummaryWidget() {
@@ -134,10 +127,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    print('${_sessionController.sessions}');
     return Scaffold(
       backgroundColor: Color(0xF2F2F2).withOpacity(1),
-      appBar:
-          AppBarWidget(text: 'Home', logoutButton: true, onLogout: onLogout),
+      appBar: AppBarWidget(text: 'Home', logoutButton: true),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.fromLTRB(16, 32, 16, 24),
@@ -148,7 +141,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Hello, ${_userController.user.email}!',
+                    _authController.isLoggedIn
+                        ? 'Hello, ${_userController.user.email}!'
+                        : 'Welcome to Sum+',
                     style: const TextStyle(fontSize: 24),
                   ),
                   const SizedBox(
@@ -190,7 +185,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 ],
               ),
               const SizedBox(height: 56),
-              SessionsSummaryWidget(),
+              if (_authController.isLoggedIn) SessionsSummaryWidget(),
             ],
           ),
         ),

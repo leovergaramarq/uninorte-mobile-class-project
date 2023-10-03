@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:uninorte_mobile_class_project/ui/pages/auth/signup_page.dart';
+// import 'package:uninorte_mobile_class_project/ui/pages/auth/signup_page.dart';
 import 'package:uninorte_mobile_class_project/ui/pages/auth/login_page.dart';
 
 class FirstPage extends StatefulWidget {
