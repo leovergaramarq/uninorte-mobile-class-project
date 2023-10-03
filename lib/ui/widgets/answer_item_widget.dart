@@ -11,7 +11,8 @@ class AnswerItemWidget extends StatelessWidget {
     List<Widget> children = [
       Text(
         'Question: ${answer.question.toString()}',
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+        style: TextStyle(
+            fontSize: 18, fontWeight: FontWeight.w400, fontFamily: 'Itim'),
       ),
       SizedBox(
         height: 8,
@@ -20,7 +21,8 @@ class AnswerItemWidget extends StatelessWidget {
         children: [
           Text(
             'Your answer: ${answer.userAnswer}',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+            style: TextStyle(
+                fontSize: 18, fontWeight: FontWeight.w400, fontFamily: 'Itim'),
           ),
           answer.isCorrect
               ? Icon(Icons.check, size: 32, color: Colors.green.shade600)
@@ -35,7 +37,8 @@ class AnswerItemWidget extends StatelessWidget {
         ),
         Text(
           'Correct answer: ${answer.question.getAnswer()}',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+          style: TextStyle(
+              fontSize: 18, fontWeight: FontWeight.w400, fontFamily: 'Itim'),
         )
       ]);
     }

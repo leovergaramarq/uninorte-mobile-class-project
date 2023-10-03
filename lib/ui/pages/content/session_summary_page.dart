@@ -57,15 +57,21 @@ class _SessionSummaryPageState extends State<SessionSummaryPage>
                         ),
                         const Text('New level!',
                             style: TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.w500)),
+                                fontSize: 24,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Itim')),
                         Text(
                             '${_questionController.session.numCorrectAnswers}/${_questionController.session.numAnswers} correct answers',
                             style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w500)),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Itim')),
                         Text(
                             'Total time: ${Answer.formatTime(_questionController.session.totalSeconds)}',
                             style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w500)),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Itim')),
                       ],
                     ),
                     SizedBox(
@@ -77,7 +83,9 @@ class _SessionSummaryPageState extends State<SessionSummaryPage>
                       children: [
                         const Text('Answers',
                             style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w500)),
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Itim')),
                         Container(
                           height: 360,
                           // child: ListView(
@@ -127,7 +135,7 @@ class _SessionSummaryPageState extends State<SessionSummaryPage>
                         Get.back();
                       },
                       child: const Text('Back to menu',
-                          style: TextStyle(fontSize: 20)),
+                          style: TextStyle(fontSize: 20, fontFamily: 'Itim')),
                     ),
                     SizedBox(
                       width: 24,
@@ -140,7 +148,7 @@ class _SessionSummaryPageState extends State<SessionSummaryPage>
                             ));
                       },
                       child: const Text('Try again',
-                          style: TextStyle(fontSize: 20)),
+                          style: TextStyle(fontSize: 20, fontFamily: 'Itim')),
                     ),
                   ],
                 )

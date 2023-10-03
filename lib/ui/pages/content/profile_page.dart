@@ -1,21 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-// import 'package:uninorte_mobile_class_project/ui/pages/auth/login_page.dart';
-// import 'package:uninorte_mobile_class_project/ui/pages/content/quest_page.dart';
 import 'package:uninorte_mobile_class_project/ui/widgets/app_bar_widget.dart';
 import 'package:uninorte_mobile_class_project/ui/widgets/bottom_nav_bar_widget.dart';
-
-// import 'package:uninorte_mobile_class_project/ui/widgets/level_stars_widget.dart';
-
-import 'package:uninorte_mobile_class_project/ui/controller/auth_controller.dart';
-// import 'package:uninorte_mobile_class_project/ui/controller/question_controller.dart';
+import 'package:uninorte_mobile_class_project/ui/controller/user_controller.dart';
 
 class ProfilePage extends StatelessWidget {
   ProfilePage({Key? key}) : super(key: key);
 
-  final AuthController _authController = Get.find<AuthController>();
-  // final QuestionController _questionController = Get.find<QuestionController>();
+  final UserController _authController = Get.find<UserController>();
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +16,81 @@ class ProfilePage extends StatelessWidget {
       appBar: AppBarWidget(text: 'Profile', logoutButton: true),
       bottomNavigationBar:
           BottomNavBarWidget(section: BottomNavBarWidgetSections.profile),
+      body: ListView(
+        children: [
+          SizedBox(height: 20.0), // Espacio entre AppBar y Container
+          Center(
+            child: Container(
+              color: Colors.white,
+              padding: EdgeInsets.all(16.0),
+              height: 210.0,
+              width: 500.0,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Personal Info',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Itim',
+                          ),
+                        ),
+                        SizedBox(height: 16.0),
+                        Text(
+                          'Email:  ${_authController.user.email}',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontFamily: 'Itim',
+                          ),
+                        ),
+                        SizedBox(height: 8.0),
+                        Text(
+                          'School: ${_authController.user.school}',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontFamily: 'Itim',
+                          ),
+                        ),
+                        SizedBox(height: 8.0),
+                        Text(
+                          'Degree: ${_authController.user.degree}',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontFamily: 'Itim',
+                          ),
+                        ),
+                        SizedBox(height: 8.0),
+                        Text(
+                          'Birthdate: ${_authController.user.birthDate}',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontFamily: 'Itim',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: CircleAvatar(
+                      radius: 70.0,
+                      backgroundColor: Colors.grey,
+                      backgroundImage:
+                          Image.asset('assets/img/profile_photo_2.jpg').image,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

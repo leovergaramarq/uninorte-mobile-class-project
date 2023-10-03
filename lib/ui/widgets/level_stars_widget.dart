@@ -11,14 +11,19 @@ class LevelStarsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     print('level $level');
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(
-          level,
-          (index) => Icon(
-                Icons.star,
-                color: Color(0xD3B549).withOpacity(1),
-                size: starSize.toDouble(),
-              )),
-    );
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(
+            level,
+            (index) => Padding(
+                  padding: const EdgeInsets.all(
+                      4.0), // Ajusta el espacio entre las imágenes
+                  child: Image.asset(
+                    'assets/img/star_level.png', // Ruta de tu imagen personalizada
+                    width:
+                        starSize.toDouble(), // Establece el ancho de la imagen
+                    height:
+                        starSize.toDouble(), // Establece la altura de la imagen
+                  ),
+                )));
   }
 }

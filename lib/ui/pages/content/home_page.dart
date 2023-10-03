@@ -143,18 +143,24 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     _authController.isLoggedIn
                         ? 'Hello, ${_userController.user.email}!'
                         : 'Welcome to Sum+',
-                    style: const TextStyle(fontSize: 24),
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontFamily: 'Itim',
+                    ),
                   ),
                   const SizedBox(
                     height: 24,
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Column(
                         children: [
-                          Image.asset(
-                            'assets/img/exercise_bg.png', // Reemplaza con la ruta de tu imagen de fondo
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Image.asset(
+                              'assets/img/exercise_bg.png',
+                            ),
                           ),
                           Obx(() => LevelStarsWidget(
                                 level: min(_questionController.level,
@@ -167,6 +173,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         width: 24,
                       ),
                       ElevatedButton(
+                        key: const Key('StartButton'),
+                        style: ElevatedButton.styleFrom(
+                          // primary: Color(0xFF997AC1),
+                          padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                        ),
                         onPressed: () {
                           Get.to(() => const QuestPage(
                                 key: Key('QuestPage'),
@@ -177,7 +190,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                             _sessionController.sessions.isNotEmpty
                                 ? 'Continue'
                                 : 'Let\'s go!',
-                            style: TextStyle(fontSize: 20))),
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontFamily: 'Itim',
+                            ))),
                       ),
                     ],
                   )
