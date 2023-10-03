@@ -33,7 +33,6 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
   @override
   void initState() {
     if (_authController.isLoggedIn || _authController.isGuest) {
-      print('Logging out');
       _authController.logOut();
     }
     if (_userController.isUserFetched) {

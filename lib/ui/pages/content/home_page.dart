@@ -7,6 +7,7 @@ import 'package:uninorte_mobile_class_project/ui/pages/content/quest_page.dart';
 import 'package:uninorte_mobile_class_project/ui/widgets/app_bar_widget.dart';
 import 'package:uninorte_mobile_class_project/ui/widgets/bottom_nav_bar_widget.dart';
 import 'package:uninorte_mobile_class_project/ui/widgets/level_stars_widget.dart';
+import 'package:uninorte_mobile_class_project/ui/utils/auth_util.dart';
 
 import 'package:uninorte_mobile_class_project/ui/controller/auth_controller.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/question_controller.dart';
@@ -24,6 +25,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
+  final AuthUtil _authUtil = AuthUtil();
   final AuthController _authController = Get.find<AuthController>();
   final QuestionController _questionController = Get.find<QuestionController>();
   final UserController _userController = Get.find<UserController>();
@@ -127,86 +129,95 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xF2F2F2).withOpacity(1),
-      appBar: AppBarWidget(text: 'Home', logoutButton: true),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(16, 32, 16, 24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return WillPopScope(
+        onWillPop: () async =>
+            (_authController.isLoggedIn || _authController.isGuest) &&
+            await _authUtil.validateLogout(context),
+        child: Scaffold(
+          backgroundColor: Color(0xF2F2F2).withOpacity(1),
+          appBar: AppBarWidget(text: 'Home', logoutButton: true),
+          body: SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(16, 32, 16, 24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(
-                    _authController.isLoggedIn
-                        ? 'Hello, ${_userController.user.email}!'
-                        : 'Welcome to Sum+',
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontFamily: 'Itim',
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
+                      Text(
+                        _authController.isLoggedIn
+                            ? 'Hello, ${_userController.user.email}!'
+                            : 'Welcome to Sum+',
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontFamily: 'Itim',
+                        ),
+                      ),
+                      // const SizedBox(
+                      //   height: 24,
+                      // ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Image.asset(
-                              'assets/img/exercise_bg.png',
+                          Container(
+                            width: 200,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Image.asset(
+                                    'assets/img/exercise_bg.png',
+                                  ),
+                                ),
+                                Obx(() => LevelStarsWidget(
+                                      level: min(_questionController.level,
+                                          _questionController.maxLevel),
+                                      starSize: 36,
+                                    ))
+                              ],
                             ),
                           ),
-                          Obx(() => LevelStarsWidget(
-                                level: min(_questionController.level,
-                                    _questionController.maxLevel),
-                                starSize: 36,
-                              ))
+                          const SizedBox(
+                            width: 24,
+                          ),
+                          ElevatedButton(
+                            key: const Key('StartButton'),
+                            style: ElevatedButton.styleFrom(
+                              // primary: Color(0xFF997AC1),
+                              padding:
+                                  const EdgeInsets.fromLTRB(32, 16, 32, 16),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                            ),
+                            onPressed: () {
+                              Get.to(() => const QuestPage(
+                                    key: Key('QuestPage'),
+                                  ));
+                            },
+                            child: Obx(() => Text(
+                                // _sessionController.areSessionsFetched &&
+                                _sessionController.sessions.isNotEmpty
+                                    ? 'Continue'
+                                    : 'Let\'s go!',
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  fontFamily: 'Itim',
+                                ))),
+                          ),
                         ],
-                      ),
-                      const SizedBox(
-                        width: 24,
-                      ),
-                      ElevatedButton(
-                        key: const Key('StartButton'),
-                        style: ElevatedButton.styleFrom(
-                          // primary: Color(0xFF997AC1),
-                          padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
-                        ),
-                        onPressed: () {
-                          Get.to(() => const QuestPage(
-                                key: Key('QuestPage'),
-                              ));
-                        },
-                        child: Obx(() => Text(
-                            // _sessionController.areSessionsFetched &&
-                            _sessionController.sessions.isNotEmpty
-                                ? 'Continue'
-                                : 'Let\'s go!',
-                            style: TextStyle(
-                              fontSize: 25,
-                              fontFamily: 'Itim',
-                            ))),
-                      ),
+                      )
                     ],
-                  )
+                  ),
+                  const SizedBox(height: 56),
+                  if (_authController.isLoggedIn) SessionsSummaryWidget(),
                 ],
               ),
-              const SizedBox(height: 56),
-              if (_authController.isLoggedIn) SessionsSummaryWidget(),
-            ],
+            ),
           ),
-        ),
-      ),
-      bottomNavigationBar:
-          BottomNavBarWidget(section: BottomNavBarWidgetSection.home),
-    );
+          bottomNavigationBar:
+              BottomNavBarWidget(section: BottomNavBarWidgetSection.home),
+        ));
   }
 }

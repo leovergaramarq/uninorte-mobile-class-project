@@ -7,6 +7,7 @@ import 'package:uninorte_mobile_class_project/ui/controller/session_controller.d
 import 'package:uninorte_mobile_class_project/ui/controller/question_controller.dart';
 
 import 'package:uninorte_mobile_class_project/ui/pages/auth/login_page.dart';
+import 'package:uninorte_mobile_class_project/ui/utils/auth_util.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   AppBarWidget(
@@ -15,6 +16,8 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
       this.backButton = false,
       this.logoutButton = false})
       : super(key: key);
+
+  final AuthUtil _authUtil = AuthUtil();
 
   final AuthController _authController = Get.find<AuthController>();
   final UserController _userController = Get.find<UserController>();
@@ -25,7 +28,8 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final bool backButton;
   final bool logoutButton;
 
-  void onLogout() {
+  Future<void> onLogout(BuildContext context) async {
+    if (!(await _authUtil.validateLogout(context))) return;
     _authController.logOut();
     if (_userController.isUserFetched) {
       _userController.resetUser();
@@ -48,7 +52,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
         if (logoutButton)
           IconButton(
               key: const Key('ButtonHomeLogOff'),
-              onPressed: onLogout,
+              onPressed: () => onLogout(context),
               icon: const Icon(Icons.logout))
       ],
       automaticallyImplyLeading: backButton,

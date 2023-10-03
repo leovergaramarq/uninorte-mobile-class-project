@@ -26,8 +26,7 @@ class AuthController extends GetxController {
   }
 
   void logOut() {
-    // if (_isLogged.value) _isLogged.value = false;
-    // if (_isGuest.value) _isGuest.value = false;
+    print('Logging out');
     _isLoggedIn.value = false;
     _isGuest.value = false;
   }
@@ -36,8 +35,4 @@ class AuthController extends GetxController {
     _isGuest.value = true;
     if (_isLoggedIn.value) _isLoggedIn.value = false;
   }
-
-  // void setLoggedIn() {
-  //   _isLogged.value = true;
-  // }
 }

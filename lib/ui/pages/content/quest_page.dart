@@ -192,14 +192,12 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
                         TextButton(
                           child: Text("Cancel"),
                           onPressed: () {
-                            // result = false;
                             Navigator.of(context).pop(false);
                           },
                         ),
                         TextButton(
                           child: Text("Continue"),
                           onPressed: () {
-                            // result = true;
                             Navigator.of(context).pop(true);
                           },
                         ),
