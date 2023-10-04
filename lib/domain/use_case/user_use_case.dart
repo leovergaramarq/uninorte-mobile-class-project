@@ -1,4 +1,4 @@
-import 'package:get/get.dart';
+// import 'package:get/get.dart';
 
 // import 'package:uninorte_mobile_class_project/domain/repositories/user_repository.dart';
 import 'package:uninorte_mobile_class_project/data/repositories/user_retool_repository.dart';

@@ -1,4 +1,4 @@
-import 'package:get/get.dart';
+// import 'package:get/get.dart';
 
 // import 'package:uninorte_mobile_class_project/domain/repositories/session_repository.dart';
 import 'package:uninorte_mobile_class_project/data/repositories/session_retool_repository.dart';
@@ -18,10 +18,4 @@ class SessionUseCase {
 
   Future<Session> addSession(Session session) async =>
       await _sessionRepository.addSession(session);
-
-  Future<void> updateSession(Session session) async =>
-      await _sessionRepository.updateSession(session);
-
-  Future<bool> deleteSession(int id) async =>
-      await _sessionRepository.deleteSession(id);
 }

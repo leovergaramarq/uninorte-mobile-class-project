@@ -15,10 +15,4 @@ class SessionRetoolRepository implements SessionRepository {
 
   Future<Session> addSession(Session Session) async =>
       await _sessionDatasource.addSession(Session);
-
-  Future<bool> updateSession(Session Session) async =>
-      await _sessionDatasource.updateSession(Session);
-
-  Future<bool> deleteSession(int id) async =>
-      await _sessionDatasource.deleteSession(id);
 }

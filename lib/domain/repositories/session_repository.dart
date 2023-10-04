@@ -5,8 +5,4 @@ abstract class SessionRepository {
   Future<List<Session>> getSessionsFromUser(String userEmail, {int? limit});
 
   Future<Session> addSession(Session Session);
-
-  Future<bool> updateSession(Session Session);
-
-  Future<bool> deleteSession(int id);
 }
