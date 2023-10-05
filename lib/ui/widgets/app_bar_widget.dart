@@ -30,7 +30,9 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
 
   Future<void> onLogout(BuildContext context) async {
     if (!(await _authUtil.validateLogout(context))) return;
-    _authController.logOut();
+
+    _authController.logOut().catchError((e) => print(e));
+
     if (_userController.isUserFetched) {
       _userController.resetUser();
     }

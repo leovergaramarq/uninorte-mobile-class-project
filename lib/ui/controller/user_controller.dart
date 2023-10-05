@@ -59,10 +59,6 @@ class UserController extends GetxController {
     return updatedUser;
   }
 
-  void deleteUser(int id) async {
-    await _userUseCase.deleteUser(id);
-  }
-
   void resetUser() {
     _user.value = User.defaultUser();
     _isUserFetched.value = false;

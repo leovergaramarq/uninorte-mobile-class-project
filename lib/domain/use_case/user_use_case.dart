@@ -8,12 +8,6 @@ class UserUseCase {
   // final UserRetoolRepository _userRepository = Get.find<UserRetoolRepository>();
   final UserRetoolRepository _userRepository = UserRetoolRepository();
 
-  UserUseCase();
-
-  Future<List<User>> getUsers() async {
-    return await _userRepository.getUsers();
-  }
-
   Future<User> getUser(String email) async {
     return await _userRepository.getUser(email);
   }
@@ -39,6 +33,4 @@ class UserUseCase {
           degree: degree,
           school: school,
           level: level);
-
-  deleteUser(int id) async => await _userRepository.deleteUser(id);
 }

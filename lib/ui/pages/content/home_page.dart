@@ -37,9 +37,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       _sessionController
           .getSessionsFromUser(_userController.user.email,
               limit: _sessionController.numSummarizeSessions)
-          .catchError((e) {
-        print(e);
-      });
+          .catchError((e) => print(e));
     }
     super.initState();
   }

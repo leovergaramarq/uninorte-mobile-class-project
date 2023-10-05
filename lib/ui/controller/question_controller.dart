@@ -89,14 +89,14 @@ class QuestionController extends GetxController {
     return question;
   }
 
-  Future<bool> nextQuestion() async {
+  bool nextQuestion() {
     if (!isSessionActive) return false;
 
     if (_questionUseCase.areAllQuestionsAnswered(session.answers)) {
       _isQuestionReady.value = false;
       return false;
     } else {
-      await getQuestion();
+      getQuestion();
 
       // if (!isQuestionReady) _isQuestionReady.value = true;
       if (didAnswer) _didAnswer.value = false;

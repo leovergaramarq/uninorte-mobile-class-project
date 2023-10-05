@@ -14,5 +14,5 @@ class AuthUseCase {
   Future<void> signUp(String email, String password) async =>
       await _authRepository.signUp(email, password);
 
-  Future<bool> logOut() async => await _authRepository.logOut();
+  Future<void> logOut() async => await _authRepository.logOut();
 }

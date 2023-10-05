@@ -25,13 +25,14 @@ class AuthController extends GetxController {
     if (_isGuest.value) _isGuest.value = false;
   }
 
-  void logOut() {
+  Future<void> logOut() async {
     print('Logging out');
+    await _authUseCase.logOut();
     _isLoggedIn.value = false;
     _isGuest.value = false;
   }
 
-  Future<void> continueAsGuest() async {
+  void continueAsGuest() {
     _isGuest.value = true;
     if (_isLoggedIn.value) _isLoggedIn.value = false;
   }

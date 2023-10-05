@@ -33,16 +33,15 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
   final AuthController _authController = Get.find<AuthController>();
   final SessionController _sessionController = Get.find<SessionController>();
   final UserController _userController = Get.find<UserController>();
-  Timer answerTimer = Timer(const Duration(), () {});
+  Timer _answerTimer = Timer(const Duration(), () {});
+  StreamSubscription<int>? _levelListener;
 
   @override
   void initState() {
     _questionController.startSession(_userController.user.email);
-    nextQuestion().catchError((e) {
-      print(e);
-    });
+    nextQuestion();
     if (_authController.isLoggedIn) {
-      _questionController.listenLevel((level) async {
+      _levelListener = _questionController.listenLevel((level) async {
         if (level == _userController.user.level) return;
         print('Updating level from ${_userController.user.level} to $level');
         try {
@@ -58,19 +57,26 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
   @override
   void dispose() {
     print('Disposing QuestPage');
-    answerTimer.cancel();
+    _answerTimer.cancel();
+    if (_levelListener != null) {
+      try {
+        _levelListener!.cancel();
+      } catch (e) {
+        print(e);
+      }
+    }
     super.dispose();
   }
 
-  Future<void> nextQuestion() async {
+  void nextQuestion() {
     if (_questionController.userAnswer != 0) _questionController.clearAnswer();
-    bool nextQuestionObtained = await _questionController.nextQuestion();
+    bool nextQuestionObtained = _questionController.nextQuestion();
 
     if (nextQuestionObtained) {
-      if (answerTimer.isActive) answerTimer.cancel();
+      if (_answerTimer.isActive) _answerTimer.cancel();
       _questionController.setAnswerSeconds(0);
 
-      answerTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      _answerTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
         _questionController.setAnswerSeconds(timer.tick);
       });
     } else {
@@ -79,9 +85,7 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
       if (_authController.isLoggedIn) {
         _sessionController
             .addSession(_questionController.session)
-            .catchError((e) {
-          print(e);
-        });
+            .catchError((e) => print(e));
       }
       Get.off(() => SessionSummaryPage(
             key: Key('SessionSummaryPage'),
@@ -89,8 +93,8 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
     }
   }
 
-  Future<void> changeQuestion() async {
-    if (!_questionController.didAnswer) await nextQuestion();
+  void changeQuestion() {
+    if (!_questionController.didAnswer) nextQuestion();
   }
 
   Widget OptionalContinueWidget() {
@@ -153,7 +157,7 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
         content: Text('You already answered this question'),
       ));
     } else {
-      answerTimer.cancel();
+      _answerTimer.cancel();
 
       // print('seconds ${_questionController.answerSeconds}');
 
