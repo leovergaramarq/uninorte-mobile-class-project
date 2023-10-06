@@ -8,30 +8,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
+import 'package:uninorte_mobile_class_project/ui/controller/auth_controller.dart';
+import 'package:uninorte_mobile_class_project/ui/controller/question_controller.dart';
+import 'package:uninorte_mobile_class_project/ui/controller/session_controller.dart';
+import 'package:uninorte_mobile_class_project/ui/controller/user_controller.dart';
 import 'package:uninorte_mobile_class_project/ui/pages/auth/login_page.dart';
 import 'package:uninorte_mobile_class_project/ui/pages/auth/signup_page.dart';
 import 'package:uninorte_mobile_class_project/ui/pages/auth/first_page.dart';
 import 'package:uninorte_mobile_class_project/main.dart';
+import 'package:uninorte_mobile_class_project/ui/pages/content/home_page.dart';
+import 'package:uninorte_mobile_class_project/ui/pages/content/profile_page.dart';
+import 'package:uninorte_mobile_class_project/ui/pages/content/history_page.dart';
 
 void main() {
-  testWidgets('First Page to Login Page', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  //Test de la primera pagina
 
-    // Verify that our First Page is rendered.
+  setUp(() {
+    Get.put(AuthController());
+    Get.put(UserController());
+    Get.put(SessionController());
+    Get.put(QuestionController());
+  });
+  testWidgets('First Page to Login Page', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      const GetMaterialApp(home: FirstPage(key: Key('FirstPage'))),
+    );
+
     expect(find.byKey(const Key('FirstPage')), findsOneWidget);
 
-    // Tap the 'Login' button and trigger a frame.
     await tester.tap(find.byKey(const Key('LoginButton')));
     await tester.pumpAndSettle();
 
-    // // Verify that our Login Page is rendered.
     expect(find.byKey(const Key('LoginPage')), findsOneWidget);
   });
 
+  //Test de autenticación de usuario
   testWidgets('Widget login validación @ email', (WidgetTester tester) async {
     await tester.pumpWidget(
-        GetMaterialApp(home: LoginPage(key: const Key('LoginPage'))));
+        const GetMaterialApp(home: LoginPage(key: Key('LoginPage'))));
     await tester.enterText(
         find.byKey(const Key('TextFormFieldLoginEmail')), 'sinarroba.com');
     await tester.enterText(
@@ -52,7 +66,7 @@ void main() {
   testWidgets('Widget login validación número de caracteres password',
       (WidgetTester tester) async {
     await tester.pumpWidget(
-        GetMaterialApp(home: LoginPage(key: const Key('LoginPage'))));
+        const GetMaterialApp(home: LoginPage(key: Key('LoginPage'))));
     await tester.enterText(
         find.byKey(const Key('TextFormFieldLoginEmail')), 'a@a.com');
     await tester.enterText(
@@ -76,7 +90,7 @@ void main() {
   testWidgets('Widget login validación campo vacio password',
       (WidgetTester tester) async {
     await tester.pumpWidget(
-        GetMaterialApp(home: LoginPage(key: const Key('LoginPage'))));
+        const GetMaterialApp(home: LoginPage(key: Key('LoginPage'))));
     await tester.enterText(
         find.byKey(const Key('TextFormFieldLoginEmail')), 'a@a.com');
     await tester.tap(find.byKey(const Key('ButtonLoginSubmit')));
@@ -126,7 +140,7 @@ void main() {
 
   testWidgets('LoginPage to SingUp', (WidgetTester tester) async {
     await tester.pumpWidget(
-      GetMaterialApp(home: LoginPage(key: const Key('LoginPage'))),
+      const GetMaterialApp(home: LoginPage(key: Key('LoginPage'))),
     );
     await tester.tap(find.byKey(const Key('ButtonLoginCreateAccount')));
     await tester.pumpAndSettle();
@@ -444,4 +458,45 @@ void main() {
     expect(find.byKey(const Key('SingUpPage')), findsOneWidget);
     expect(find.byKey(const Key('HomePage')), findsNothing);
   });
+
+  //Test de Home
+  // testWidgets('Home Page to profile page', (WidgetTester tester) async {
+  //   await tester
+  //       .pumpWidget(GetMaterialApp(home: HomePage(key: const Key('HomePage'))));
+  //   await tester.tap(find.byKey(const Key('BottomNavBar')));
+  //   await tester.pumpAndSettle();
+  //   expect(find.byKey(const Key('ProfilePage')), findsOneWidget);
+  // });
+
+  // testWidgets('Profile Page to HomePage ', (WidgetTester tester) async {
+  //   await tester.pumpWidget(
+  //       GetMaterialApp(home: ProfilePage(key: const Key('ProfilePage'))));
+  //   await tester.tap(find.byKey(const Key('HomeButton')));
+  //   await tester.pumpAndSettle();
+  //   expect(find.byKey(const Key('HomePage')), findsOneWidget);
+  // });
+
+  // testWidgets('Logout', (WidgetTester tester) async {
+  //   await tester
+  //       .pumpWidget(GetMaterialApp(home: HomePage(key: const Key('HomePage'))));
+  //   await tester.tap(find.byKey(const Key('LogoutButton')));
+  //   await tester.pumpAndSettle();
+  //   expect(find.byKey(const Key('FirstPage')), findsOneWidget);
+  // });
+
+  testWidgets('HomePage to questionPage', (WidgetTester tester) async {
+    await tester
+        .pumpWidget(GetMaterialApp(home: HomePage(key: const Key('HomePage'))));
+    await tester.tap(find.byKey(const Key('StartButton')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('QuestPage')), findsOneWidget);
+  });
+
+  // testWidgets('HomePage to historial', (WidgetTester tester) async {
+  //   await tester
+  //       .pumpWidget(GetMaterialApp(home: HomePage(key: const Key('HomePage'))));
+  //   await tester.tap(find.byKey(const Key('HistorialButton')));
+  //   await tester.pumpAndSettle();
+  //   expect(find.byKey(const Key('HistorialPage')), findsOneWidget);
+  // });
 }

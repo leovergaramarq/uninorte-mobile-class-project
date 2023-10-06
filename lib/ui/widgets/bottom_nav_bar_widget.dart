@@ -13,6 +13,7 @@ class BottomNavBarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      key: const Key('BottomNavBar'),
       currentIndex: section.index,
       items: [
         BottomNavigationBarItem(
