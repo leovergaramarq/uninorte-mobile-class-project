@@ -170,7 +170,7 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
             ));
       } else {
         Get.off(() => const LoginPage(
-              key: const Key('LoginPage'),
+              key: Key('LoginPage'),
             ));
       }
     } else {
@@ -182,7 +182,7 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
 
   void onGoBack() {
     Get.off(const FirstPage(
-      key: const Key('FirstPage'),
+      key: Key('FirstPage'),
     ));
   }
 
