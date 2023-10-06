@@ -181,9 +181,9 @@ class _SignUpPageState extends State<SignUpPage> with WidgetsBindingObserver {
   }
 
   void onGoBack() {
-    Get.off(const FirstPage(
-      key: Key('FirstPage'),
-    ));
+    Get.offAll(() => const FirstPage(
+          key: Key('FirstPage'),
+        ));
   }
 
   @override

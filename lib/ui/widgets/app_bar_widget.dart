@@ -44,7 +44,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
 
     // await (await SharedPreferences.getInstance()).clear(); // clear localStorage on logout for debugging
 
-    Get.off(() => const LoginPage(
+    Get.offAll(() => const LoginPage(
           key: Key('LoginPage'),
         ));
   }

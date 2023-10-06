@@ -109,7 +109,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
           print(err);
         }
 
-        Get.off(() => HomePage(
+        Get.offAll(() => HomePage(
               key: const Key('HomePage'),
             ));
       } else {
@@ -125,7 +125,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
   }
 
   void onGoBack() {
-    Get.off(() => const FirstPage(
+    Get.offAll(() => const FirstPage(
           key: Key('FirstPage'),
         ));
   }

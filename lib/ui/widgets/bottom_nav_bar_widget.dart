@@ -42,7 +42,7 @@ class BottomNavBarWidget extends StatelessWidget {
           case 0:
             Get.off(() => HomePage(
                   key: const Key('HomePage'),
-                  fetchSessions: false, // don't fetch sessions again
+                  // fetchSessions: false, // don't fetch sessions again
                 ));
             break;
           case 1:

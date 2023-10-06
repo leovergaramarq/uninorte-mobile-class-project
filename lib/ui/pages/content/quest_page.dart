@@ -33,6 +33,7 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
   final AuthController _authController = Get.find<AuthController>();
   final SessionController _sessionController = Get.find<SessionController>();
   final UserController _userController = Get.find<UserController>();
+
   Timer _answerTimer = Timer(const Duration(), () {});
   StreamSubscription<int>? _levelListener;
 
@@ -87,7 +88,7 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
             .addSession(_questionController.session)
             .catchError((e) => print(e));
       }
-      Get.off(() => SessionSummaryPage(
+      Get.off(() => const SessionSummaryPage(
             key: Key('SessionSummaryPage'),
           ));
     }

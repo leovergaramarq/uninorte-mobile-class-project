@@ -25,7 +25,7 @@ class _FirstPageState extends State<FirstPage> {
   void onStart() async {
     if (_authController.isLoggedIn && _userController.isUserFetched) {
       _questionController.setLevel(_userController.user.level!);
-      Get.to(
+      Get.off(
         () => HomePage(
           key: const Key('HomePage'),
         ),
