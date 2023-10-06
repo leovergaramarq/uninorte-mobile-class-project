@@ -1,18 +1,16 @@
 class Question {
-  Question(this.num1, this.op, this.num2);
+  Question(this.num1, this.op, this.num2, this.level);
 
   Question.defaultQuestion()
       : num1 = 0,
         op = Operation.none,
-        num2 = 0;
+        num2 = 0,
+        level = 0;
 
   int num1;
   int num2;
   Operation op;
-
-  int get level {
-    return (num1.toString().length + num2.toString().length) ~/ 2;
-  }
+  int level;
 
   String get opString {
     switch (op) {

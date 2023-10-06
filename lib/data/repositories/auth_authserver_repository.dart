@@ -2,7 +2,6 @@ import 'package:uninorte_mobile_class_project/domain/repositories/auth_repositor
 
 import 'package:uninorte_mobile_class_project/data/datasources/remote/auth_datasource.dart';
 import 'package:uninorte_mobile_class_project/data/datasources/local/auth_local_datasource.dart';
-import 'package:uninorte_mobile_class_project/data/datasources/local/user_local_datasource.dart';
 
 class AuthAuthserverRepository implements AuthRepository {
   // AuthAuthserverRepository() {
@@ -18,12 +17,10 @@ class AuthAuthserverRepository implements AuthRepository {
 
   final AuthDatasource _authDatasource = AuthDatasource();
   final AuthLocalDatasource _authLocalDatasource = AuthLocalDatasource();
-  final UserLocalDatasource _userLocalDatasource =
-      UserLocalDatasource(); //TODO: User unique instance with Getx
   // String token = "";
   // the base url of the API should end without the /
   final String _baseUrl =
-      "http://ip172-18-0-13-ckecv18gftqg0098hen0-8000.direct.labs.play-with-docker.com";
+      "http://ip172-18-0-17-ckfn3jmfml8g009g12cg-8000.direct.labs.play-with-docker.com";
 
   @override
   Future<String> login(String email, String password) async {
@@ -43,27 +40,16 @@ class AuthAuthserverRepository implements AuthRepository {
   }
 
   @override
-  Future<void> logOut() async {
-    if (_authLocalDatasource.getToken() != null) {
-      if (!(await _authLocalDatasource.removeToken())) {
-        return Future.error('Token couldn\'t be removed');
-      }
-    }
-
-    if (_userLocalDatasource.getUser() != null) {
-      if (!(await _userLocalDatasource.removeUser())) {
-        return Future.error('User couldn\'t be removed');
-      }
+  Future<bool> logOut() async {
+    if (await _authLocalDatasource.containsToken()) {
+      return await _authLocalDatasource.removeToken();
+    } else {
+      return true;
     }
   }
 
   @override
-  bool isLoggedin() {
-    try {
-      return _authLocalDatasource.getToken() != null;
-    } catch (e) {
-      print(e);
-      return false;
-    }
+  Future<bool> isLoggedIn() async {
+    return await _authLocalDatasource.containsToken();
   }
 }

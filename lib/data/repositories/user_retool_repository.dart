@@ -12,24 +12,23 @@ class UserRetoolRepository implements UserRepository {
   final String baseUri = 'https://retoolapi.dev/0zLAjT/sum-plus';
 
   @override
-  Future<User> getUser(String email) async {
-    if (await NetworkUtil.hasNetwork(baseUri)) {
-      final User user = await _userDatasource.getUser(baseUri, email);
-      _userLocalDatasource.addUser(true, user).catchError((e) => print(e));
+  Future<User> getUser(String? email) async {
+    User? user = await _userLocalDatasource.getUser();
+    if (user != null) {
+      return user;
+    } else if (email != null) {
+      user = await _userDatasource.getUser(baseUri, email);
+      _userLocalDatasource.setUser(user).catchError((e) => print(e));
       return user;
     } else {
-      final User? user = _userLocalDatasource.getUser();
-      if (user == null) {
-        return Future.error('User doesn\'t exist');
-      }
-      return user;
+      return Future.error('User not found');
     }
   }
 
   @override
   Future<User> addUser(User user) async {
     final User newUser = await _userDatasource.addUser(baseUri, user);
-    _userLocalDatasource.addUser(true, newUser).catchError((e) => print(e));
+    _userLocalDatasource.setUser(newUser).catchError((e) => print(e));
     return newUser;
   }
 
@@ -37,12 +36,10 @@ class UserRetoolRepository implements UserRepository {
   Future<User> updateUser(User user) async {
     if (await NetworkUtil.hasNetwork(baseUri)) {
       final User updatedUser = await _userDatasource.updateUser(baseUri, user);
-      _userLocalDatasource
-          .updateUser(true, updatedUser)
-          .catchError((e) => print(e));
+      _userLocalDatasource.updateUser(updatedUser).catchError((e) => print(e));
       return updatedUser;
     } else {
-      return await _userLocalDatasource.updateUser(false, user);
+      return await _userLocalDatasource.updateUser(user);
     }
   }
 
@@ -56,7 +53,8 @@ class UserRetoolRepository implements UserRepository {
       String? school,
       int? level}) async {
     if (await NetworkUtil.hasNetwork(baseUri)) {
-      User updatedUser = await _userDatasource.updatePartialUser(baseUri, id,
+      final User updatedUser = await _userDatasource.updatePartialUser(
+          baseUri, id,
           firstName: firstName,
           lastName: lastName,
           email: email,
@@ -64,13 +62,10 @@ class UserRetoolRepository implements UserRepository {
           degree: degree,
           school: school,
           level: level);
-      _userLocalDatasource
-          .addUser(true, updatedUser)
-          .catchError((e) => print(e));
+      _userLocalDatasource.setUser(updatedUser).catchError((e) => print(e));
       return updatedUser;
     } else {
-      final User updatedUser = await _userLocalDatasource.updatePartialUser(
-          false, id,
+      final User updatedUser = await _userLocalDatasource.updatePartialUser(id,
           firstName: firstName,
           lastName: lastName,
           email: email,
@@ -79,6 +74,15 @@ class UserRetoolRepository implements UserRepository {
           school: school,
           level: level);
       return updatedUser;
+    }
+  }
+
+  @override
+  Future<bool> removeUser() async {
+    if (await _userLocalDatasource.containsUser()) {
+      return await _userLocalDatasource.removeUser();
+    } else {
+      return true;
     }
   }
 }

@@ -11,19 +11,13 @@ class UserLocalDatasource {
   final String userKey = 'user';
   SharedPreferences? prefs;
 
-  User? getUser() {
-    final _UserStore? userStore = _getUser();
-    if (userStore == null) return null;
-    return userStore.data;
-  }
+  Future<User?> getUser() async => await _getUser();
 
-  Future<User> addUser(bool isUpToDate, User user) async =>
-      await _addUser(isUpToDate, user);
+  Future<User> setUser(User user) async => await _setUser(user);
 
-  Future<User> updateUser(bool isUpToDate, User user) async =>
-      await addUser(isUpToDate, user);
+  Future<User> updateUser(User user) async => await _setUser(user);
 
-  Future<User> updatePartialUser(bool isUpToDate, int id,
+  Future<User> updatePartialUser(int id,
       {String? firstName,
       String? lastName,
       String? email,
@@ -32,14 +26,13 @@ class UserLocalDatasource {
       String? school,
       int? level}) async {
     if (prefs == null) {
-      return Future.error('SharedPreferences instance doesn\'t exist');
+      prefs = await SharedPreferences.getInstance();
     }
 
-    final _UserStore? userStore = _getUser();
-    if (userStore == null) {
+    final User? user = await _getUser();
+    if (user == null) {
       return Future.error('User doesn\'t exist');
     }
-    final User user = userStore.data;
 
     if (firstName != null) user.firstName = firstName;
     if (lastName != null) user.lastName = lastName;
@@ -49,25 +42,24 @@ class UserLocalDatasource {
     if (school != null) user.school = school;
     if (level != null) user.level = level;
 
-    return await _addUser(isUpToDate, user);
+    return await _setUser(user);
   }
 
-  _UserStore? _getUser() {
+  Future<User?> _getUser() async {
     if (prefs == null) {
-      throw Exception('SharedPreferences instance doesn\'t exist');
+      prefs = await SharedPreferences.getInstance();
     }
     final String? userString = prefs!.getString(userKey);
     if (userString == null) return null;
-    final Map<String, dynamic> userStoreMap = jsonDecode(userString);
-    return _UserStore.fromJson(userStoreMap);
+    final Map<String, dynamic> userMap = jsonDecode(userString);
+    return User.fromJson(userMap);
   }
 
-  Future<User> _addUser(bool isUpToDate, User user) async {
+  Future<User> _setUser(User user) async {
     if (prefs == null) {
-      return Future.error('SharedPreferences instance doesn\'t exist');
+      prefs = await SharedPreferences.getInstance();
     }
-    final _UserStore userStore = _UserStore(user, isUpToDate);
-    final String userString = jsonEncode(userStore.toJson());
+    final String userString = jsonEncode(user.toJson());
     final bool result = await prefs!.setString(userKey, userString);
     if (!result) {
       return Future.error('User couldn\'t be saved');
@@ -77,25 +69,15 @@ class UserLocalDatasource {
 
   Future<bool> removeUser() async {
     if (prefs == null) {
-      return Future.error('SharedPreferences instance doesn\'t exist');
+      prefs = await SharedPreferences.getInstance();
     }
     return await prefs!.remove(userKey);
   }
-}
 
-class _UserStore {
-  _UserStore(this.data, this.isUpToDate);
-
-  final User data;
-  final bool isUpToDate; // whether the data is updated in the backend
-
-  factory _UserStore.fromJson(Map<String, dynamic> json) => _UserStore(
-        User.fromJson(json["data"]),
-        json["isUpToDate"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "data": data.toJson(),
-        "isUpToDate": isUpToDate,
-      };
+  Future<bool> containsUser() async {
+    if (prefs == null) {
+      prefs = await SharedPreferences.getInstance();
+    }
+    return prefs!.containsKey(userKey);
+  }
 }

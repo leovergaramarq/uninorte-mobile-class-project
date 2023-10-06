@@ -143,7 +143,7 @@ class QuestionController extends GetxController {
 
     _level.value = _questionUseCase.getNewLevel(session, level);
     print('newLevel $level');
-    print(session.answers.length);
+    // print(session.answers.length);
 
     return newAnswer;
   }

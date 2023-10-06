@@ -19,7 +19,7 @@ class UserDatasource {
 
       List<User> users = List<User>.from(data.map((x) => User.fromJson(x)));
       print(data);
-      if (users.length != 0) return users[0];
+      if (users.isNotEmpty) return users[0];
       return Future.error('User not found');
     } else {
       logError("Got error code ${response.statusCode}");

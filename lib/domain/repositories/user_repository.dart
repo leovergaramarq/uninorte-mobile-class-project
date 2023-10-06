@@ -1,7 +1,7 @@
 import 'package:uninorte_mobile_class_project/domain/models/user.dart';
 
 abstract class UserRepository {
-  Future<User> getUser(String email);
+  Future<User> getUser(String? email);
 
   Future<User> addUser(User user);
 
@@ -15,4 +15,6 @@ abstract class UserRepository {
       String? degree,
       String? school,
       int? level});
+
+  Future<bool> removeUser();
 }

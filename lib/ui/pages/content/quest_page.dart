@@ -38,6 +38,7 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    super.initState();
     _questionController.startSession(_userController.user.email);
     nextQuestion();
     if (_authController.isLoggedIn) {
@@ -51,11 +52,11 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
         }
       });
     }
-    super.initState();
   }
 
   @override
   void dispose() {
+    super.dispose();
     print('Disposing QuestPage');
     _answerTimer.cancel();
     if (_levelListener != null) {
@@ -65,7 +66,6 @@ class _QuestPageState extends State<QuestPage> with WidgetsBindingObserver {
         print(e);
       }
     }
-    super.dispose();
   }
 
   void nextQuestion() {

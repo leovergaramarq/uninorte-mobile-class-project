@@ -32,17 +32,17 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    super.initState();
     if (_authController.isLoggedIn || _authController.isGuest) {
       _authController.logOut().catchError((e) => print(e));
     }
     if (_userController.isUserFetched) {
-      _userController.resetUser();
+      _userController.resetUser().catchError((e) => print(e));
     }
     if (_sessionController.areSessionsFetched) {
-      _sessionController.resetSessions();
+      _sessionController.resetSessions().catchError((e) => print(e));
     }
     _questionController.resetLevel();
-    super.initState();
   }
 
   void onSubmit() async {
@@ -228,7 +228,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                         ),
                         TextButton(
                             key: const Key('ButtonLoginCreateAccount'),
-                            onPressed: () => Get.to(
+                            onPressed: () => Get.offAll(
                                   () => const SignUpPage(
                                     key: Key('SignUpPage'),
                                   ),

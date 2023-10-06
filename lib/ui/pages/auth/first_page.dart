@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-// import 'package:uninorte_mobile_class_project/ui/pages/auth/signup_page.dart';
 import 'package:uninorte_mobile_class_project/ui/pages/auth/login_page.dart';
+import 'package:uninorte_mobile_class_project/ui/pages/content/home_page.dart';
+
+import 'package:uninorte_mobile_class_project/ui/controller/auth_controller.dart';
+import 'package:uninorte_mobile_class_project/ui/controller/user_controller.dart';
+import 'package:uninorte_mobile_class_project/ui/controller/session_controller.dart';
+import 'package:uninorte_mobile_class_project/ui/controller/question_controller.dart';
 
 class FirstPage extends StatefulWidget {
   const FirstPage({Key? key}) : super(key: key);
@@ -12,6 +17,39 @@ class FirstPage extends StatefulWidget {
 }
 
 class _FirstPageState extends State<FirstPage> {
+  final AuthController _authController = Get.find<AuthController>();
+  final UserController _userController = Get.find<UserController>();
+  final SessionController _sessionController = Get.find<SessionController>();
+  final QuestionController _questionController = Get.find<QuestionController>();
+
+  void onStart() async {
+    if (_authController.isLoggedIn && _userController.isUserFetched) {
+      _questionController.setLevel(_userController.user.level!);
+      Get.to(
+        () => HomePage(
+          key: const Key('HomePage'),
+        ),
+      );
+    } else {
+      try {
+        await Future.wait([
+          if (_authController.isLoggedIn) _authController.logOut(),
+          if (_userController.isUserFetched) _userController.resetUser(),
+          if (_sessionController.areSessionsFetched)
+            _sessionController.resetSessions(),
+        ]);
+      } catch (e) {
+        print(e);
+      }
+      _questionController.resetLevel();
+      Get.to(
+        () => const LoginPage(
+          key: Key('LoginPage'),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,13 +78,7 @@ class _FirstPageState extends State<FirstPage> {
                 SizedBox(height: 50),
                 ElevatedButton(
                   key: const Key('LoginButton'),
-                  onPressed: () {
-                    Get.to(
-                      () => const LoginPage(
-                        key: Key('LoginPage'),
-                      ),
-                    );
-                  },
+                  onPressed: onStart,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF997AC1),
                     shape: RoundedRectangleBorder(

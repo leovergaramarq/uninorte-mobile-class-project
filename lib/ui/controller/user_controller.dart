@@ -12,8 +12,18 @@ class UserController extends GetxController {
   User get user => _user.value;
   bool get isUserFetched => _isUserFetched.value;
 
-  Future<void> getUser(String email) async {
-    logInfo("Getting users");
+  @override
+  void onInit() async {
+    super.onInit();
+    try {
+      await getUser(null);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> getUser(String? email) async {
+    logInfo("Getting user");
     _user.value = await _userUseCase.getUser(email);
     _isUserFetched.value = true;
   }
@@ -59,7 +69,8 @@ class UserController extends GetxController {
     return updatedUser;
   }
 
-  void resetUser() {
+  Future<void> resetUser() async {
+    await _userUseCase.removeUser();
     _user.value = User.defaultUser();
     _isUserFetched.value = false;
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:math';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // import 'package:uninorte_mobile_class_project/ui/pages/auth/login_page.dart';
 import 'package:uninorte_mobile_class_project/ui/pages/content/quest_page.dart';
@@ -80,6 +81,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   );
                 }
 
+                if (_sessionController.sessions.isEmpty) {
+                  return const Text('No sessions yet');
+                }
+
                 int avgSeconds = _sessionController.sessions.fold(
                         0,
                         (previousValue, element) =>
@@ -141,6 +146,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    SharedPreferences.getInstance().then((prefs) async {
+      print(prefs.getString('user'));
+    });
     return WillPopScope(
         onWillPop: () async =>
             (_authController.isLoggedIn || _authController.isGuest) &&

@@ -4,6 +4,10 @@ import 'package:loggy/loggy.dart';
 import 'package:uninorte_mobile_class_project/domain/use_case/auth_use_case.dart';
 
 class AuthController extends GetxController {
+  // AuthController(): super() {
+  //   _isLoggedIn.value = _authUseCase.isLoggedIn();
+  // }
+
   final AuthUseCase _authUseCase = AuthUseCase();
   final RxBool _isLoggedIn = RxBool(false);
   final RxBool _isGuest = RxBool(false);
@@ -11,11 +15,16 @@ class AuthController extends GetxController {
   bool get isLoggedIn => _isLoggedIn.value;
   bool get isGuest => _isGuest.value;
 
-  Future<String> login(email, password) async {
-    String token = await _authUseCase.login(email, password);
+  @override
+  void onInit() async {
+    super.onInit();
+    _isLoggedIn.value = await _authUseCase.isLoggedIn();
+  }
+
+  Future<void> login(email, password) async {
+    await _authUseCase.login(email, password);
     _isLoggedIn.value = true;
     if (_isGuest.value) _isGuest.value = false;
-    return token;
   }
 
   Future<void> signUp(email, password) async {
@@ -35,5 +44,10 @@ class AuthController extends GetxController {
   void continueAsGuest() {
     _isGuest.value = true;
     if (_isLoggedIn.value) _isLoggedIn.value = false;
+  }
+
+  void setLoggedIn() {
+    _isLoggedIn.value = true;
+    if (_isGuest.value) _isGuest.value = false;
   }
 }

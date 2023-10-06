@@ -36,7 +36,7 @@ class QuestionUseCase {
       num1 = num2;
       num2 = temp;
     }
-    return Question(num1, op, num2);
+    return Question(num1, op, num2, level);
   }
 
   bool isAnswerCorrect(Question question, int answer) =>
@@ -56,6 +56,7 @@ class QuestionUseCase {
     if (level < 1 || level > maxLevel) {
       return _boundLevel(level);
     }
+
     _LevelConfig levelConfig = _levelsConfig[level - 1];
     List<Answer> answers = session.answers;
 

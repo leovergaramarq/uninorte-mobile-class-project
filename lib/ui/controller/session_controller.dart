@@ -15,12 +15,12 @@ class SessionController extends GetxController {
   bool get areSessionsFetched => _areSessionsFetched.value;
   int get numSummarizeSessions => _sessionUseCase.numSummarizeSessions;
 
-  Future<List<Session>> getSessionsFromUser(String userEmail,
-      {int? limit}) async {
+  Future<List<Session>> getSessionsFromUser(String? userEmail,
+      {int? limit, String? sort, String? order}) async {
     logInfo("Getting sessions");
     if (areSessionsFetched) _areSessionsFetched.value = false;
-    List<Session> sessions =
-        await _sessionUseCase.getSessionsFromUser(userEmail, limit: limit);
+    List<Session> sessions = await _sessionUseCase
+        .getSessionsFromUser(userEmail, limit: limit, sort: sort, order: order);
     _sessions.value = sessions;
     _areSessionsFetched.value = true;
     return sessions;
@@ -34,18 +34,8 @@ class SessionController extends GetxController {
     return newSession;
   }
 
-  // updateSession(Session session) async {
-  //   logInfo("Update session");
-  //   await _sessionUseCase.updateSession(session);
-  //   getSessions();
-  // }
-
-  // void deleteSession(int id) async {
-  //   await _sessionUseCase.deleteSession(id);
-  //   getSessions();
-  // }
-
-  void resetSessions() {
+  Future<void> resetSessions() async {
+    await _sessionUseCase.removeSessions();
     _sessions.value = [];
     _areSessionsFetched.value = false;
   }

@@ -5,12 +5,14 @@ import 'package:http/http.dart' as http;
 
 class SessionDatasource {
   Future<List<Session>> getSessionsFromUser(String baseUri, String userEmail,
-      {int? limit}) async {
+      {int? limit, String? sort, String? order}) async {
     List<Session> sessions = [];
     final Uri request = Uri.parse(baseUri).resolveUri(Uri(queryParameters: {
       "format": 'json',
       "userEmail": userEmail,
       if (limit != null) "_limit": limit.toString(),
+      if (sort != null) "_sort": sort,
+      if (order != null) "_order": order,
     }));
 
     final http.Response response = await http.get(request);

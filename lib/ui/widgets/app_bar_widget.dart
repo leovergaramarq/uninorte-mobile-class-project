@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:uninorte_mobile_class_project/ui/controller/auth_controller.dart';
 import 'package:uninorte_mobile_class_project/ui/controller/user_controller.dart';
@@ -34,14 +35,17 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
     _authController.logOut().catchError((e) => print(e));
 
     if (_userController.isUserFetched) {
-      _userController.resetUser();
+      _userController.resetUser().catchError((e) => print(e));
     }
     if (_sessionController.areSessionsFetched) {
-      _sessionController.resetSessions();
+      _sessionController.resetSessions().catchError((e) => print(e));
     }
     _questionController.resetLevel();
-    Get.off(() => LoginPage(
-          key: const Key('LoginPage'),
+
+    // await (await SharedPreferences.getInstance()).clear(); // clear localStorage on logout for debugging
+
+    Get.off(() => const LoginPage(
+          key: Key('LoginPage'),
         ));
   }
 
@@ -62,5 +66,5 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
