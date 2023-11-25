@@ -10,5 +10,4 @@ Es un aplicativo movil que tiene como función la practica de operaciones aritme
 ![Captura de pantalla 2023-11-25 082028](https://github.com/leovergaramarq/uninorte-mobile-class-project/assets/103125856/1e0c0494-8c70-4171-ae78-c527d6c8be2d)
 ![Captura de pantalla 2023-11-25 082103](https://github.com/leovergaramarq/uninorte-mobile-class-project/assets/103125856/e1e8ede3-7cd6-4430-aafe-29a77d23c586)
 ![Captura de pantalla 2023-11-25 082150](https://github.com/leovergaramarq/uninorte-mobile-class-project/assets/103125856/4317e338-c7c3-414e-b41e-e6657ab689b7)
-![Captura de pantalla 2023-11-25 082150](https://github.com/leovergaramarq/uninorte-mobile-class-project/assets/103125856/9e1e74cb-ac8c-4efa-8a5a-c4440c445506)
 ![Captura de pantalla 2023-11-25 082222](https://github.com/leovergaramarq/uninorte-mobile-class-project/assets/103125856/32c7b862-c9d5-46bd-b6ab-1f2f11de1234)
